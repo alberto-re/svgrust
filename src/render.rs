@@ -2,6 +2,7 @@ use crate::Shape;
 use crate::Sketch;
 use anyhow::Context;
 use anyhow::Result;
+use svg::node::element::path::Data;
 use svg::Document;
 
 pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
@@ -40,6 +41,14 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
                         .set("y", s.xy.y)
                         .set("width", s.width)
                         .set("height", s.height);
+                    group = group.add(e);
+                }
+                Shape::LineString(s) => {
+                    let mut data = Data::new().move_to((s.points[0].x, s.points[0].y));
+                    for p in s.points[1..].iter() {
+                        data = data.line_to((p.x, p.y));
+                    }
+                    let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
             }

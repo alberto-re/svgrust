@@ -54,12 +54,12 @@ fn main() -> Result<()> {
 
     let rect = Rectangle::new(sketch.layout.center(), 100., 100.);
 
-    let mut layer1 = Layer::new().set_style(Style::new("blue", "2px"));
+    let mut layer1 = Layer::default().set_style(Style::new("blue", "2px"));
     for c in circles.iter() {
         layer1.add_circle(c.clone());
     }
 
-    let mut layer2 = Layer::new().set_style(Style::new("red", "3px"));
+    let mut layer2 = Layer::default().set_style(Style::new("red", "3px"));
     layer2.add_rect(rect);
 
     sketch.add_layer(layer1);

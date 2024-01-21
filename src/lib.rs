@@ -5,21 +5,12 @@ pub mod shapes;
 use geo::coord;
 use layout::PageLayout;
 use shapes::Rectangle;
-use svg::node::element::path::Data;
-use svg::node::element::Path;
-
-pub fn path(data: Data) -> Path {
-    Path::new()
-        .set("fill", "none")
-        .set("stroke", "black")
-        .set("stroke-width", "1px")
-        .set("d", data)
-}
 
 #[derive(Clone)]
 pub enum Shape {
     Circle(shapes::Circle),
     Rectangle(shapes::Rectangle),
+    LineString(shapes::LineString),
 }
 
 #[derive(Clone)]
@@ -44,11 +35,8 @@ pub struct Layer {
 }
 
 impl Layer {
-    pub fn new() -> Self {
-        Self {
-            elements: vec![],
-            style: None,
-        }
+    pub fn new(elements: Vec<Shape>, style: Option<Style>) -> Self {
+        Self { elements, style }
     }
 
     pub fn add_circle(&mut self, circle: shapes::Circle) {
@@ -59,9 +47,19 @@ impl Layer {
         self.elements.push(Shape::Rectangle(rect));
     }
 
+    pub fn add_linestr(&mut self, linestr: shapes::LineString) {
+        self.elements.push(Shape::LineString(linestr));
+    }
+
     pub fn set_style(&mut self, style: Style) -> Self {
         self.style = Some(style);
         self.clone()
+    }
+}
+
+impl Default for Layer {
+    fn default() -> Self {
+        Self::new(vec![], None)
     }
 }
 

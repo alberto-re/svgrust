@@ -6,6 +6,32 @@ use geo::EuclideanDistance;
 use rand::Rng;
 
 #[derive(Clone, PartialEq)]
+pub struct LineString {
+    pub points: Vec<Coord>,
+    stroke: String,
+    stroke_width: String,
+}
+
+impl LineString {
+    pub fn new(points: Vec<Coord>) -> Self {
+        Self {
+            points,
+            stroke: "black".to_string(),
+            stroke_width: "".to_string(),
+        }
+    }
+
+    pub fn from_tuples(points: Vec<(f64, f64)>) -> Self {
+        Self::new(
+            points
+                .iter()
+                .map(|p| coord! { x: p.0, y: p.1})
+                .collect::<Vec<Coord>>(),
+        )
+    }
+}
+
+#[derive(Clone, PartialEq)]
 pub struct Rectangle {
     pub xy: Coord,
     pub width: f64,
