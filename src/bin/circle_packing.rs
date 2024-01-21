@@ -1,4 +1,5 @@
 use anyhow::Result;
+use plt::Layer;
 use plt::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::Rectangle;
@@ -49,10 +50,12 @@ fn main() -> Result<()> {
     let rect = Rectangle::new(sketch.layout.center(), 100., 100.);
     let mut circles = place_circles(&enclosing_circle);
     grow_circles(&mut circles);
+    let mut layer = Layer::new();
     for c in circles.iter() {
-        sketch.add_circle(c.clone());
+        layer.add_circle(c.clone());
     }
-    sketch.add_rect(rect);
+    layer.add_rect(rect);
+    sketch.add_layer(layer);
     render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
     Ok(())
 }

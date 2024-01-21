@@ -74,17 +74,13 @@ pub enum Shape {
     Rectangle(shapes::Rectangle),
 }
 
-pub struct Sketch {
-    pub layout: PageLayout,
+pub struct Layer {
     elements: Vec<Shape>,
 }
 
-impl Sketch {
-    pub fn new(layout: PageLayout) -> Self {
-        Self {
-            layout,
-            elements: vec![],
-        }
+impl Layer {
+    pub fn new() -> Self {
+        Self { elements: vec![] }
     }
 
     pub fn add_circle(&mut self, circle: shapes::Circle) {
@@ -93,6 +89,24 @@ impl Sketch {
 
     pub fn add_rect(&mut self, rect: shapes::Rectangle) {
         self.elements.push(Shape::Rectangle(rect));
+    }
+}
+
+pub struct Sketch {
+    pub layout: PageLayout,
+    layers: Vec<Layer>
+}
+
+impl Sketch {
+    pub fn new(layout: PageLayout) -> Self {
+        Self {
+            layout,
+            layers: vec![],
+        }
+    }
+
+    pub fn add_layer(&mut self, layer: Layer) {
+        self.layers.push(layer);
     }
 }
 
@@ -110,28 +124,30 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
         doc = doc.set("style", style.to_owned());
     }
 
-    for e in sketch.elements.iter() {
-        match e {
-            Shape::Circle(s) => {
-                let mut e = svg::node::element::Circle::new()
-                    .set("cx", s.center.x)
-                    .set("cy", s.center.y)
-                    .set("r", s.radius);
-                e = e.set("fill", "none");
-                e = e.set("stroke", "black");
-                doc = doc.add(e);
-            }
-            Shape::Rectangle(s) => {
-                let mut e = svg::node::element::Rectangle::new()
-                    .set("x", s.xy.x)
-                    .set("y", s.xy.y)
-                    .set("width", s.width)
-                    .set("height", s.height);
-                e = e.set("fill", "none");
-                e = e.set("stroke", "black");
-                doc = doc.add(e);
+    for l in sketch.layers.iter() {
+        let mut group = svg::node::element::Group::new();
+        group = group.set("fill", "none");
+        group = group.set("stroke", "black");
+        for e in l.elements.iter() {
+            match e {
+                Shape::Circle(s) => {
+                    let e = svg::node::element::Circle::new()
+                        .set("cx", s.center.x)
+                        .set("cy", s.center.y)
+                        .set("r", s.radius);
+                    group = group.add(e);
+                }
+                Shape::Rectangle(s) => {
+                    let e = svg::node::element::Rectangle::new()
+                        .set("x", s.xy.x)
+                        .set("y", s.xy.y)
+                        .set("width", s.width)
+                        .set("height", s.height);
+                    group = group.add(e);
+                }
             }
         }
+        doc = doc.add(group);
     }
     svg::save(path, &doc).context("Cannot save SVG file")?;
     Ok(())
