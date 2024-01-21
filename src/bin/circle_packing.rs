@@ -6,6 +6,7 @@ use plt::shapes::Rectangle;
 use plt::Orientation::Landscape;
 use plt::PageLayout;
 use plt::Sketch;
+use plt::Style;
 use rand::Rng;
 
 const MIN_R: f64 = 1.;
@@ -46,16 +47,24 @@ fn grow_circles(circles: &mut [Circle]) {
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
+
     let enclosing_circle = Circle::new(sketch.layout.center(), sketch.layout.shortest_side() / 2.5);
-    let rect = Rectangle::new(sketch.layout.center(), 100., 100.);
     let mut circles = place_circles(&enclosing_circle);
     grow_circles(&mut circles);
-    let mut layer = Layer::new();
+
+    let rect = Rectangle::new(sketch.layout.center(), 100., 100.);
+
+    let mut layer1 = Layer::new().set_style(Style::new("blue", "2px"));
     for c in circles.iter() {
-        layer.add_circle(c.clone());
+        layer1.add_circle(c.clone());
     }
-    layer.add_rect(rect);
-    sketch.add_layer(layer);
+
+    let mut layer2 = Layer::new().set_style(Style::new("red", "3px"));
+    layer2.add_rect(rect);
+
+    sketch.add_layer(layer1);
+    sketch.add_layer(layer2);
+
     render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
     Ok(())
 }
