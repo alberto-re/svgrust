@@ -1,65 +1,14 @@
+pub mod layout;
 pub mod shapes;
 
+use anyhow::Context;
+use anyhow::Result;
 use geo::coord;
-use geo::Coord;
+use layout::PageLayout;
+use shapes::Rectangle;
 use svg::node::element::path::Data;
 use svg::node::element::Path;
 use svg::Document;
-use anyhow::Context;
-use anyhow::Result;
-
-// This is the default resolution both for web (CSS) and Inkscape:
-// - https://developer.mozilla.org/en-US/docs/Web/CSS/resolution
-// - https://inkscape.org/forums/beyond/resolution-change/
-const DPI: f64 = 96.0;
-
-pub enum Uom {
-    In,
-    Mm,
-    Px,
-}
-
-pub enum Orientation {
-    Landscape,
-    Portrait,
-}
-
-pub struct PageLayout {
-    pub width: f64,
-    pub height: f64,
-    pub uom: Uom,
-    pub orientation: Orientation,
-    pub style: Option<String>,
-}
-
-impl PageLayout {
-    pub fn new(width: f64, height: f64, uom: Uom, orientation: Orientation) -> Self {
-        Self {
-            width,
-            height,
-            uom,
-            orientation,
-            style: None,
-        }
-    }
-
-    pub fn axidraw_minikit(orientation: Orientation) -> Self {
-        Self::new(6.0 * DPI, 4.0 * DPI, Uom::In, orientation)
-    }
-
-    pub fn set_style(&mut self, style: String) -> &Self {
-        self.style = Some(style);
-        self
-    }
-
-    pub fn center(&self) -> Coord {
-        coord! { x: self.width / 2., y: self.height / 2. }
-    }
-
-    pub fn shortest_side(&self) -> f64 {
-        f64::min(self.width, self.height)
-    }
-}
 
 pub fn path(data: Data) -> Path {
     Path::new()
@@ -83,7 +32,10 @@ pub struct Style {
 
 impl Style {
     pub fn new(stroke: &str, stroke_width: &str) -> Self {
-        Self { stroke: stroke.to_string(), stroke_width: stroke_width.to_string() }
+        Self {
+            stroke: stroke.to_string(),
+            stroke_width: stroke_width.to_string(),
+        }
     }
 }
 
@@ -95,7 +47,10 @@ pub struct Layer {
 
 impl Layer {
     pub fn new() -> Self {
-        Self { elements: vec![], style: None }
+        Self {
+            elements: vec![],
+            style: None,
+        }
     }
 
     pub fn add_circle(&mut self, circle: shapes::Circle) {
@@ -114,7 +69,7 @@ impl Layer {
 
 pub struct Sketch {
     pub layout: PageLayout,
-    layers: Vec<Layer>
+    layers: Vec<Layer>,
 }
 
 impl Sketch {
@@ -127,6 +82,10 @@ impl Sketch {
 
     pub fn add_layer(&mut self, layer: Layer) {
         self.layers.push(layer);
+    }
+
+    pub fn as_rect(&self) -> Rectangle {
+        Rectangle::new(coord! { x: 0., y: 0. }, self.layout.width, self.layout.height)
     }
 }
 
@@ -173,5 +132,6 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
         doc = doc.add(group);
     }
     svg::save(path, &doc).context("Cannot save SVG file")?;
+    println!("Output written in '{path}'");
     Ok(())
 }

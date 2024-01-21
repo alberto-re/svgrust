@@ -26,6 +26,16 @@ impl Rectangle {
     }
 }
 
+impl Scalable<Rectangle> for Rectangle {
+    fn scaled(&self, perc: f64) -> Rectangle {
+        Rectangle::new(
+            coord! { x: self.xy.x + self.width * ((1. - perc) / 2.), y: self.xy.y + self.height * ((1. - perc) / 2.) },
+            self.width * perc,
+            self.height * perc,
+        )
+    }
+}
+
 #[derive(Clone, PartialEq)]
 pub struct Circle {
     pub center: Coord,
@@ -63,4 +73,8 @@ impl Circle {
             self.center.euclidean_distance(&other.center) - self.radius - other.radius,
         )
     }
+}
+
+pub trait Scalable<T> {
+    fn scaled(&self, perc: f64) -> T;
 }
