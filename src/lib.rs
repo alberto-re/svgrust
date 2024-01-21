@@ -74,13 +74,25 @@ pub enum Shape {
     Rectangle(shapes::Rectangle),
 }
 
+pub struct Style {
+    stroke: String,
+    stroke_width: String,
+}
+
+impl Style {
+    pub fn new(stroke: &str, stroke_width: &str) -> Self {
+        Self { stroke: stroke.to_string(), stroke_width: stroke_width.to_string() }
+    }
+}
+
 pub struct Layer {
     elements: Vec<Shape>,
+    style: Option<Style>,
 }
 
 impl Layer {
     pub fn new() -> Self {
-        Self { elements: vec![] }
+        Self { elements: vec![], style: None }
     }
 
     pub fn add_circle(&mut self, circle: shapes::Circle) {
@@ -89,6 +101,10 @@ impl Layer {
 
     pub fn add_rect(&mut self, rect: shapes::Rectangle) {
         self.elements.push(Shape::Rectangle(rect));
+    }
+
+    pub fn set_style(&mut self, style: Style) {
+        self.style = Some(style);
     }
 }
 
@@ -127,7 +143,10 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
     for l in sketch.layers.iter() {
         let mut group = svg::node::element::Group::new();
         group = group.set("fill", "none");
-        group = group.set("stroke", "black");
+        if let Some(s) = &l.style {
+            group = group.set("stroke", s.stroke.clone());
+            group = group.set("stroke-width", s.stroke_width.clone());
+        }
         for e in l.elements.iter() {
             match e {
                 Shape::Circle(s) => {
