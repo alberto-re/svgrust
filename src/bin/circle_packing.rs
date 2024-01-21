@@ -1,10 +1,10 @@
 use anyhow::Result;
-use plt::Layer;
-use plt::render_svg;
-use plt::shapes::Circle;
-use plt::shapes::Rectangle;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
+use plt::render::render_svg;
+use plt::shapes::Circle;
+use plt::shapes::Rectangle;
+use plt::Layer;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
