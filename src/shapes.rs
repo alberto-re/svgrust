@@ -52,13 +52,26 @@ impl Rectangle {
     }
 }
 
-impl Scalable<Rectangle> for Rectangle {
-    fn scaled(&self, perc: f64) -> Rectangle {
+impl Scale<Rectangle> for Rectangle {
+    fn scale(&self, perc: f64) -> Rectangle {
         Rectangle::new(
             coord! { x: self.xy.x + self.width * ((1. - perc) / 2.), y: self.xy.y + self.height * ((1. - perc) / 2.) },
             self.width * perc,
             self.height * perc,
         )
+    }
+}
+
+impl Sample for Rectangle {
+    fn sample_uniform(&self, n: u64) -> Vec<Coord> {
+        let mut rng = rand::thread_rng();
+        let mut samples = vec![];
+        (0..n).for_each(|_| {
+            let x = rng.gen::<f64>() * self.width + self.xy.x;
+            let y = rng.gen::<f64>() * self.height + self.xy.y;
+            samples.push(coord! { x: x, y: y});
+        });
+        samples
     }
 }
 
@@ -79,16 +92,6 @@ impl Circle {
             stroke_width: "".to_string(),
         }
     }
-
-    pub fn rnd_uniform(&self) -> Coord {
-        let mut rng = rand::thread_rng();
-        let r_sqrt = (rng.gen::<f64>() * self.radius * self.radius).sqrt();
-        let angle = rng.gen::<f64>() * TAU;
-        let x = r_sqrt * angle.cos() + self.center.x;
-        let y = r_sqrt * angle.sin() + self.center.y;
-        coord! { x: x, y: y }
-    }
-
     pub fn overlaps(&self, other: &Circle) -> bool {
         self.center.euclidean_distance(&other.center) <= self.radius + other.radius
     }
@@ -101,6 +104,25 @@ impl Circle {
     }
 }
 
-pub trait Scalable<T> {
-    fn scaled(&self, perc: f64) -> T;
+impl Sample for Circle {
+    fn sample_uniform(&self, n: u64) -> Vec<Coord> {
+        let mut rng = rand::thread_rng();
+        let mut samples = vec![];
+        (0..n).for_each(|_| {
+            let r_sqrt = (rng.gen::<f64>() * self.radius * self.radius).sqrt();
+            let angle = rng.gen::<f64>() * TAU;
+            let x = r_sqrt * angle.cos() + self.center.x;
+            let y = r_sqrt * angle.sin() + self.center.y;
+            samples.push(coord! { x: x, y: y});
+        });
+        samples
+    }
+}
+
+pub trait Scale<T> {
+    fn scale(&self, perc: f64) -> T;
+}
+
+pub trait Sample {
+    fn sample_uniform(&self, n: u64) -> Vec<Coord>;
 }

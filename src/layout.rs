@@ -27,9 +27,13 @@ pub struct PageLayout {
 
 impl PageLayout {
     pub fn new(width: f64, height: f64, uom: Uom, orientation: Orientation) -> Self {
+        let (height, width) = match &orientation {
+            Orientation::Portrait => (width, height),
+            Orientation::Landscape => (height, width),
+        };
         Self {
-            width,
             height,
+            width,
             uom,
             orientation,
             style: None,

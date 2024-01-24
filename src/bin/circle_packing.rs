@@ -4,6 +4,7 @@ use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::Rectangle;
+use plt::shapes::Sample;
 use plt::Layer;
 use plt::Sketch;
 use plt::Style;
@@ -17,7 +18,7 @@ fn place_circles(enclosing_circle: &Circle) -> Vec<Circle> {
     let mut circles: Vec<Circle> = vec![];
 
     while circles.len() < CIRCLES_N {
-        let candidate = Circle::new(enclosing_circle.rnd_uniform(), MIN_R);
+        let candidate = Circle::new(*enclosing_circle.sample_uniform(1).first().unwrap(), MIN_R);
         if circles
             .iter()
             .filter(|c| c.dist(&candidate) < MIN_DIST)
