@@ -1,9 +1,13 @@
 use std::f64::consts::TAU;
 
+use geo::MultiLineString;
+use geo::MultiPolygon;
+use geo::Polygon;
 use geo::coord;
 use geo::Coord;
 use geo::EuclideanDistance;
 use rand::Rng;
+use geo::algorithm::bool_ops::BooleanOps;
 
 #[derive(Clone, PartialEq)]
 pub struct LineString {
@@ -28,6 +32,27 @@ impl LineString {
                 .map(|p| coord! { x: p.0, y: p.1})
                 .collect::<Vec<Coord>>(),
         )
+    }
+}
+
+impl Clippable<LineString> for LineString {
+    fn clipped(&self, _: &Rectangle) -> LineString {
+        let ls = geo::LineString(self.points.clone());
+        let mls = MultiLineString::new(vec![ls]);
+        let poly_lstr = geo::LineString::new(vec![
+            coord!{x: 100., y: 100.},
+            coord!{x: 200., y: 100.},
+            coord!{x: 200., y: 200.},
+            coord!{x: 100., y: 200.},
+        ]);
+        let poly = Polygon::new(poly_lstr, vec![]);
+        let mpoly = MultiPolygon::new(vec![poly]);
+        let res = mpoly.clip(&mls, false);
+        let mut newcoords: Vec<Coord> = vec![]; 
+        for coord in res.0.first().unwrap().coords() {
+            newcoords.push(coord.clone());
+        }
+        LineString::new(newcoords)
     }
 }
 
@@ -103,4 +128,8 @@ impl Circle {
 
 pub trait Scalable<T> {
     fn scaled(&self, perc: f64) -> T;
+}
+
+pub trait Clippable<T> {
+    fn clipped(&self, bbox: &Rectangle) -> T;
 }
