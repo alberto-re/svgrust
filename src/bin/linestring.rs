@@ -9,7 +9,7 @@ use plt::Style;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
-    let mut layer = Layer::default().set_style(Style::new("black", "10px"));
+    let mut layer = Layer::new("1").set_style(Style::new("black", "10px"));
     let linestr = LineString::from_tuples(vec![
         (50., 55.),
         (150., 155.),

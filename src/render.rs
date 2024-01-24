@@ -22,6 +22,7 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
     for l in sketch.layers.iter() {
         let mut group = svg::node::element::Group::new();
         group = group.set("fill", "none");
+        group = group.set("id", l.name.clone());
         if let Some(s) = &l.style {
             group = group.set("stroke", s.stroke.clone());
             group = group.set("stroke-width", s.stroke_width.clone());
