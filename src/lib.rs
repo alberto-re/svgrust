@@ -31,15 +31,13 @@ impl Style {
 
 #[derive(Clone)]
 pub struct Layer {
-    name: String,
     elements: Vec<Shape>,
     style: Option<Style>,
 }
 
 impl Layer {
-    pub fn new(name: &str) -> Self {
+    pub fn new() -> Self {
         Self {
-            name: name.to_string(),
             elements: vec![],
             style: None,
         }
@@ -60,6 +58,12 @@ impl Layer {
     pub fn set_style(&mut self, style: Style) -> Self {
         self.style = Some(style);
         self.clone()
+    }
+}
+
+impl Default for Layer {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

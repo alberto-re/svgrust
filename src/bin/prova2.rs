@@ -16,7 +16,7 @@ use rand::Rng;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
-    let mut layer = Layer::new("1").set_style(Style::new("black", "1px"));
+    let mut layer = Layer::new().set_style(Style::new("black", "1px"));
     let enclosing =
         Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.80);
     layer.add_rect(&enclosing);
