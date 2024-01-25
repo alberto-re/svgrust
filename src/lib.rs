@@ -5,12 +5,12 @@ pub mod shapes;
 use geo::coord;
 use geo::Coord;
 use layout::PageLayout;
-use shapes::{Centroid, Rectangle};
+use shapes::{Centroid, Rect};
 
 #[derive(Clone)]
 pub enum Shape {
     Circle(shapes::Circle),
-    Rectangle(shapes::Rectangle),
+    Rectangle(shapes::Rect),
     LineString(shapes::LineString),
 }
 
@@ -49,7 +49,7 @@ impl Layer {
         self.elements.push(Shape::Circle(circle.clone()));
     }
 
-    pub fn add_rect(&mut self, rect: &shapes::Rectangle) {
+    pub fn add_rect(&mut self, rect: &shapes::Rect) {
         self.elements.push(Shape::Rectangle(rect.clone()));
     }
 
@@ -80,8 +80,8 @@ impl Sketch {
         self.layers.push(layer.clone());
     }
 
-    pub fn as_rect(&self) -> Rectangle {
-        Rectangle::new(
+    pub fn as_rect(&self) -> Rect {
+        Rect::new(
             coord! { x: 0., y: 0. },
             self.layout.width,
             self.layout.height,

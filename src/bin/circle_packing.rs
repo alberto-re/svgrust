@@ -3,7 +3,7 @@ use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::Rectangle;
+use plt::shapes::Rect;
 use plt::shapes::Sample;
 use plt::Layer;
 use plt::Sketch;
@@ -53,7 +53,7 @@ fn main() -> Result<()> {
     let mut circles = place_circles(&enclosing_circle);
     grow_circles(&mut circles);
 
-    let rect = Rectangle::new(sketch.centroid(), 100., 100.);
+    let rect = Rect::new(sketch.centroid(), 100., 100.);
 
     let mut layer1 = Layer::new("1").set_style(Style::new("blue", "2px"));
     for c in circles.iter() {

@@ -32,7 +32,7 @@ impl LineString {
 }
 
 #[derive(Clone, PartialEq)]
-pub struct Rectangle {
+pub struct Rect {
     pub xy: Coord,
     pub width: f64,
     pub height: f64,
@@ -40,7 +40,7 @@ pub struct Rectangle {
     stroke_width: String,
 }
 
-impl Rectangle {
+impl Rect {
     pub fn new(xy: Coord, width: f64, height: f64) -> Self {
         Self {
             xy,
@@ -51,14 +51,24 @@ impl Rectangle {
         }
     }
 
+    pub fn with_center(xy: Coord, h: f64, w: f64) -> Rect {
+        let x = xy.x - w / 2.;
+        let y = xy.y - h / 2.;
+        Self::new(coord! { x: x, y: y }, h, w)
+    }
+
+    pub fn square_with_center(xy: Coord, l: f64) -> Rect {
+        Self::with_center(xy, l, l)
+    }
+
     pub fn min_len(&self) -> f64 {
         f64::min(self.width, self.height)
     }
 }
 
-impl Scale<Rectangle> for Rectangle {
-    fn scale(&self, perc: f64) -> Rectangle {
-        Rectangle::new(
+impl Scale<Rect> for Rect {
+    fn scale(&self, perc: f64) -> Rect {
+        Rect::new(
             coord! { x: self.xy.x + self.width * ((1. - perc) / 2.), y: self.xy.y + self.height * ((1. - perc) / 2.) },
             self.width * perc,
             self.height * perc,
@@ -66,7 +76,7 @@ impl Scale<Rectangle> for Rectangle {
     }
 }
 
-impl Sample for Rectangle {
+impl Sample for Rect {
     fn sample_uniform(&self, n: u64) -> Vec<Coord> {
         let mut rng = rand::thread_rng();
         let mut samples = vec![];
@@ -79,7 +89,7 @@ impl Sample for Rectangle {
     }
 }
 
-impl Centroid for Rectangle {
+impl Centroid for Rect {
     fn centroid(&self) -> Coord {
         coord! {
             x: self.xy.x + self.width * 0.5,

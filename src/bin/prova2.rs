@@ -5,6 +5,8 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::LineString;
+use plt::shapes::Rect;
+use plt::shapes::Scale;
 use plt::Layer;
 use plt::Sketch;
 use plt::Style;
@@ -15,10 +17,11 @@ use rand::Rng;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
     let mut layer = Layer::new("1").set_style(Style::new("black", "1px"));
-    let enclosing = sketch.as_rect();
+    let enclosing =
+        Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.80);
     layer.add_rect(&enclosing);
-    let cols: u8 = 60;
-    let rows: u8 = 60;
+    let cols: u8 = 50;
+    let rows: u8 = 50;
     let side: f64 = enclosing.min_len() / cols as f64;
     let mut rng = rand::thread_rng();
     (0..cols).for_each(|c| {
