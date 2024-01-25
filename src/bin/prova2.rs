@@ -4,6 +4,7 @@ use geo::Coord;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
+use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::shapes::Rect;
 use plt::shapes::Scale;
@@ -18,10 +19,10 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
     let mut layer = Group::new().set_style(Style::new("black", "1px"));
     let enclosing =
-        Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.80);
-    layer.add_rect(&enclosing);
-    let cols: u8 = 50;
-    let rows: u8 = 50;
+        Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.95);
+    // layer.add_rect(&enclosing);
+    let cols: u8 = 100;
+    let rows: u8 = 100;
     let side: f64 = enclosing.min_len() / cols as f64;
     let mut rng = rand::thread_rng();
     (0..cols).for_each(|c| {
@@ -44,7 +45,8 @@ fn main() -> Result<()> {
             layer.add_lstr(&LineString::new(points));
         })
     });
-    sketch.add_layer(&layer);
+    let (l1, l2) = layer.split_shape(Circle::new(sketch.centroid(), 160.));
+    sketch.add_layer(&l1);
     render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
     Ok(())
 }

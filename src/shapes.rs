@@ -31,6 +31,22 @@ impl LineString {
     }
 }
 
+impl Centroid for LineString {
+    fn centroid(&self) -> Coord {
+        // TODO: we must prevent division by zero
+        let mut xsum: f64 = 0.;
+        let mut ysum: f64 = 0.;
+        self.points.iter().for_each(|p| {
+            xsum += p.x;
+            ysum += p.y;
+        });
+        coord! {
+            x: xsum / self.points.len() as f64,
+            y: ysum / self.points.len() as f64,
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 pub struct Rect {
     pub xy: Coord,
@@ -73,6 +89,13 @@ impl Scale<Rect> for Rect {
             self.width * perc,
             self.height * perc,
         )
+    }
+}
+
+impl Contains for Rect {
+    fn contains<T: Centroid>(&self, shape: &T) -> bool {
+        (shape.centroid().x > self.xy.x && shape.centroid().x < self.xy.x + self.width)
+            && (shape.centroid().y > self.xy.y && shape.centroid().y < self.xy.y + self.height)
     }
 }
 
@@ -148,6 +171,12 @@ impl Centroid for Circle {
     }
 }
 
+impl Contains for Circle {
+    fn contains<T: Centroid>(&self, shape: &T) -> bool {
+        self.center.euclidean_distance(&shape.centroid()) < self.radius
+    }
+}
+
 pub trait Scale<T> {
     fn scale(&self, perc: f64) -> T;
 }
@@ -158,4 +187,8 @@ pub trait Sample {
 
 pub trait Centroid {
     fn centroid(&self) -> Coord;
+}
+
+pub trait Contains {
+    fn contains<T: Centroid>(&self, coord: &T) -> bool;
 }

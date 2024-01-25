@@ -5,6 +5,7 @@ pub mod shapes;
 use geo::coord;
 use geo::Coord;
 use layout::PageLayout;
+use shapes::Contains;
 use shapes::{Centroid, Rect};
 
 #[derive(Clone)]
@@ -58,6 +59,38 @@ impl Group {
     pub fn set_style(&mut self, style: Style) -> Self {
         self.style = Some(style);
         self.clone()
+    }
+
+    pub fn split_shape<T: Contains>(&self, bbox: T) -> (Group, Group) {
+        let mut inside = Group::default();
+        let mut outside = Group::default();
+        if let Some(style) = &self.style {
+            inside.set_style(style.clone());
+            outside.set_style(style.clone());
+        }
+        self.elements.iter().for_each(|e| {
+            match e {
+                Shape::Circle(_) => {
+                    // TODO
+                    unreachable!();
+                }
+                Shape::Rectangle(s) => {
+                    if bbox.contains(s) {
+                        inside.add_rect(&s.clone());
+                    } else {
+                        outside.add_rect(&s.clone());
+                    }
+                }
+                Shape::LineString(s) => {
+                    if bbox.contains(s) {
+                        inside.add_lstr(&s.clone());
+                    } else {
+                        outside.add_lstr(&s.clone());
+                    }
+                }
+            }
+        });
+        (inside, outside)
     }
 }
 
