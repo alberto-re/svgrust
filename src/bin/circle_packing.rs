@@ -5,7 +5,7 @@ use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::Rect;
 use plt::shapes::Sample;
-use plt::Layer;
+use plt::Group;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
@@ -55,12 +55,12 @@ fn main() -> Result<()> {
 
     let rect = Rect::new(sketch.centroid(), 100., 100.);
 
-    let mut layer1 = Layer::new().set_style(Style::new("blue", "2px"));
+    let mut layer1 = Group::new().set_style(Style::new("blue", "2px"));
     for c in circles.iter() {
         layer1.add_circle(c);
     }
 
-    let mut layer2 = Layer::new().set_style(Style::new("red", "3px"));
+    let mut layer2 = Group::new().set_style(Style::new("red", "3px"));
     layer2.add_rect(&rect);
 
     sketch.add_layer(&layer1);

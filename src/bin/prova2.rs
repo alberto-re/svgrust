@@ -7,7 +7,7 @@ use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::shapes::Rect;
 use plt::shapes::Scale;
-use plt::Layer;
+use plt::Group;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
@@ -16,7 +16,7 @@ use rand::Rng;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
-    let mut layer = Layer::new().set_style(Style::new("black", "1px"));
+    let mut layer = Group::new().set_style(Style::new("black", "1px"));
     let enclosing =
         Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.80);
     layer.add_rect(&enclosing);

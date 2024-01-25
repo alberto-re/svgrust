@@ -30,12 +30,12 @@ impl Style {
 }
 
 #[derive(Clone)]
-pub struct Layer {
+pub struct Group {
     elements: Vec<Shape>,
     style: Option<Style>,
 }
 
-impl Layer {
+impl Group {
     pub fn new() -> Self {
         Self {
             elements: vec![],
@@ -61,7 +61,7 @@ impl Layer {
     }
 }
 
-impl Default for Layer {
+impl Default for Group {
     fn default() -> Self {
         Self::new()
     }
@@ -69,7 +69,7 @@ impl Default for Layer {
 
 pub struct Sketch {
     pub layout: PageLayout,
-    layers: Vec<Layer>,
+    layers: Vec<Group>,
 }
 
 impl Sketch {
@@ -80,7 +80,7 @@ impl Sketch {
         }
     }
 
-    pub fn add_layer(&mut self, layer: &Layer) {
+    pub fn add_layer(&mut self, layer: &Group) {
         self.layers.push(layer.clone());
     }
 
