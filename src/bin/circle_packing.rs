@@ -49,22 +49,22 @@ fn grow_circles(circles: &mut [Circle]) {
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
 
-    let enclosing_circle = Circle::new(sketch.layout.center(), sketch.layout.shortest_side() / 2.5);
+    let enclosing_circle = Circle::new(sketch.centroid(), sketch.as_rect().min_len() / 2.5);
     let mut circles = place_circles(&enclosing_circle);
     grow_circles(&mut circles);
 
-    let rect = Rectangle::new(sketch.layout.center(), 100., 100.);
+    let rect = Rectangle::new(sketch.centroid(), 100., 100.);
 
     let mut layer1 = Layer::new("1").set_style(Style::new("blue", "2px"));
     for c in circles.iter() {
-        layer1.add_circle(c.clone());
+        layer1.add_circle(c);
     }
 
     let mut layer2 = Layer::new("2").set_style(Style::new("red", "3px"));
-    layer2.add_rect(rect);
+    layer2.add_rect(&rect);
 
-    sketch.add_layer(layer1);
-    sketch.add_layer(layer2);
+    sketch.add_layer(&layer1);
+    sketch.add_layer(&layer2);
 
     render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
     Ok(())

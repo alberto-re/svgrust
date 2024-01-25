@@ -50,6 +50,10 @@ impl Rectangle {
             stroke_width: "".to_string(),
         }
     }
+
+    pub fn min_len(&self) -> f64 {
+        f64::min(self.width, self.height)
+    }
 }
 
 impl Scale<Rectangle> for Rectangle {
@@ -72,6 +76,15 @@ impl Sample for Rectangle {
             samples.push(coord! { x: x, y: y});
         });
         samples
+    }
+}
+
+impl Centroid for Rectangle {
+    fn centroid(&self) -> Coord {
+        coord! {
+            x: self.xy.x + self.width * 0.5,
+            y: self.xy.y + self.height * 0.5,
+        }
     }
 }
 
@@ -119,10 +132,20 @@ impl Sample for Circle {
     }
 }
 
+impl Centroid for Circle {
+    fn centroid(&self) -> Coord {
+        self.center
+    }
+}
+
 pub trait Scale<T> {
     fn scale(&self, perc: f64) -> T;
 }
 
 pub trait Sample {
     fn sample_uniform(&self, n: u64) -> Vec<Coord>;
+}
+
+pub trait Centroid {
+    fn centroid(&self) -> Coord;
 }

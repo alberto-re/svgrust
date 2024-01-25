@@ -3,8 +3,9 @@ pub mod render;
 pub mod shapes;
 
 use geo::coord;
+use geo::Coord;
 use layout::PageLayout;
-use shapes::Rectangle;
+use shapes::{Centroid, Rectangle};
 
 #[derive(Clone)]
 pub enum Shape {
@@ -44,16 +45,16 @@ impl Layer {
         }
     }
 
-    pub fn add_circle(&mut self, circle: shapes::Circle) {
-        self.elements.push(Shape::Circle(circle));
+    pub fn add_circle(&mut self, circle: &shapes::Circle) {
+        self.elements.push(Shape::Circle(circle.clone()));
     }
 
-    pub fn add_rect(&mut self, rect: shapes::Rectangle) {
-        self.elements.push(Shape::Rectangle(rect));
+    pub fn add_rect(&mut self, rect: &shapes::Rectangle) {
+        self.elements.push(Shape::Rectangle(rect.clone()));
     }
 
-    pub fn add_linestr(&mut self, linestr: shapes::LineString) {
-        self.elements.push(Shape::LineString(linestr));
+    pub fn add_lstr(&mut self, linestr: &shapes::LineString) {
+        self.elements.push(Shape::LineString(linestr.clone()));
     }
 
     pub fn set_style(&mut self, style: Style) -> Self {
@@ -75,8 +76,8 @@ impl Sketch {
         }
     }
 
-    pub fn add_layer(&mut self, layer: Layer) {
-        self.layers.push(layer);
+    pub fn add_layer(&mut self, layer: &Layer) {
+        self.layers.push(layer.clone());
     }
 
     pub fn as_rect(&self) -> Rectangle {
@@ -85,5 +86,9 @@ impl Sketch {
             self.layout.width,
             self.layout.height,
         )
+    }
+
+    pub fn centroid(&self) -> Coord {
+        self.as_rect().centroid()
     }
 }

@@ -17,8 +17,8 @@ fn main() -> Result<()> {
         (300., 300.),
         (320., 320.),
     ]);
-    layer.add_linestr(linestr);
-    sketch.add_layer(layer);
+    layer.add_lstr(&linestr);
+    sketch.add_layer(&layer);
     render_svg(&sketch, "/Users/are/Desktop/linestring.svg")?;
     Ok(())
 }
