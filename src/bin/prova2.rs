@@ -9,6 +9,7 @@ use plt::shapes::LineString;
 use plt::shapes::Rect;
 use plt::shapes::Scale;
 use plt::Group;
+use plt::Shape;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
@@ -19,10 +20,9 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
     let mut layer = Group::new().set_style(Style::new("black", "1px"));
     let enclosing =
-        Rect::square_with_center(sketch.centroid(), sketch.as_rect().min_len()).scale(0.95);
-    // layer.add_rect(&enclosing);
-    let cols: u8 = 100;
-    let rows: u8 = 100;
+        Rect::square_with_center(sketch.centroid(), sketch.as_rect().scale(0.99).min_len());
+    let cols: u8 = 70;
+    let rows: u8 = 70;
     let side: f64 = enclosing.min_len() / cols as f64;
     let mut rng = rand::thread_rng();
     (0..cols).for_each(|c| {
@@ -45,8 +45,29 @@ fn main() -> Result<()> {
             layer.add_lstr(&LineString::new(points));
         })
     });
-    let (l1, l2) = layer.split_shape(Circle::new(sketch.centroid(), 160.));
-    sketch.add_layer(&l1);
+    let (mut l1, mut l2) = layer.split_shape(Circle::new(
+        sketch.centroid(),
+        enclosing.scale(0.75).min_len() / 2.,
+    ));
+    let l0 = Group::new().set_style(Style::new("black", "1px"));
+    // l0.add_rect(&enclosing);
+    sketch.add_group(&l0);
+    l1.set_style(Style::new("black", "1px"));
+    sketch.add_group(&l1);
+
+    let (mut l3, l4) = l2.split_shape(Circle::new(
+        sketch.centroid(),
+        enclosing.scale(0.98).min_len() / 2.,
+    ));
+    l3.set_style(Style::new("red", "1px"));
+
+    l3.elements = l3
+        .elements
+        .iter()
+        .filter(|e| rng.gen::<f64>() < 0.25)
+        .map(|e| e.clone())
+        .collect::<Vec<Shape>>();
+    sketch.add_group(&l3);
     render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
     Ok(())
 }

@@ -19,7 +19,7 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
         doc = doc.set("style", style.to_owned());
     }
 
-    for (id, l) in sketch.layers.iter().enumerate() {
+    for (id, l) in sketch.groups.iter().enumerate() {
         let mut group = svg::node::element::Group::new();
         group = group.set("fill", "none");
         group = group.set("id", (id + 1).to_string());

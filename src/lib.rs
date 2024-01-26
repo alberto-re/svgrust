@@ -32,7 +32,7 @@ impl Style {
 
 #[derive(Clone)]
 pub struct Group {
-    elements: Vec<Shape>,
+    pub elements: Vec<Shape>,
     style: Option<Style>,
 }
 
@@ -102,19 +102,19 @@ impl Default for Group {
 
 pub struct Sketch {
     pub layout: PageLayout,
-    layers: Vec<Group>,
+    groups: Vec<Group>,
 }
 
 impl Sketch {
     pub fn new(layout: PageLayout) -> Self {
         Self {
             layout,
-            layers: vec![],
+            groups: vec![],
         }
     }
 
-    pub fn add_layer(&mut self, layer: &Group) {
-        self.layers.push(layer.clone());
+    pub fn add_group(&mut self, layer: &Group) {
+        self.groups.push(layer.clone());
     }
 
     pub fn as_rect(&self) -> Rect {

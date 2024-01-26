@@ -63,8 +63,8 @@ fn main() -> Result<()> {
     let mut layer2 = Group::new().set_style(Style::new("red", "3px"));
     layer2.add_rect(&rect);
 
-    sketch.add_layer(&layer1);
-    sketch.add_layer(&layer2);
+    sketch.add_group(&layer1);
+    sketch.add_group(&layer2);
 
     render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
     Ok(())
