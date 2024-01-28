@@ -55,16 +55,16 @@ fn main() -> Result<()> {
 
     let rect = Rect::new(sketch.centroid(), 100., 100.);
 
-    let mut layer1 = Group::new().set_style(Style::new("blue", "2px"));
+    let mut layer1 = Group::new();
     for c in circles.iter() {
         layer1.add_circle(c);
     }
 
-    let mut layer2 = Group::new().set_style(Style::new("red", "3px"));
+    let mut layer2 = Group::new();
     layer2.add_rect(&rect);
 
-    sketch.add_group(&layer1);
-    sketch.add_group(&layer2);
+    sketch.add_group(&layer1, &Style::new("black", "1px"));
+    sketch.add_group(&layer2, &Style::new("black", "1px"));
 
     render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
     Ok(())

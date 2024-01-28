@@ -33,15 +33,11 @@ impl Style {
 #[derive(Clone)]
 pub struct Group {
     pub elements: Vec<Shape>,
-    style: Option<Style>,
 }
 
 impl Group {
     pub fn new() -> Self {
-        Self {
-            elements: vec![],
-            style: None,
-        }
+        Self { elements: vec![] }
     }
 
     pub fn add_circle(&mut self, circle: &shapes::Circle) {
@@ -56,37 +52,25 @@ impl Group {
         self.elements.push(Shape::LineString(linestr.clone()));
     }
 
-    pub fn set_style(&mut self, style: Style) -> Self {
-        self.style = Some(style);
-        self.clone()
-    }
-
     pub fn split_shape<T: Contains>(&self, bbox: T) -> (Group, Group) {
         let mut inside = Group::default();
         let mut outside = Group::default();
-        if let Some(style) = &self.style {
-            inside.set_style(style.clone());
-            outside.set_style(style.clone());
-        }
-        self.elements.iter().for_each(|e| {
-            match e {
-                Shape::Circle(_) => {
-                    // TODO
-                    unreachable!();
+        self.elements.iter().for_each(|e| match e {
+            Shape::Circle(_) => {
+                unreachable!();
+            }
+            Shape::Rectangle(s) => {
+                if bbox.contains(s) {
+                    inside.add_rect(&s.clone());
+                } else {
+                    outside.add_rect(&s.clone());
                 }
-                Shape::Rectangle(s) => {
-                    if bbox.contains(s) {
-                        inside.add_rect(&s.clone());
-                    } else {
-                        outside.add_rect(&s.clone());
-                    }
-                }
-                Shape::LineString(s) => {
-                    if bbox.contains(s) {
-                        inside.add_lstr(&s.clone());
-                    } else {
-                        outside.add_lstr(&s.clone());
-                    }
+            }
+            Shape::LineString(s) => {
+                if bbox.contains(s) {
+                    inside.add_lstr(&s.clone());
+                } else {
+                    outside.add_lstr(&s.clone());
                 }
             }
         });
@@ -102,7 +86,7 @@ impl Default for Group {
 
 pub struct Sketch {
     pub layout: PageLayout,
-    groups: Vec<Group>,
+    groups: Vec<(Group, Style)>,
 }
 
 impl Sketch {
@@ -113,8 +97,8 @@ impl Sketch {
         }
     }
 
-    pub fn add_group(&mut self, layer: &Group) {
-        self.groups.push(layer.clone());
+    pub fn add_group(&mut self, layer: &Group, style: &Style) {
+        self.groups.push((layer.clone(), style.clone()));
     }
 
     pub fn as_rect(&self) -> Rect {

@@ -9,7 +9,7 @@ use plt::Style;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
-    let mut layer = Group::new().set_style(Style::new("black", "10px"));
+    let mut layer = Group::new();
     let linestr = LineString::from_tuples(vec![
         (50., 55.),
         (150., 155.),
@@ -18,7 +18,7 @@ fn main() -> Result<()> {
         (320., 320.),
     ]);
     layer.add_lstr(&linestr);
-    sketch.add_group(&layer);
+    sketch.add_group(&layer, &Style::new("black", "1px"));
     render_svg(&sketch, "/Users/are/Desktop/linestring.svg")?;
     Ok(())
 }

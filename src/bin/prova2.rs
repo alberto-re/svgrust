@@ -20,7 +20,7 @@ use rand::Rng;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
-    let mut layer = Group::new().set_style(Style::new("black", "1px"));
+    let mut layer = Group::new();
     let enclosing =
         Rect::square_with_center(sketch.centroid(), sketch.as_rect().scale(0.99).min_len());
     let cols: u8 = 60;
@@ -51,14 +51,14 @@ fn main() -> Result<()> {
         sketch.centroid(),
         enclosing.scale(0.96).min_len() / 2.,
     ));
-    let mut l2 = Group::new().set_style(Style::new("black", "1.5px"));
-    let mut l3 = Group::new().set_style(Style::new("orange", "1.5px"));
-    let mut l4 = Group::new().set_style(Style::new("red", "1.5px"));
+    let mut l2 = Group::new();
+    let mut l3 = Group::new();
+    let mut l4 = Group::new();
 
     let perlin = Perlin::new(19);
 
-    l1.elements.iter().for_each(|e| match e {
-        Shape::LineString(s) => {
+    l1.elements.iter().for_each(|e| {
+        if let Shape::LineString(s) = e {
             let val = perlin.get([s.centroid().x * 0.005, s.centroid().y * 0.015]);
             if val < 0.33 {
                 l2.elements.push(e.clone());
@@ -66,13 +66,12 @@ fn main() -> Result<()> {
                 l3.elements.push(e.clone());
             } else {
                 l4.elements.push(e.clone());
-            };
+            }
         }
-        _ => (),
     });
-    sketch.add_group(&l2);
-    sketch.add_group(&l3);
-    sketch.add_group(&l4);
+    sketch.add_group(&l2, &Style::new("blue", "1.5px"));
+    sketch.add_group(&l3, &Style::new("orange", "1.5px"));
+    sketch.add_group(&l4, &Style::new("purple", "1.5px"));
     render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
     Ok(())
 }

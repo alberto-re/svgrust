@@ -19,14 +19,12 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
         doc = doc.set("style", style.to_owned());
     }
 
-    for (id, l) in sketch.groups.iter().enumerate() {
+    for (id, (l, s)) in sketch.groups.iter().enumerate() {
         let mut group = svg::node::element::Group::new();
         group = group.set("fill", "none");
         group = group.set("id", (id + 1).to_string());
-        if let Some(s) = &l.style {
-            group = group.set("stroke", s.stroke.clone());
-            group = group.set("stroke-width", s.stroke_width.clone());
-        }
+        group = group.set("stroke", s.stroke.clone());
+        group = group.set("stroke-width", s.stroke_width.clone());
         for e in l.elements.iter() {
             match e {
                 Shape::Circle(s) => {
