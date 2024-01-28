@@ -1,9 +1,11 @@
 use anyhow::Result;
 use geo::coord;
 use geo::Coord;
+use noise::{NoiseFn, Perlin};
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
+use plt::shapes::Centroid;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::shapes::Rect;
@@ -21,8 +23,8 @@ fn main() -> Result<()> {
     let mut layer = Group::new().set_style(Style::new("black", "1px"));
     let enclosing =
         Rect::square_with_center(sketch.centroid(), sketch.as_rect().scale(0.99).min_len());
-    let cols: u8 = 70;
-    let rows: u8 = 70;
+    let cols: u8 = 60;
+    let rows: u8 = 60;
     let side: f64 = enclosing.min_len() / cols as f64;
     let mut rng = rand::thread_rng();
     (0..cols).for_each(|c| {
@@ -45,29 +47,32 @@ fn main() -> Result<()> {
             layer.add_lstr(&LineString::new(points));
         })
     });
-    let (mut l1, mut l2) = layer.split_shape(Circle::new(
+    let (l1, _) = layer.split_shape(Circle::new(
         sketch.centroid(),
-        enclosing.scale(0.75).min_len() / 2.,
+        enclosing.scale(0.96).min_len() / 2.,
     ));
-    let l0 = Group::new().set_style(Style::new("black", "1px"));
-    // l0.add_rect(&enclosing);
-    sketch.add_group(&l0);
-    l1.set_style(Style::new("black", "1px"));
-    sketch.add_group(&l1);
+    let mut l2 = Group::new().set_style(Style::new("black", "1.5px"));
+    let mut l3 = Group::new().set_style(Style::new("orange", "1.5px"));
+    let mut l4 = Group::new().set_style(Style::new("red", "1.5px"));
 
-    let (mut l3, l4) = l2.split_shape(Circle::new(
-        sketch.centroid(),
-        enclosing.scale(0.98).min_len() / 2.,
-    ));
-    l3.set_style(Style::new("red", "1px"));
+    let perlin = Perlin::new(19);
 
-    l3.elements = l3
-        .elements
-        .iter()
-        .filter(|e| rng.gen::<f64>() < 0.25)
-        .map(|e| e.clone())
-        .collect::<Vec<Shape>>();
+    l1.elements.iter().for_each(|e| match e {
+        Shape::LineString(s) => {
+            let val = perlin.get([s.centroid().x * 0.005, s.centroid().y * 0.015]);
+            if val < 0.33 {
+                l2.elements.push(e.clone());
+            } else if rng.gen::<f64>() < 0.66 {
+                l3.elements.push(e.clone());
+            } else {
+                l4.elements.push(e.clone());
+            };
+        }
+        _ => (),
+    });
+    sketch.add_group(&l2);
     sketch.add_group(&l3);
+    sketch.add_group(&l4);
     render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
     Ok(())
 }
