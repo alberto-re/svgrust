@@ -23,14 +23,12 @@ fn main() -> Result<()> {
     let mut layer = Group::new();
     let enclosing =
         Rect::square_with_center(sketch.centroid(), sketch.as_rect().scale(0.99).min_len());
-    let cols: u8 = 60;
-    let rows: u8 = 60;
-    let side: f64 = enclosing.min_len() / cols as f64;
+    let cells: u8 = 60;
+    let side: f64 = enclosing.min_len() / cells as f64;
     let mut rng = rand::thread_rng();
-    (0..cols).for_each(|c| {
-        (0..rows).for_each(|r| {
+    (0..cells).for_each(|c| {
+        (0..cells).for_each(|r| {
             let mut points: Vec<Coord> = vec![];
-
             if rng.gen::<f64>() < 0.5 {
                 points.push(coord! { x: c as f64 * side, y: r as f64 * side });
                 points.push(coord! { x: c as f64 * side + side, y: r as f64 * side + side });
@@ -38,13 +36,7 @@ fn main() -> Result<()> {
                 points.push(coord! { x: c as f64 * side + side, y: r as f64 * side });
                 points.push(coord! { x: c as f64 * side, y: r as f64 * side + side });
             }
-
-            points.iter_mut().for_each(|p| {
-                p.x += enclosing.xy.x;
-                p.y += enclosing.xy.y;
-            });
-
-            layer.add_lstr(&LineString::new(points));
+            layer.add_lstr(&LineString::new(points).add_vec(enclosing.xy));
         })
     });
     let (l1, _) = layer.split_shape(Circle::new(

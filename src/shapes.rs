@@ -29,6 +29,14 @@ impl LineString {
                 .collect::<Vec<Coord>>(),
         )
     }
+
+    pub fn add_vec(&mut self, vec: Coord) -> Self {
+        self.points.iter_mut().for_each(|p| {
+            p.x += vec.x;
+            p.y += vec.y;
+        });
+        self.clone()
+    }
 }
 
 impl Centroid for LineString {
