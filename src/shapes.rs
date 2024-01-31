@@ -88,6 +88,18 @@ impl Rect {
     pub fn min_len(&self) -> f64 {
         f64::min(self.width, self.height)
     }
+
+    pub fn grid(&self, rows: u64, cols: u64) -> Vec<Rect> {
+        let w = self.width / cols as f64;
+        let h = self.height / rows as f64;
+        let mut cells = vec![];
+        (0..rows).for_each(|r| {
+            (0..cols).for_each(|c| {
+                cells.push(Rect::new(coord! {x: c as f64 * w, y: r as f64 * h}, w, h));
+            });
+        });
+        cells
+    }
 }
 
 impl Scale<Rect> for Rect {
@@ -182,6 +194,12 @@ impl Centroid for Circle {
 impl Contains for Circle {
     fn contains<T: Centroid>(&self, shape: &T) -> bool {
         self.center.euclidean_distance(&shape.centroid()) < self.radius
+    }
+}
+
+impl Scale<Circle> for Circle {
+    fn scale(&self, perc: f64) -> Circle {
+        Circle::new(self.center, self.radius * perc)
     }
 }
 

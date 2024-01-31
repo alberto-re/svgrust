@@ -52,7 +52,7 @@ impl Group {
         self.elements.push(Shape::LineString(linestr.clone()));
     }
 
-    pub fn split_shape<T: Contains>(&self, bbox: T) -> (Group, Group) {
+    pub fn split_shape<T: Contains>(&self, bbox: &T) -> (Group, Group) {
         let mut inside = Group::default();
         let mut outside = Group::default();
         self.elements.iter().for_each(|e| match e {
