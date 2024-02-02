@@ -23,6 +23,6 @@ fn main() -> Result<()> {
         layer.add_circle(&Circle::new(*xy, 3.));
     });
     sketch.add_group(&layer, &Style::new("black", "1px"));
-    render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
+    render_svg(&sketch, "./samples/prova.svg")?;
     Ok(())
 }

@@ -26,6 +26,6 @@ fn main() -> Result<()> {
     });
 
     sketch.add_group(&group, &Style::new("black", "1px"));
-    render_svg(&sketch, "/Users/are/Desktop/noise_waves_1.svg")?;
+    render_svg(&sketch, "./samples/noise_waves_1.svg")?;
     Ok(())
 }

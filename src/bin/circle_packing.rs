@@ -66,6 +66,6 @@ fn main() -> Result<()> {
     sketch.add_group(&layer1, &Style::new("black", "1px"));
     sketch.add_group(&layer2, &Style::new("black", "1px"));
 
-    render_svg(&sketch, "/Users/are/Desktop/shapes.svg")?;
+    render_svg(&sketch, "./samples/shapes.svg")?;
     Ok(())
 }

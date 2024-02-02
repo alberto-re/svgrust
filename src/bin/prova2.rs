@@ -81,6 +81,6 @@ fn main() -> Result<()> {
     // sketch.add_group(&outer, &Style::new("red", "1.0px"));
     sketch.add_group(&inner1, &Style::new("black", "1.0px"));
 
-    render_svg(&sketch, "/Users/are/Desktop/prova.svg")?;
+    render_svg(&sketch, "./samples/prova2.svg")?;
     Ok(())
 }
