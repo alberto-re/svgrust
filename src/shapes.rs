@@ -94,6 +94,18 @@ impl Rect {
         });
         cells
     }
+
+    pub fn to_linestr(&self) -> LineStr {
+        LineStr {
+            points: vec![
+                self.xy,
+                coord! {x: self.xy.x + self.width, y: self.xy.y},
+                coord! {x: self.xy.x + self.width, y: self.xy.y + self.height},
+                coord! {x: self.xy.x, y: self.xy.y + self.height},
+                self.xy,
+            ],
+        }
+    }
 }
 
 impl Scale<Rect> for Rect {
@@ -131,19 +143,6 @@ impl Centroid for Rect {
         coord! {
             x: self.xy.x + self.width * 0.5,
             y: self.xy.y + self.height * 0.5,
-        }
-    }
-}
-
-impl ToLineStr for Rect {
-    fn to_linestr(&self) -> LineStr {
-        LineStr {
-            points: vec![
-                self.xy,
-                coord! {x: self.xy.x + self.width, y: self.xy.y},
-                coord! {x: self.xy.x + self.width, y: self.xy.y + self.height},
-                coord! {x: self.xy.x, y: self.xy.y + self.height},
-            ],
         }
     }
 }
@@ -224,8 +223,4 @@ pub trait Centroid {
 
 pub trait Contains {
     fn contains<T: Centroid>(&self, coord: &T) -> bool;
-}
-
-pub trait ToLineStr {
-    fn to_linestr(&self) -> LineStr;
 }
