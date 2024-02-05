@@ -1,8 +1,12 @@
 use std::f64::consts::TAU;
 
+use geo::algorithm::bool_ops::BooleanOps;
 use geo::coord;
 use geo::Coord;
 use geo::EuclideanDistance;
+use geo::MultiLineString;
+use geo::MultiPolygon;
+use geo::Polygon;
 use rand::Rng;
 
 #[derive(Clone, PartialEq)]
@@ -30,6 +34,24 @@ impl LineStr {
             p.y += vec.y;
         });
         self.clone()
+    }
+
+    pub fn clip(&self, other: &LineStr) -> Vec<LineStr> {
+        let ls = geo::LineString(self.points.clone());
+        let mls = MultiLineString::new(vec![ls]);
+        let poly_lstr = geo::LineString::new(other.points.clone());
+        let poly = Polygon::new(poly_lstr, vec![]);
+        let mpoly = MultiPolygon::new(vec![poly]);
+        let clipped = mpoly.clip(&mls, false);
+        let mut res = vec![];
+        clipped.0.iter().for_each(|l| {
+            let mut points: Vec<Coord> = vec![];
+            l.clone().into_points().iter().for_each(|p| {
+                points.push(p.0);
+            });
+            res.push(LineStr::new(points));
+        });
+        res
     }
 }
 

@@ -38,6 +38,10 @@ fn main() -> Result<()> {
         });
         let lstr = LineStr::new(points);
         group.add_lstr(&lstr);
+        // let lstrs = lstr.clip(&sketch.as_rect().scale(0.98).to_linestr());
+        // lstrs.iter().for_each(|l| {
+        //     group.add_lstr(&l);
+        // });
     });
     sketch.add_group(&group, &Style::new("black", "2.5px"));
 
