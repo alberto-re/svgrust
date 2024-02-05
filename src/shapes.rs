@@ -6,19 +6,13 @@ use geo::EuclideanDistance;
 use rand::Rng;
 
 #[derive(Clone, PartialEq)]
-pub struct LineString {
+pub struct LineStr {
     pub points: Vec<Coord>,
-    stroke: String,
-    stroke_width: String,
 }
 
-impl LineString {
+impl LineStr {
     pub fn new(points: Vec<Coord>) -> Self {
-        Self {
-            points,
-            stroke: "black".to_string(),
-            stroke_width: "".to_string(),
-        }
+        Self { points }
     }
 
     pub fn from_tuples(points: Vec<(f64, f64)>) -> Self {
@@ -39,7 +33,7 @@ impl LineString {
     }
 }
 
-impl Centroid for LineString {
+impl Centroid for LineStr {
     fn centroid(&self) -> Coord {
         // TODO: we must prevent division by zero
         let mut xsum: f64 = 0.;
@@ -141,6 +135,19 @@ impl Centroid for Rect {
     }
 }
 
+impl ToLineStr for Rect {
+    fn to_linestr(&self) -> LineStr {
+        LineStr {
+            points: vec![
+                self.xy,
+                coord! {x: self.xy.x + self.width, y: self.xy.y},
+                coord! {x: self.xy.x + self.width, y: self.xy.y + self.height},
+                coord! {x: self.xy.x, y: self.xy.y + self.height},
+            ],
+        }
+    }
+}
+
 #[derive(Clone, PartialEq)]
 pub struct Circle {
     pub center: Coord,
@@ -217,4 +224,8 @@ pub trait Centroid {
 
 pub trait Contains {
     fn contains<T: Centroid>(&self, coord: &T) -> bool;
+}
+
+pub trait ToLineStr {
+    fn to_linestr(&self) -> LineStr;
 }

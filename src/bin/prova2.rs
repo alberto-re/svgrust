@@ -8,7 +8,7 @@ use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Centroid;
 use plt::shapes::Circle;
-use plt::shapes::LineString;
+use plt::shapes::LineStr;
 use plt::shapes::Scale;
 use plt::Group;
 use plt::Shape;
@@ -40,7 +40,7 @@ fn main() -> Result<()> {
             points.push(coord! { x: c.xy.x + c.width, y: c.xy.y });
             points.push(coord! { x: c.xy.x, y: c.xy.y + c.height });
         }
-        layer.add_lstr(&LineString::new(points).add_vec(enclosing.xy));
+        layer.add_lstr(&LineStr::new(points).add_vec(enclosing.xy));
     });
 
     let circle = Circle::new(sketch.centroid(), enclosing.scale(0.98).min_len() / 2.);
@@ -62,8 +62,6 @@ fn main() -> Result<()> {
         }
     });
 
-    // inner1.add_circle(&circle);
-    // inner1.add_circle(&circle.scale(0.995));
     inner1.add_circle(&circle.scale(0.990));
     inner1.add_circle(&circle.scale(0.985));
     inner1.add_circle(&circle.scale(0.980));
@@ -78,8 +76,7 @@ fn main() -> Result<()> {
             outer.add_lstr(&s.clone().add_vec(coord! {x: 1., y: 1.}));
         }
     });
-    // sketch.add_group(&outer, &Style::new("red", "1.0px"));
-    sketch.add_group(&inner1, &Style::new("black", "1.0px"));
+    sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 
     render_svg(&sketch, "./samples/prova2.svg")?;
     Ok(())

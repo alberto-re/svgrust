@@ -12,7 +12,7 @@ use shapes::{Centroid, Rect};
 pub enum Shape {
     Circle(shapes::Circle),
     Rectangle(shapes::Rect),
-    LineString(shapes::LineString),
+    LineString(shapes::LineStr),
 }
 
 #[derive(Clone)]
@@ -48,7 +48,7 @@ impl Group {
         self.elements.push(Shape::Rectangle(rect.clone()));
     }
 
-    pub fn add_lstr(&mut self, linestr: &shapes::LineString) {
+    pub fn add_lstr(&mut self, linestr: &shapes::LineStr) {
         self.elements.push(Shape::LineString(linestr.clone()));
     }
 

@@ -5,7 +5,7 @@ use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
-use plt::shapes::LineString;
+use plt::shapes::LineStr;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
@@ -36,7 +36,7 @@ fn main() -> Result<()> {
             let val = val * 12;
             points.push(coord! { x: x, y: y + val as f64 });
         });
-        let lstr = LineString::new(points);
+        let lstr = LineStr::new(points);
         group.add_lstr(&lstr);
     });
     sketch.add_group(&group, &Style::new("black", "2.5px"));
