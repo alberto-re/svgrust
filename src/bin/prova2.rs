@@ -25,7 +25,7 @@ use rand::SeedableRng;
 // - repetition is good, but a bit of unexpected makes the plot more interesting to the eye
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
     let mut layer = Group::new();
     let enclosing = sketch.as_rect();
 

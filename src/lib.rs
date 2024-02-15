@@ -90,9 +90,9 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn new(layout: PageLayout) -> Self {
+    pub fn new(layout: &PageLayout) -> Self {
         Self {
-            layout,
+            layout: layout.clone(),
             groups: vec![],
         }
     }

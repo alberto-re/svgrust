@@ -47,7 +47,7 @@ fn grow_circles(circles: &mut [Circle]) {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
 
     let enclosing_circle = Circle::new(sketch.centroid(), sketch.as_rect().min_len() / 2.5);
     let mut circles = place_circles(&enclosing_circle);

@@ -12,7 +12,7 @@ use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
     let perlin = Perlin::new(29);
 
     let dx: isize = 35;
@@ -45,8 +45,8 @@ fn main() -> Result<()> {
     let mut lstrs2: Vec<LineStr> = vec![];
     for i in 1..lstrs.len() - 1 {
         let mut segments: Vec<LineStr> = vec![lstrs[i].clone()];
-        for j in i + 1..lstrs.len() - 1 {
-            let mut points: Vec<Coord> = lstrs[j].points.clone();
+        for other in lstrs.iter().take(lstrs.len() - 1).skip(i + 1) {
+            let mut points: Vec<Coord> = other.points.clone();
             let first = points[0];
             let last = points[points.len() - 1];
             points.insert(0, coord! { x: first.x, y: -1000.});
@@ -54,7 +54,7 @@ fn main() -> Result<()> {
             let other: LineStr = LineStr::new(points);
             let mut newsegments: Vec<LineStr> = vec![];
             segments.iter().for_each(|s| {
-                let subs = s.clip(&other);
+                let subs = s.clip(&other, false);
                 subs.iter().for_each(|subseg| {
                     newsegments.push(subseg.clone());
                 });
@@ -67,11 +67,11 @@ fn main() -> Result<()> {
 
     let mut lstrs3: Vec<LineStr> = vec![];
     lstrs2.iter().for_each(|l| {
-        let s = l.clip(&sketch.as_rect().to_linestr());
+        let s = l.clip(&sketch.as_rect().to_linestr(), false);
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
-    lstrs3.iter().for_each(|l| group.add_lstr(&l));
+    lstrs3.iter().for_each(|l| group.add_lstr(l));
 
     sketch.add_group(&group, &Style::new("black", "2.5px"));
 

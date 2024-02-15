@@ -3,17 +3,20 @@
 // - https://inkscape.org/forums/beyond/resolution-change/
 const DPI: f64 = 96.0;
 
+#[derive(Clone)]
 pub enum Uom {
     In,
     Mm,
     Px,
 }
 
+#[derive(Clone)]
 pub enum Orientation {
     Landscape,
     Portrait,
 }
 
+#[derive(Clone)]
 pub struct PageLayout {
     pub width: f64,
     pub height: f64,
@@ -41,8 +44,8 @@ impl PageLayout {
         Self::new(6.0 * DPI, 4.0 * DPI, Uom::In, orientation)
     }
 
-    pub fn set_style(&mut self, style: String) -> &Self {
-        self.style = Some(style);
+    pub fn set_style(&mut self, style: &str) -> &Self {
+        self.style = Some(style.to_string());
         self
     }
 }

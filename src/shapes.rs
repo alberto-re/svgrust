@@ -36,13 +36,13 @@ impl LineStr {
         self.clone()
     }
 
-    pub fn clip(&self, other: &LineStr) -> Vec<LineStr> {
+    pub fn clip(&self, other: &LineStr, invert: bool) -> Vec<LineStr> {
         let ls = geo::LineString(self.points.clone());
         let mls = MultiLineString::new(vec![ls]);
         let poly_lstr = geo::LineString::new(other.points.clone());
         let poly = Polygon::new(poly_lstr, vec![]);
         let mpoly = MultiPolygon::new(vec![poly]);
-        let clipped = mpoly.clip(&mls, false);
+        let clipped = mpoly.clip(&mls, invert);
         let mut res = vec![];
         clipped.0.iter().for_each(|l| {
             let mut points: Vec<Coord> = vec![];
@@ -53,25 +53,6 @@ impl LineStr {
         });
         res
     }
-
-    pub fn diff(&self, other: &LineStr) -> Vec<LineStr> {
-        let ls = geo::LineString(self.points.clone());
-        let mls = MultiLineString::new(vec![ls]);
-        let poly_lstr = geo::LineString::new(other.points.clone());
-        let poly = Polygon::new(poly_lstr, vec![]);
-        let mpoly = MultiPolygon::new(vec![poly]);
-        let clipped = mpoly.clip(&mls, true);
-        let mut res = vec![];
-        clipped.0.iter().for_each(|l| {
-            let mut points: Vec<Coord> = vec![];
-            l.clone().into_points().iter().for_each(|p| {
-                points.push(p.0);
-            });
-            res.push(LineStr::new(points));
-        });
-        res
-    }
-
 }
 
 impl Centroid for LineStr {
@@ -216,8 +197,7 @@ impl Circle {
         )
     }
 
-    pub fn to_linestr(&self) -> LineStr {
-        let points = 100;
+    pub fn to_linestr(&self, points: usize) -> LineStr {
         let mut pvec = vec![];
         for i in 0..points {
             let angle = TAU / points as f64 * i as f64;
@@ -225,7 +205,7 @@ impl Circle {
             let y = angle.sin() * self.radius + self.centroid().y;
             pvec.push(coord! {x: x, y: y});
         }
-        pvec.push(pvec.first().unwrap().clone());
+        pvec.push(*pvec.first().unwrap());
 
         LineStr { points: pvec }
     }

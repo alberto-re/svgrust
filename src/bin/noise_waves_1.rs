@@ -14,7 +14,7 @@ use rand::Rng;
 use rand::SeedableRng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
     let perlin = Perlin::new(5);
     let mut rng = StdRng::seed_from_u64(42);
 
