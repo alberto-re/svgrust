@@ -1,8 +1,10 @@
 use std::f64::consts::TAU;
 
 use geo::algorithm::bool_ops::BooleanOps;
+use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
 use geo::Coord;
+use geo::CoordsIter;
 use geo::EuclideanDistance;
 use geo::MultiLineString;
 use geo::MultiPolygon;
@@ -71,6 +73,80 @@ impl Centroid for LineStr {
     }
 }
 
+impl Upsample for LineStr {
+    fn upsample(&self, factor: u64) -> Self {
+        // TODO: add wrap bool argument like Chaikin
+        let mut points = self.points.clone();
+        (0..factor).for_each(|_| {
+            let mut upsampled = vec![];
+            for i in 1..points.len() {
+                upsampled.push(points[i - 1]);
+                let middle_point = coord! {
+                    x: (points[i-1].x + points[i].x) * 0.5,
+                    y: (points[i-1].y + points[i].y) * 0.5,
+                };
+                upsampled.push(middle_point);
+            }
+            upsampled.push(coord! {
+                x: (points[0].x + points[points.len()-1].x) * 0.5,
+                y: (points[0].y + points[points.len()-1].y) * 0.5,
+            });
+            points = upsampled.clone();
+        });
+        LineStr::new(points)
+    }
+}
+
+impl Chaikin for LineStr {
+    fn chaikin(&self, iterations: u64, closed: bool) -> Self {
+        let mut points = self.points.clone();
+        (0..iterations).for_each(|_| {
+            let mut smoothed = vec![];
+            for i in 1..points.len() {
+                smoothed.push(coord! {
+                    x: points[i - 1].x * 0.75 + points[i].x * 0.25,
+                    y: points[i - 1].y * 0.75 + points[i].y * 0.25,
+                });
+                smoothed.push(coord! {
+                    x: points[i - 1].x * 0.25 + points[i].x * 0.75,
+                    y: points[i - 1].y * 0.25 + points[i].y * 0.75,
+                });
+            }
+            if closed {
+                smoothed.push(coord! {
+                    x: points[points.len() - 1].x * 0.75 + points[1].x * 0.25,
+                    y: points[points.len() - 1].y * 0.75 + points[1].y * 0.25,
+                });
+                smoothed.push(coord! {
+                    x: points[points.len() -1].x * 0.25 + points[1].x * 0.75,
+                    y: points[points.len() -1].y * 0.25 + points[1].y * 0.75,
+                });
+            }
+            points = smoothed.clone();
+        });
+        LineStr::new(points)
+    }
+}
+
+impl Rotate for LineStr {
+    // TODO: this should be a polygon method.
+    // For simplicity here we assume the linestring is closed
+    // and represents a polygon.
+    // TODO: add direction (clockwise, anti-clockwise) of rotation
+    // TODO: implement from scratch?
+    fn rotate(&self, radians: f64) -> Self {
+        let poly: Polygon = geo::Polygon::new(geo::LineString::new(self.points.clone()), vec![]);
+        let degrees = radians * 180.0 / TAU;
+        let poly = poly.rotate_around_centroid(degrees);
+        LineStr::new(
+            poly.exterior()
+                .points()
+                .map(|p| p.coords_iter().nth(0).unwrap())
+                .collect::<Vec<Coord>>(),
+        )
+    }
+}
+
 #[derive(Clone, PartialEq)]
 pub struct Rect {
     pub xy: Coord,
@@ -117,16 +193,17 @@ impl Rect {
         cells
     }
 
-    pub fn to_linestr(&self) -> LineStr {
-        LineStr {
-            points: vec![
-                self.xy,
-                coord! {x: self.xy.x + self.width, y: self.xy.y},
-                coord! {x: self.xy.x + self.width, y: self.xy.y + self.height},
-                coord! {x: self.xy.x, y: self.xy.y + self.height},
-                self.xy,
-            ],
+    pub fn to_linestr(&self, close: bool) -> LineStr {
+        let mut points = vec![
+            self.xy,
+            coord! {x: self.xy.x + self.width, y: self.xy.y},
+            coord! {x: self.xy.x + self.width, y: self.xy.y + self.height},
+            coord! {x: self.xy.x, y: self.xy.y + self.height},
+        ];
+        if close {
+            points.push(self.xy);
         }
+        LineStr { points }
     }
 }
 
@@ -250,6 +327,18 @@ pub trait Scale<T> {
 
 pub trait Sample {
     fn sample_uniform(&self, n: u64) -> Vec<Coord>;
+}
+
+pub trait Upsample {
+    fn upsample(&self, factor: u64) -> Self;
+}
+
+pub trait Chaikin {
+    fn chaikin(&self, iterations: u64, wrap: bool) -> Self;
+}
+
+pub trait Rotate {
+    fn rotate(&self, radians: f64) -> Self;
 }
 
 pub trait Centroid {

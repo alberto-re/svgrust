@@ -67,7 +67,7 @@ fn main() -> Result<()> {
 
     let mut lstrs3: Vec<LineStr> = vec![];
     lstrs2.iter().for_each(|l| {
-        let s = l.clip(&sketch.as_rect().to_linestr(), false);
+        let s = l.clip(&sketch.as_rect().to_linestr(true), false);
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
