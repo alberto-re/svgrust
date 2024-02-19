@@ -152,19 +152,11 @@ pub struct Rect {
     pub xy: Coord,
     pub width: f64,
     pub height: f64,
-    stroke: String,
-    stroke_width: String,
 }
 
 impl Rect {
     pub fn new(xy: Coord, width: f64, height: f64) -> Self {
-        Self {
-            xy,
-            width,
-            height,
-            stroke: "black".to_string(),
-            stroke_width: "".to_string(),
-        }
+        Self { xy, width, height }
     }
 
     pub fn with_center(xy: Coord, h: f64, w: f64) -> Rect {
@@ -250,18 +242,11 @@ impl Centroid for Rect {
 pub struct Circle {
     pub center: Coord,
     pub radius: f64,
-    stroke: String,
-    stroke_width: String,
 }
 
 impl Circle {
     pub fn new(center: Coord, radius: f64) -> Self {
-        Self {
-            center,
-            radius,
-            stroke: "black".to_string(),
-            stroke_width: "".to_string(),
-        }
+        Self { center, radius }
     }
     pub fn overlaps(&self, other: &Circle) -> bool {
         self.center.euclidean_distance(&other.center) <= self.radius + other.radius
@@ -318,6 +303,40 @@ impl Contains for Circle {
 impl Scale<Circle> for Circle {
     fn scale(&self, perc: f64) -> Circle {
         Circle::new(self.center, self.radius * perc)
+    }
+}
+
+#[derive(Clone, PartialEq)]
+pub struct Arc {
+    pub center: Coord,
+    pub radius: f64,
+    pub start: f64,
+    pub end: f64,
+}
+
+impl Arc {
+    pub fn new(center: Coord, radius: f64, start: f64, end: f64) -> Self {
+        if start == end {
+            panic!("You should use Circle for closed arcs");
+        }
+        Self {
+            center,
+            radius,
+            start,
+            end,
+        }
+    }
+
+    pub fn to_linestr(&self, points: usize) -> LineStr {
+        let mut pvec = vec![];
+        let arc_size: f64 = self.end - self.start;
+        let step = arc_size / points as f64;
+        for i in 0..points {
+            let x = (self.start + step * i as f64).cos() * self.radius + self.center.x;
+            let y = (self.start + step * i as f64).sin() * self.radius + self.center.y;
+            pvec.push(coord! {x: x, y: y});
+        }
+        LineStr { points: pvec }
     }
 }
 

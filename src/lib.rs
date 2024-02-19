@@ -10,6 +10,7 @@ use shapes::{Centroid, Rect};
 
 #[derive(Clone)]
 pub enum Shape {
+    Arc(shapes::Arc),
     Circle(shapes::Circle),
     Rectangle(shapes::Rect),
     LineString(shapes::LineStr),
@@ -44,6 +45,10 @@ impl Group {
         self.elements.push(Shape::Circle(circle.clone()));
     }
 
+    pub fn add_arc(&mut self, arc: &shapes::Arc) {
+        self.elements.push(Shape::Arc(arc.clone()));
+    }
+
     pub fn add_rect(&mut self, rect: &shapes::Rect) {
         self.elements.push(Shape::Rectangle(rect.clone()));
     }
@@ -57,6 +62,9 @@ impl Group {
         let mut outside = Group::default();
         self.elements.iter().for_each(|e| match e {
             Shape::Circle(_) => {
+                unreachable!();
+            }
+            Shape::Arc(_) => {
                 unreachable!();
             }
             Shape::Rectangle(s) => {

@@ -1,7 +1,11 @@
+use std::f64::consts::PI;
+use std::f64::consts::TAU;
+
 use crate::Shape;
 use crate::Sketch;
 use anyhow::Context;
 use anyhow::Result;
+use geo::coord;
 use svg::node::element::path::Data;
 use svg::Document;
 
@@ -47,6 +51,24 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
                     for p in s.points[1..].iter() {
                         data = data.line_to((p.x, p.y));
                     }
+                    let e = svg::node::element::Path::new().set("d", data);
+                    group = group.add(e);
+                }
+                Shape::Arc(s) => {
+                    let p1 = coord! {
+                        x: s.center.x + s.start.cos() * s.radius,
+                        y: s.center.y + s.start.sin() * s.radius,
+                    };
+                    let p2 = coord! {
+                        x: s.center.x + s.end.cos() * s.radius,
+                        y: s.center.y + s.end.sin() * s.radius,
+                    };
+                    let arc_size = if s.end > s.start { s.end } else { s.end + TAU } - s.start;
+                    let large_arc = if arc_size > PI { 1 } else { 0 };
+                    let arc_parameters = (s.radius, s.radius, 0., large_arc, 1, p2.x, p2.y);
+                    let data = Data::new()
+                        .move_to((p1.x, p1.y))
+                        .elliptical_arc_to(arc_parameters);
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
