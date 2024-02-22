@@ -34,13 +34,14 @@ fn main() -> Result<()> {
 
     let lines = lines
         .iter()
-        .flat_map(|l| l.clip(&frame.to_linestr(true), false));
+        .flat_map(|l| l.clip(&frame.to_linestr(true), false))
+        .collect::<Vec<_>>();
 
     let mut group = Group::new();
     (0..3).for_each(|i| {
         group.add_rect(&frame.scale((100. + i as f64) / 100.));
     });
-    lines.for_each(|l| group.add_lstr(&l));
+    group.add_lstrs(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));
     render_svg(&sketch, "./samples/arcs_spiral_1.svg")?;
     Ok(())

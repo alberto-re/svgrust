@@ -59,6 +59,12 @@ impl Group {
         self.elements.push(Shape::LineString(linestr.clone()));
     }
 
+    pub fn add_lstrs(&mut self, linestr: &[shapes::LineStr]) {
+        linestr.iter().for_each(|l| {
+            self.elements.push(Shape::LineString(l.clone()));
+        });
+    }
+
     pub fn split_shape<T: Contains>(&self, bbox: &T) -> (Group, Group) {
         let mut inside = Group::default();
         let mut outside = Group::default();

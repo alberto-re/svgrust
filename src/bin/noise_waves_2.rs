@@ -71,7 +71,7 @@ fn main() -> Result<()> {
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
-    lstrs3.iter().for_each(|l| group.add_lstr(l));
+    group.add_lstrs(&lstrs3);
 
     sketch.add_group(&group, &Style::new("black", "2.5px"));
 
