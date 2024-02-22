@@ -7,7 +7,7 @@ use plt::render::render_svg;
 use plt::shapes::Arc;
 use plt::shapes::LineStr;
 use plt::shapes::Rect;
-use plt::shapes::Scale;
+use plt::traits::Scale;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
@@ -34,13 +34,7 @@ fn main() -> Result<()> {
 
     let lines = lines
         .iter()
-        .map(|l| {
-            l.clip(
-                &frame.to_linestr(true),
-                false,
-            )
-        })
-        .flatten();
+        .flat_map(|l| l.clip(&frame.to_linestr(true), false));
 
     let mut group = Group::new();
     (0..3).for_each(|i| {

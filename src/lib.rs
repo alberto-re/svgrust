@@ -1,12 +1,14 @@
 pub mod layout;
 pub mod render;
 pub mod shapes;
+pub mod traits;
 
 use geo::coord;
 use geo::Coord;
 use layout::PageLayout;
-use shapes::Contains;
-use shapes::{Centroid, Rect};
+use shapes::Rect;
+use traits::Centroid;
+use traits::Contains;
 
 #[derive(Clone)]
 pub enum Shape {

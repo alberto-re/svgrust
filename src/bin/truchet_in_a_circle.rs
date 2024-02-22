@@ -6,10 +6,10 @@ use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
-use plt::shapes::Centroid;
 use plt::shapes::Circle;
 use plt::shapes::LineStr;
-use plt::shapes::Scale;
+use plt::traits::Centroid;
+use plt::traits::Scale;
 use plt::Group;
 use plt::Shape;
 use plt::Sketch;
@@ -78,6 +78,6 @@ fn main() -> Result<()> {
     });
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 
-    render_svg(&sketch, "./samples/prova2.svg")?;
+    render_svg(&sketch, "./samples/truchet_in_a_circle.svg")?;
     Ok(())
 }
