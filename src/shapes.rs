@@ -1,5 +1,6 @@
 use std::f64::consts::TAU;
 
+use crate::grid::SquareGrid;
 use geo::algorithm::bool_ops::BooleanOps;
 use geo::coord;
 use geo::Coord;
@@ -103,6 +104,10 @@ impl Rect {
             points.push(self.xy);
         }
         LineStr { points }
+    }
+
+    pub fn into_square_grid(&self, square_side: f64) -> SquareGrid {
+        SquareGrid::new(self.xy.x, self.xy.y, self.width, self.height, square_side)
     }
 }
 

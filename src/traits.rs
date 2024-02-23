@@ -36,6 +36,7 @@ pub trait Centroid {
 pub trait Contains {
     fn contains<T: Centroid>(&self, coord: &T) -> bool;
 }
+
 impl Centroid for LineStr {
     fn centroid(&self) -> Coord {
         // TODO: we must prevent division by zero
