@@ -3,13 +3,12 @@ pub mod layout;
 pub mod render;
 pub mod shapes;
 pub mod traits;
+pub mod vec2;
 
-use geo::coord;
-use geo::Coord;
 use layout::PageLayout;
 use shapes::Rect;
-use traits::Centroid;
 use traits::Contains;
+use vec2::Vec2;
 
 #[derive(Clone)]
 pub enum Shape {
@@ -119,14 +118,6 @@ impl Sketch {
     }
 
     pub fn as_rect(&self) -> Rect {
-        Rect::new(
-            coord! { x: 0., y: 0. },
-            self.layout.width,
-            self.layout.height,
-        )
-    }
-
-    pub fn centroid(&self) -> Coord {
-        self.as_rect().centroid()
+        Rect::new(Vec2 { x: 0., y: 0. }, self.layout.width, self.layout.height)
     }
 }

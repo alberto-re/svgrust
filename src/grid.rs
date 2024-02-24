@@ -1,8 +1,8 @@
-use geo::{coord, Coord};
+use crate::vec2::Vec2;
 
 pub struct SquareGrid {
-    vertexes: Vec<Coord>,
-    centers: Vec<Coord>,
+    vertexes: Vec<Vec2>,
+    centers: Vec<Vec2>,
 }
 
 impl SquareGrid {
@@ -19,18 +19,18 @@ impl SquareGrid {
                 let vy = y + padding_height + row_index as f64 * square_side;
                 let cx = vx + square_side / 2.;
                 let cy = vy + square_side / 2.;
-                vertexes.push(coord! {x: vx, y: vy});
-                centers.push(coord! {x: cx, y: cy});
+                vertexes.push(Vec2 { x: vx, y: vy });
+                centers.push(Vec2 { x: cx, y: cy });
             }
         }
         Self { vertexes, centers }
     }
 
-    pub fn iter_vertexes(&self) -> std::slice::Iter<'_, Coord> {
+    pub fn iter_vertexes(&self) -> std::slice::Iter<'_, Vec2> {
         self.vertexes.iter()
     }
 
-    pub fn iter_centers(&self) -> std::slice::Iter<'_, Coord> {
+    pub fn iter_centers(&self) -> std::slice::Iter<'_, Vec2> {
         self.centers.iter()
     }
 }

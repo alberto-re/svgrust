@@ -1,21 +1,22 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
-use geo::Coord;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Rect;
+use plt::traits::Centroid;
 use plt::traits::Chaikin;
 use plt::traits::Rotate;
 use plt::traits::Scale;
 use plt::traits::Upsample;
+use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
 
 fn add_square_spiral_with_center(
-    center: Coord,
+    center: Vec2,
     side: f64,
     n: usize,
     start_angle: f64,
@@ -41,7 +42,7 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
     let mut group = Group::new();
     add_square_spiral_with_center(
-        sketch.centroid(),
+        sketch.as_rect().centroid(),
         sketch.as_rect().scale(0.80).min_len(),
         60,
         TAU * 0.25,

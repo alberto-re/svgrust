@@ -1,7 +1,6 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
-use geo::{coord, Coord};
 use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Portrait;
@@ -10,6 +9,7 @@ use plt::render::render_svg;
 use plt::shapes::LineStr;
 use plt::traits::Sample;
 use plt::traits::Scale;
+use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
@@ -34,7 +34,10 @@ fn main() -> Result<()> {
     grid.iter_centers().for_each(|center| {
         let noise_val = perlin.get([center.x * noise_ratio, center.y * noise_ratio]);
         let angle = map_range(noise_val, -1., 1., 0., TAU);
-        let move_to = coord! {x: center.x + angle.cos() * 5., y: center.y + angle.sin() * 5.};
+        let move_to = Vec2 {
+            x: center.x + angle.cos() * 5.,
+            y: center.y + angle.sin() * 5.,
+        };
         let arrow = LineStr::new(vec![*center, move_to]);
         group1.add_lstr(&arrow);
     });
@@ -43,11 +46,14 @@ fn main() -> Result<()> {
     let origin_bbox = bbox.scale(0.3);
 
     for mut pos in origin_bbox.sample_uniform(20) {
-        let mut trail_points: Vec<Coord> = vec![pos.clone()];
+        let mut trail_points: Vec<Vec2> = vec![pos];
         for _ in 0..100 {
             let noise_val = perlin.get([pos.x * noise_ratio, pos.y * noise_ratio]);
             let noise_angle = map_range(noise_val, -1., 1., 0., TAU);
-            pos = coord! {x: pos.x + noise_angle.cos() * 10., y: pos.y + noise_angle.sin() * 10.};
+            pos = Vec2 {
+                x: pos.x + noise_angle.cos() * 10.,
+                y: pos.y + noise_angle.sin() * 10.,
+            };
             if pos.x > bbox.xy.x + bbox.width
                 || pos.x < bbox.xy.x
                 || pos.y < bbox.xy.y
@@ -55,7 +61,7 @@ fn main() -> Result<()> {
             {
                 break;
             }
-            trail_points.push(pos.clone());
+            trail_points.push(pos);
         }
         let trail = LineStr::new(trail_points);
         group2.add_lstr(&trail);

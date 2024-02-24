@@ -1,6 +1,4 @@
 use anyhow::Result;
-use geo::coord;
-use geo::Coord;
 use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Portrait;
@@ -10,6 +8,7 @@ use plt::shapes::Circle;
 use plt::shapes::LineStr;
 use plt::traits::Centroid;
 use plt::traits::Scale;
+use plt::vec2::Vec2;
 use plt::Group;
 use plt::Shape;
 use plt::Sketch;
@@ -32,22 +31,36 @@ fn main() -> Result<()> {
     let cells = enclosing.grid(60, 40);
     let mut rng = StdRng::seed_from_u64(42);
     cells.iter().for_each(|c| {
-        let mut points: Vec<Coord> = vec![];
+        let mut points: Vec<Vec2> = vec![];
         if rng.gen::<f64>() < 0.5 {
-            points.push(coord! { x: c.xy.x, y: c.xy.y });
-            points.push(coord! { x: c.xy.x + c.width, y: c.xy.y + c.height });
+            points.push(Vec2 {
+                x: c.xy.x,
+                y: c.xy.y,
+            });
+            points.push(Vec2 {
+                x: c.xy.x + c.width,
+                y: c.xy.y + c.height,
+            });
         } else {
-            points.push(coord! { x: c.xy.x + c.width, y: c.xy.y });
-            points.push(coord! { x: c.xy.x, y: c.xy.y + c.height });
+            points.push(Vec2 {
+                x: c.xy.x + c.width,
+                y: c.xy.y,
+            });
+            points.push(Vec2 {
+                x: c.xy.x,
+                y: c.xy.y + c.height,
+            });
         }
         layer.add_lstr(&LineStr::new(points).add_vec(enclosing.xy));
     });
 
-    let circle = Circle::new(sketch.centroid(), enclosing.scale(0.98).min_len() / 2.);
+    let circle = Circle::new(
+        sketch.as_rect().centroid(),
+        enclosing.scale(0.98).min_len() / 2.,
+    );
 
     let (inner, _) = layer.split_shape(&circle.scale(0.9));
     let mut inner1 = Group::new();
-    let mut inner2 = Group::new();
 
     let perlin = Perlin::new(38);
 
@@ -56,8 +69,6 @@ fn main() -> Result<()> {
             let val = perlin.get([s.centroid().x * 0.015, s.centroid().y * 0.02]);
             if val < 0.5 && rng.gen::<f64>() < 0.85 {
                 inner1.elements.push(e.clone());
-            } else {
-                inner2.elements.push(e.clone());
             }
         }
     });
@@ -70,12 +81,6 @@ fn main() -> Result<()> {
     inner1.add_circle(&circle.scale(0.965));
     inner1.add_circle(&circle.scale(0.960));
 
-    let mut outer = Group::new();
-    inner1.elements.iter().for_each(|e| {
-        if let Shape::LineString(s) = e {
-            outer.add_lstr(&s.clone().add_vec(coord! {x: 1., y: 1.}));
-        }
-    });
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 
     render_svg(&sketch, "./samples/truchet_in_a_circle.svg")?;

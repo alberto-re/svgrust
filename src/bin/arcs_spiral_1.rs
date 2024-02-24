@@ -7,6 +7,7 @@ use plt::render::render_svg;
 use plt::shapes::Arc;
 use plt::shapes::LineStr;
 use plt::shapes::Rect;
+use plt::traits::Centroid;
 use plt::traits::Scale;
 use plt::Group;
 use plt::Sketch;
@@ -15,7 +16,7 @@ use rand::Rng;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
-    let center = sketch.centroid();
+    let center = sketch.as_rect().centroid();
     let mut rng = rand::thread_rng();
 
     let step = 2.;
@@ -30,7 +31,10 @@ fn main() -> Result<()> {
         lines.push(arc_lstr.clone());
     });
 
-    let frame = Rect::square_with_center(sketch.centroid(), sketch.as_rect().scale(0.97).min_len());
+    let frame = Rect::square_with_center(
+        sketch.as_rect().centroid(),
+        sketch.as_rect().scale(0.97).min_len(),
+    );
 
     let lines = lines
         .iter()

@@ -1,11 +1,11 @@
 use std::f64::consts::TAU;
 
 use crate::shapes::{Circle, LineStr, Rect};
+use crate::vec2::Vec2;
 use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
 use geo::Coord;
 use geo::CoordsIter;
-use geo::EuclideanDistance;
 use geo::Polygon;
 use rand::Rng;
 
@@ -14,7 +14,7 @@ pub trait Scale<T> {
 }
 
 pub trait Sample {
-    fn sample_uniform(&self, n: u64) -> Vec<Coord>;
+    fn sample_uniform(&self, n: u64) -> Vec<Vec2>;
 }
 
 pub trait Upsample {
@@ -30,7 +30,7 @@ pub trait Rotate {
 }
 
 pub trait Centroid {
-    fn centroid(&self) -> Coord;
+    fn centroid(&self) -> Vec2;
 }
 
 pub trait Contains {
@@ -38,7 +38,7 @@ pub trait Contains {
 }
 
 impl Centroid for LineStr {
-    fn centroid(&self) -> Coord {
+    fn centroid(&self) -> Vec2 {
         // TODO: we must prevent division by zero
         let mut xsum: f64 = 0.;
         let mut ysum: f64 = 0.;
@@ -46,7 +46,7 @@ impl Centroid for LineStr {
             xsum += p.x;
             ysum += p.y;
         });
-        coord! {
+        Vec2 {
             x: xsum / self.points.len() as f64,
             y: ysum / self.points.len() as f64,
         }
@@ -61,15 +61,15 @@ impl Upsample for LineStr {
             let mut upsampled = vec![];
             for i in 1..points.len() {
                 upsampled.push(points[i - 1]);
-                let middle_point = coord! {
-                    x: (points[i-1].x + points[i].x) * 0.5,
-                    y: (points[i-1].y + points[i].y) * 0.5,
+                let middle_point = Vec2 {
+                    x: (points[i - 1].x + points[i].x) * 0.5,
+                    y: (points[i - 1].y + points[i].y) * 0.5,
                 };
                 upsampled.push(middle_point);
             }
-            upsampled.push(coord! {
-                x: (points[0].x + points[points.len()-1].x) * 0.5,
-                y: (points[0].y + points[points.len()-1].y) * 0.5,
+            upsampled.push(Vec2 {
+                x: (points[0].x + points[points.len() - 1].x) * 0.5,
+                y: (points[0].y + points[points.len() - 1].y) * 0.5,
             });
             points = upsampled.clone();
         });
@@ -83,23 +83,23 @@ impl Chaikin for LineStr {
         (0..iterations).for_each(|_| {
             let mut smoothed = vec![];
             for i in 1..points.len() {
-                smoothed.push(coord! {
+                smoothed.push(Vec2 {
                     x: points[i - 1].x * 0.75 + points[i].x * 0.25,
                     y: points[i - 1].y * 0.75 + points[i].y * 0.25,
                 });
-                smoothed.push(coord! {
+                smoothed.push(Vec2 {
                     x: points[i - 1].x * 0.25 + points[i].x * 0.75,
                     y: points[i - 1].y * 0.25 + points[i].y * 0.75,
                 });
             }
             if closed {
-                smoothed.push(coord! {
+                smoothed.push(Vec2 {
                     x: points[points.len() - 1].x * 0.75 + points[1].x * 0.25,
                     y: points[points.len() - 1].y * 0.75 + points[1].y * 0.25,
                 });
-                smoothed.push(coord! {
-                    x: points[points.len() -1].x * 0.25 + points[1].x * 0.75,
-                    y: points[points.len() -1].y * 0.25 + points[1].y * 0.75,
+                smoothed.push(Vec2 {
+                    x: points[points.len() - 1].x * 0.25 + points[1].x * 0.75,
+                    y: points[points.len() - 1].y * 0.25 + points[1].y * 0.75,
                 });
             }
             points = smoothed.clone();
@@ -115,14 +115,24 @@ impl Rotate for LineStr {
     // TODO: add direction (clockwise, anti-clockwise) of rotation
     // TODO: implement from scratch?
     fn rotate(&self, radians: f64) -> Self {
-        let poly: Polygon = geo::Polygon::new(geo::LineString::new(self.points.clone()), vec![]);
+        let poly: Polygon = geo::Polygon::new(
+            geo::LineString::new(
+                self.points
+                    .clone()
+                    .iter()
+                    .map(|v| coord! {x: v.x, y: v.y})
+                    .collect::<Vec<Coord>>(),
+            ),
+            vec![],
+        );
         let degrees = radians * 180.0 / TAU;
         let poly = poly.rotate_around_centroid(degrees);
         LineStr::new(
             poly.exterior()
                 .points()
                 .map(|p| p.coords_iter().nth(0).unwrap())
-                .collect::<Vec<Coord>>(),
+                .map(|p| Vec2 { x: p.x, y: p.y })
+                .collect::<Vec<Vec2>>(),
         )
     }
 }
@@ -130,7 +140,10 @@ impl Rotate for LineStr {
 impl Scale<Rect> for Rect {
     fn scale(&self, perc: f64) -> Rect {
         Rect::new(
-            coord! { x: self.xy.x + self.width * ((1. - perc) / 2.), y: self.xy.y + self.height * ((1. - perc) / 2.) },
+            Vec2 {
+                x: self.xy.x + self.width * ((1. - perc) / 2.),
+                y: self.xy.y + self.height * ((1. - perc) / 2.),
+            },
             self.width * perc,
             self.height * perc,
         )
@@ -145,21 +158,21 @@ impl Contains for Rect {
 }
 
 impl Sample for Rect {
-    fn sample_uniform(&self, n: u64) -> Vec<Coord> {
+    fn sample_uniform(&self, n: u64) -> Vec<Vec2> {
         let mut rng = rand::thread_rng();
         let mut samples = vec![];
         (0..n).for_each(|_| {
             let x = rng.gen::<f64>() * self.width + self.xy.x;
             let y = rng.gen::<f64>() * self.height + self.xy.y;
-            samples.push(coord! { x: x, y: y});
+            samples.push(Vec2 { x, y });
         });
         samples
     }
 }
 
 impl Centroid for Rect {
-    fn centroid(&self) -> Coord {
-        coord! {
+    fn centroid(&self) -> Vec2 {
+        Vec2 {
             x: self.xy.x + self.width * 0.5,
             y: self.xy.y + self.height * 0.5,
         }
@@ -167,7 +180,7 @@ impl Centroid for Rect {
 }
 
 impl Sample for Circle {
-    fn sample_uniform(&self, n: u64) -> Vec<Coord> {
+    fn sample_uniform(&self, n: u64) -> Vec<Vec2> {
         let mut rng = rand::thread_rng();
         let mut samples = vec![];
         (0..n).for_each(|_| {
@@ -175,14 +188,14 @@ impl Sample for Circle {
             let angle = rng.gen::<f64>() * TAU;
             let x = r_sqrt * angle.cos() + self.center.x;
             let y = r_sqrt * angle.sin() + self.center.y;
-            samples.push(coord! { x: x, y: y});
+            samples.push(Vec2 { x, y });
         });
         samples
     }
 }
 
 impl Centroid for Circle {
-    fn centroid(&self) -> Coord {
+    fn centroid(&self) -> Vec2 {
         self.center
     }
 }

@@ -1,12 +1,12 @@
 use anyhow::Result;
-use geo::coord;
-use geo::Coord;
 use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::LineStr;
+use plt::traits::Centroid;
+use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
@@ -25,18 +25,22 @@ fn main() -> Result<()> {
 
     let mut group = Group::new();
     let mut lstrs: Vec<LineStr> = vec![];
+    let center = sketch.as_rect().centroid();
     (-dy..dy).for_each(|j| {
         let mut points = vec![];
         (-dx..dx).for_each(|i| {
             let mut x = (spcx * i) as f64;
             let mut y = (spcy * j) as f64;
-            x += sketch.centroid().x;
-            y += sketch.centroid().y;
+            x += center.x;
+            y += center.y;
             let val = perlin.get([x * noiseratio, y * noiseratio]);
             let val = (val + 1.0) / 2.;
             let val = minrad + 1 + (val * (maxrad - minrad) as f64) as usize;
             let val = val * 12;
-            points.push(coord! { x: x, y: y + val as f64 });
+            points.push(Vec2 {
+                x,
+                y: y + val as f64,
+            });
         });
         let lstr = LineStr::new(points);
         lstrs.push(lstr);
@@ -46,11 +50,20 @@ fn main() -> Result<()> {
     for i in 1..lstrs.len() - 1 {
         let mut segments: Vec<LineStr> = vec![lstrs[i].clone()];
         for other in lstrs.iter().take(lstrs.len() - 1).skip(i + 1) {
-            let mut points: Vec<Coord> = other.points.clone();
+            let mut points: Vec<Vec2> = other.points.clone();
             let first = points[0];
             let last = points[points.len() - 1];
-            points.insert(0, coord! { x: first.x, y: -1000.});
-            points.push(coord! { x: last.x, y: -1000.});
+            points.insert(
+                0,
+                Vec2 {
+                    x: first.x,
+                    y: -1000.,
+                },
+            );
+            points.push(Vec2 {
+                x: last.x,
+                y: -1000.,
+            });
             let other: LineStr = LineStr::new(points);
             let mut newsegments: Vec<LineStr> = vec![];
             segments.iter().for_each(|s| {

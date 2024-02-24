@@ -1,11 +1,11 @@
 use anyhow::Result;
-use geo::coord;
-use geo::Coord;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineStr;
+use plt::traits::Centroid;
+use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
@@ -35,12 +35,13 @@ fn main() -> Result<()> {
         TAU * 1.0,
     ];
 
-    let mut in_points: Vec<Coord> = vec![];
+    let mut in_points: Vec<Vec2> = vec![];
 
+    let center = sketch.as_rect().centroid();
     for angle in angles {
-        let x = angle.cos() * inner_radius + sketch.centroid().x;
-        let y = angle.sin() * inner_radius + sketch.centroid().y;
-        in_points.push(coord! {x: x, y: y});
+        let x = angle.cos() * inner_radius + center.x;
+        let y = angle.sin() * inner_radius + center.y;
+        in_points.push(Vec2 { x, y });
     }
 
     let mut circles: Vec<Vec<Circle>> = vec![];
