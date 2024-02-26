@@ -7,6 +7,7 @@ use geo::coord;
 use geo::Coord;
 use geo::CoordsIter;
 use geo::Polygon;
+use rand::rngs::StdRng;
 use rand::Rng;
 
 pub trait Scale<T> {
@@ -14,7 +15,7 @@ pub trait Scale<T> {
 }
 
 pub trait Sample {
-    fn sample_uniform(&self, n: u64) -> Vec<Vec2>;
+    fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2>;
 }
 
 pub trait Upsample {
@@ -158,8 +159,7 @@ impl Contains for Rect {
 }
 
 impl Sample for Rect {
-    fn sample_uniform(&self, n: u64) -> Vec<Vec2> {
-        let mut rng = rand::thread_rng();
+    fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2> {
         let mut samples = vec![];
         (0..n).for_each(|_| {
             let x = rng.gen::<f64>() * self.width + self.xy.x;
@@ -180,8 +180,7 @@ impl Centroid for Rect {
 }
 
 impl Sample for Circle {
-    fn sample_uniform(&self, n: u64) -> Vec<Vec2> {
-        let mut rng = rand::thread_rng();
+    fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2> {
         let mut samples = vec![];
         (0..n).for_each(|_| {
             let r_sqrt = (rng.gen::<f64>() * self.radius * self.radius).sqrt();
@@ -209,5 +208,11 @@ impl Contains for Circle {
 impl Scale<Circle> for Circle {
     fn scale(&self, perc: f64) -> Circle {
         Circle::new(self.center, self.radius * perc)
+    }
+}
+
+impl Centroid for Vec2 {
+    fn centroid(&self) -> Vec2 {
+        *self
     }
 }

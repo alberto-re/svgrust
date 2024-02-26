@@ -1,7 +1,7 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
-use plt::layout::Orientation::Portrait;
+use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Arc;
@@ -15,7 +15,7 @@ use plt::Style;
 use rand::Rng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
     let center = sketch.as_rect().centroid();
     let mut rng = rand::thread_rng();
 
