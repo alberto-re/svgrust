@@ -70,6 +70,14 @@ impl LineStr {
         });
         res
     }
+
+    pub fn clip_many(&self, others: &Vec<LineStr>, invert: bool) -> Vec<LineStr> {
+        let mut retval = vec![self.clone()];
+        others.iter().for_each(|other| {
+            retval = retval.iter().flat_map(|l| l.clip(other, invert)).collect::<Vec<_>>();
+        });
+        retval
+    }
 }
 
 #[derive(Clone, PartialEq)]
@@ -154,6 +162,7 @@ impl Circle {
     pub fn new(center: Vec2, radius: f64) -> Self {
         Self { center, radius }
     }
+
     pub fn overlaps(&self, other: &Circle) -> bool {
         self.center.euclidean_distance(&other.center) <= self.radius + other.radius
     }

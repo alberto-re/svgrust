@@ -17,6 +17,8 @@ use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 
 fn perlin_angle(perlin: &Perlin, smooth: f64, pos: Vec2) -> f64 {
     let val = perlin.get([pos.x * smooth, pos.y * smooth]);
@@ -45,6 +47,8 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
     let mut group1 = Group::new();
     let mut group2 = Group::new();
+
+    let mut rng = StdRng::seed_from_u64(48);
 
     let perlin = Perlin::new(19);
     let square_side = 5.;
@@ -75,7 +79,7 @@ fn main() -> Result<()> {
 
     let bbox = sketch.as_rect().scale(0.98);
 
-    bbox.sample_uniform(10).iter().for_each(|center| {
+    bbox.sample_uniform(&mut rng, 10).iter().for_each(|center| {
         // grid.iter_centers().step_by(10).for_each(|center| {
         let mut pos = center.clone();
         let mut trail_points: Vec<Vec2> = vec![pos];

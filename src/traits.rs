@@ -1,3 +1,5 @@
+pub mod packing;
+
 use std::f64::consts::TAU;
 
 use crate::shapes::{Circle, LineStr, Rect};

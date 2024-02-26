@@ -8,7 +8,7 @@ pub struct Vec2 {
 
 impl Vec2 {
     pub fn euclidean_distance(&self, other: &Vec2) -> f64 {
-        f64::abs(self.x - other.x) + f64::abs(self.y - other.y)
+        ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
     }
 
     pub fn from_angle_length(angle: f64, length: f64) -> Self {

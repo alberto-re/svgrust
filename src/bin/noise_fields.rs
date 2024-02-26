@@ -3,9 +3,9 @@ use std::f64::consts::TAU;
 use anyhow::Result;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::map_range;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::{Circle, LineStr};
+use plt::traits::packing::CirclePacking;
 use plt::traits::Centroid;
 use plt::traits::Contains;
 use plt::traits::Sample;
@@ -14,6 +14,7 @@ use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
 use plt::Style;
+use plt::{map_range, Shape};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
@@ -27,14 +28,17 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> f64 {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
+    let mut layout = PageLayout::axidraw_minikit(Landscape);
+    let layout = layout.set_style("background-color: black");
+    let mut sketch = Sketch::new(&layout);
     let mut field = Group::new();
     let mut trails = Group::new();
+    let mut glyphs = Group::new();
 
     let mut rng = StdRng::seed_from_u64(48);
 
     let square_side = 10.;
-    let focal_max_dist = 300.;
+    let focal_max_dist = 310.;
     let bbox = sketch.as_rect().scale(0.98);
 
     let grid = bbox.into_square_grid(square_side);
@@ -49,7 +53,7 @@ fn main() -> Result<()> {
         field.add_lstr(&arrow);
     });
 
-    bbox.sample_uniform(&mut rng, 100)
+    bbox.sample_uniform(&mut rng, 200)
         .iter()
         .for_each(|center| {
             let mut pos = center.clone();
@@ -77,12 +81,46 @@ fn main() -> Result<()> {
     trails.elements = trails
         .linestrings()
         .iter()
-        .filter(|t| t.points.len() > 8)
+        .filter(|t| t.points.len() > 12)
         .map(|l| plt::Shape::LineString(l.clone()))
         .collect();
 
-    sketch.add_group(&field, &Style::new("black", "1.0px"));
-    sketch.add_group(&trails, &Style::new("black", "1.0px"));
+    let mut circles: Vec<Circle> = vec![];
+    let mut trails_to_prune: Vec<usize> = vec![];
+    trails
+        .linestrings()
+        .iter()
+        .enumerate()
+        .for_each(|(index, trail)| {
+            let radius = (trails.linestrings().len() - index) as f64 / 35. as f64 + 1.;
+            let mut candidates = trail.pack_with_circles(radius, &mut circles, 2.);
+            if candidates.len() < 3 {
+                trails_to_prune.push(index);
+            } else {
+                circles.append(&mut candidates);
+            }
+        });
+
+    circles.iter().for_each(|circle| glyphs.add_circle(&circle));
+
+    trails.elements = trails
+        .linestrings()
+        .iter()
+        .enumerate()
+        .filter(|(index, _)| !trails_to_prune.contains(index))
+        .map(|(_, linestring)| Shape::LineString(linestring.clone()))
+        .collect::<Vec<Shape>>();
+
+    // trails.elements = trails
+    //     .linestrings()
+    //     .iter()
+    //     .flat_map(|trail| trail.clip_many(&glyphs.linestrings(), true))
+    //     .map(|linestring| Shape::LineString(linestring.clone()))
+    //     .collect::<Vec<Shape>>();
+
+    // sketch.add_group(&field, &Style::new("black", "1.0px"));
+    sketch.add_group(&trails, &Style::new("silver", "1.0px"));
+    sketch.add_group(&glyphs, &Style::new("silver", "1.5px"));
 
     render_svg(&sketch, "./samples/noise_fields.svg")?;
     Ok(())
