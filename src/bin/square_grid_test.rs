@@ -14,7 +14,7 @@ fn main() -> Result<()> {
 
     let square_side = 5.;
     let grid_box = sketch.as_rect();
-    let grid_box = grid_box.scale(0.90);
+    let grid_box = grid_box.scale_perc(0.90);
 
     let grid = grid_box.into_square_grid(square_side);
 

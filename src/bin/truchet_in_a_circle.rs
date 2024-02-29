@@ -56,10 +56,10 @@ fn main() -> Result<()> {
 
     let circle = Circle::new(
         sketch.as_rect().centroid(),
-        enclosing.scale(0.98).min_len() / 2.,
+        enclosing.scale_perc(0.98).min_len() / 2.,
     );
 
-    let (inner, _) = layer.split_shape(&circle.scale(0.9));
+    let (inner, _) = layer.split_shape(&circle.scale_perc(0.9));
     let mut inner1 = Group::new();
 
     let perlin = Perlin::new(38);
@@ -73,13 +73,13 @@ fn main() -> Result<()> {
         }
     });
 
-    inner1.add_circle(&circle.scale(0.990));
-    inner1.add_circle(&circle.scale(0.985));
-    inner1.add_circle(&circle.scale(0.980));
-    inner1.add_circle(&circle.scale(0.975));
-    inner1.add_circle(&circle.scale(0.970));
-    inner1.add_circle(&circle.scale(0.965));
-    inner1.add_circle(&circle.scale(0.960));
+    inner1.add_circle(&circle.scale_perc(0.990));
+    inner1.add_circle(&circle.scale_perc(0.985));
+    inner1.add_circle(&circle.scale_perc(0.980));
+    inner1.add_circle(&circle.scale_perc(0.975));
+    inner1.add_circle(&circle.scale_perc(0.970));
+    inner1.add_circle(&circle.scale_perc(0.965));
+    inner1.add_circle(&circle.scale_perc(0.960));
 
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 

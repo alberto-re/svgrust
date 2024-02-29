@@ -29,7 +29,7 @@ fn add_square_spiral_with_center(
         } else {
             1.0
         };
-        let rect = rect.scale(scale);
+        let rect = rect.scale_perc(scale);
         let rect = rect.to_linestr(true);
         let rect = rect.rotate(start_angle + TAU * scale);
         let rect = rect.upsample(1);
@@ -43,7 +43,7 @@ fn main() -> Result<()> {
     let mut group = Group::new();
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
-        sketch.as_rect().scale(0.80).min_len(),
+        sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25,
         &mut group,

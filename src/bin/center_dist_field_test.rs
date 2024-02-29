@@ -27,7 +27,7 @@ fn main() -> Result<()> {
     let mut group1 = Group::new();
 
     let square_side = 10.;
-    let bbox = sketch.as_rect().scale(0.98);
+    let bbox = sketch.as_rect().scale_perc(0.98);
 
     let grid = bbox.into_square_grid(square_side);
 

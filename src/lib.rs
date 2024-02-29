@@ -6,7 +6,7 @@ pub mod traits;
 pub mod vec2;
 
 use layout::PageLayout;
-use shapes::{LineStr, Rect};
+use shapes::{Circle, LineStr, Rect};
 use traits::Contains;
 use vec2::Vec2;
 
@@ -68,12 +68,19 @@ impl Group {
     pub fn linestrings(&self) -> Vec<LineStr> {
         let mut lstrs = vec![];
         self.elements.iter().for_each(|e| match e {
-            Shape::LineString(s) => {
-                lstrs.push(s.clone())
-            },
-            _ => { () }
+            Shape::LineString(s) => lstrs.push(s.clone()),
+            _ => (),
         });
         lstrs
+    }
+
+    pub fn circles(&self) -> Vec<Circle> {
+        let mut circles = vec![];
+        self.elements.iter().for_each(|e| match e {
+            Shape::Circle(s) => circles.push(s.clone()),
+            _ => (),
+        });
+        circles
     }
 
     pub fn split_shape<T: Contains>(&self, bbox: &T) -> (Group, Group) {

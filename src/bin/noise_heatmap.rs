@@ -20,7 +20,7 @@ fn main() -> Result<()> {
     let radius_min = 0.0;
     let radius_interval = 6.;
     let grid_box = sketch.as_rect();
-    let grid_box = grid_box.scale(0.98);
+    let grid_box = grid_box.scale_perc(0.98);
 
     let grid = grid_box.into_square_grid(square_side);
 

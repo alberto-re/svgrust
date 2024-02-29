@@ -33,7 +33,7 @@ fn main() -> Result<()> {
 
     let frame = Rect::square_with_center(
         sketch.as_rect().centroid(),
-        sketch.as_rect().scale(0.97).min_len(),
+        sketch.as_rect().scale_perc(0.97).min_len(),
     );
 
     let lines = lines
@@ -43,7 +43,7 @@ fn main() -> Result<()> {
 
     let mut group = Group::new();
     (0..3).for_each(|i| {
-        group.add_rect(&frame.scale((100. + i as f64) / 100.));
+        group.add_rect(&frame.scale_perc((100. + i as f64) / 100.));
     });
     group.add_lstrs(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));

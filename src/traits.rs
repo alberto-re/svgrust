@@ -13,7 +13,8 @@ use rand::rngs::StdRng;
 use rand::Rng;
 
 pub trait Scale<T> {
-    fn scale(&self, perc: f64) -> T;
+    fn scale_perc(&self, perc: f64) -> T;
+    fn scale_unit(&self, unit: f64) -> T;
 }
 
 pub trait Sample {
@@ -141,7 +142,7 @@ impl Rotate for LineStr {
 }
 
 impl Scale<Rect> for Rect {
-    fn scale(&self, perc: f64) -> Rect {
+    fn scale_perc(&self, perc: f64) -> Rect {
         Rect::new(
             Vec2 {
                 x: self.xy.x + self.width * ((1. - perc) / 2.),
@@ -149,6 +150,17 @@ impl Scale<Rect> for Rect {
             },
             self.width * perc,
             self.height * perc,
+        )
+    }
+
+    fn scale_unit(&self, unit: f64) -> Rect {
+        Rect::new(
+            Vec2 {
+                x: self.xy.x + unit / 2.,
+                y: self.xy.y + unit / 2.,
+            },
+            self.width - unit,
+            self.height - unit,
         )
     }
 }
@@ -208,9 +220,14 @@ impl Contains for Circle {
 }
 
 impl Scale<Circle> for Circle {
-    fn scale(&self, perc: f64) -> Circle {
+    fn scale_perc(&self, perc: f64) -> Circle {
         Circle::new(self.center, self.radius * perc)
     }
+
+    fn scale_unit(&self, unit: f64) -> Circle {
+        Circle::new(self.center, self.radius - unit)
+    }
+
 }
 
 impl Centroid for Vec2 {
