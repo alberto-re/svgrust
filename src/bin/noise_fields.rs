@@ -30,7 +30,7 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> f64 {
 fn main() -> Result<()> {
     let mut layout = PageLayout::axidraw_minikit(Landscape);
     let layout = layout.set_style("background-color: white");
-    let mut sketch = Sketch::new(&layout);
+    let mut sketch = Sketch::new(layout);
     let mut field = Group::new();
     let mut trails = Group::new();
     let mut glyphs = Group::new();
@@ -57,7 +57,7 @@ fn main() -> Result<()> {
     bbox.sample_uniform(&mut rng, 400)
         .iter()
         .for_each(|center| {
-            let mut pos = center.clone();
+            let mut pos = *center;
             let mut trail_points: Vec<Vec2> = vec![pos];
             for _ in 0..200 {
                 let angle = focal_dist_angle(bbox.centroid(), focal_max_dist, pos);
@@ -93,7 +93,7 @@ fn main() -> Result<()> {
         .iter()
         .enumerate()
         .for_each(|(index, trail)| {
-            let radius = (trails.linestrings().len() - index) as f64 / 35. as f64 + 1.;
+            let radius = (trails.linestrings().len() - index) as f64 / 35_f64 + 1.;
             let dist = radius - 1.;
             let mut candidates = trail.pack_with_circles(radius, &mut circles, dist);
             if candidates.len() < 12 {
@@ -104,7 +104,7 @@ fn main() -> Result<()> {
         });
 
     circles.iter().for_each(|circle| {
-        glyphs.add_circle(&circle);
+        glyphs.add_circle(circle);
         glyphs.add_circle(&circle.scale_perc(0.6));
         if circle.radius > 2. {
             glyphs.add_circle(&circle.scale_perc(0.3));

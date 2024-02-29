@@ -71,10 +71,13 @@ impl LineStr {
         res
     }
 
-    pub fn clip_many(&self, others: &Vec<LineStr>, invert: bool) -> Vec<LineStr> {
+    pub fn clip_many(&self, others: &[LineStr], invert: bool) -> Vec<LineStr> {
         let mut retval = vec![self.clone()];
         others.iter().for_each(|other| {
-            retval = retval.iter().flat_map(|l| l.clip(other, invert)).collect::<Vec<_>>();
+            retval = retval
+                .iter()
+                .flat_map(|l| l.clip(other, invert))
+                .collect::<Vec<_>>();
         });
         retval
     }

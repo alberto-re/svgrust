@@ -67,18 +67,20 @@ impl Group {
 
     pub fn linestrings(&self) -> Vec<LineStr> {
         let mut lstrs = vec![];
-        self.elements.iter().for_each(|e| match e {
-            Shape::LineString(s) => lstrs.push(s.clone()),
-            _ => (),
+        self.elements.iter().for_each(|e| {
+            if let Shape::LineString(s) = e {
+                lstrs.push(s.clone())
+            }
         });
         lstrs
     }
 
     pub fn circles(&self) -> Vec<Circle> {
         let mut circles = vec![];
-        self.elements.iter().for_each(|e| match e {
-            Shape::Circle(s) => circles.push(s.clone()),
-            _ => (),
+        self.elements.iter().for_each(|e| {
+            if let Shape::Circle(s) = e {
+                circles.push(s.clone())
+            }
         });
         circles
     }

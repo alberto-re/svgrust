@@ -9,10 +9,7 @@ use plt::layout::PageLayout;
 use plt::map_range;
 use plt::render::render_svg;
 use plt::shapes::LineStr;
-use plt::traits::Centroid;
-use plt::traits::Contains;
-use plt::traits::Sample;
-use plt::traits::Scale;
+use plt::traits::{Centroid, Contains, Sample, Scale};
 use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
@@ -23,15 +20,6 @@ use rand::SeedableRng;
 fn perlin_angle(perlin: &Perlin, smooth: f64, pos: Vec2) -> f64 {
     let val = perlin.get([pos.x * smooth, pos.y * smooth]);
     map_range(val, -1., 1., 0., TAU)
-}
-
-fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> f64 {
-    // The idea comes from:
-    // https://damoonrashidi.me/articles/flow-field-methods#noise-function-alternatives
-    let dx = pos.x - focal.x;
-    let dy = pos.y - focal.y;
-    let val = f64::sqrt(dx.powi(2) + dy.powi(2));
-    map_range(val, 0., max_dist, 0., TAU)
 }
 
 fn focal_angle(focal: Vec2, pos: Vec2) -> f64 {
@@ -53,7 +41,7 @@ fn main() -> Result<()> {
     let perlin = Perlin::new(19);
     let square_side = 5.;
     let smooth = 0.003;
-    let bbox = sketch.as_rect().scale(0.98);
+    let bbox = sketch.as_rect().scale_perc(0.98);
 
     let grid = bbox.into_square_grid(square_side);
 
@@ -77,14 +65,14 @@ fn main() -> Result<()> {
         group1.add_lstr(&arrow);
     });
 
-    let bbox = sketch.as_rect().scale(0.98);
+    let bbox = sketch.as_rect().scale_perc(0.98);
 
     bbox.sample_uniform(&mut rng, 10).iter().for_each(|center| {
         // grid.iter_centers().step_by(10).for_each(|center| {
-        let mut pos = center.clone();
+        let mut pos = *center;
         let mut trail_points: Vec<Vec2> = vec![pos];
         for _ in 0..100 {
-            let angle = focal_tangle(bbox.centroid(), *center);
+            let angle = focal_angle(bbox.centroid(), *center);
             let vec = Vec2 {
                 x: angle.cos() * 5.,
                 y: angle.sin() * 5.,

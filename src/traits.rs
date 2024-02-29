@@ -227,7 +227,6 @@ impl Scale<Circle> for Circle {
     fn scale_unit(&self, unit: f64) -> Circle {
         Circle::new(self.center, self.radius - unit)
     }
-
 }
 
 impl Centroid for Vec2 {
