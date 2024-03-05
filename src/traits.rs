@@ -41,6 +41,10 @@ pub trait Contains {
     fn contains<T: Centroid>(&self, coord: &T) -> bool;
 }
 
+pub trait Translate {
+    fn translate(&self, displacement: Vec2) -> Self;
+}
+
 impl Centroid for LineStr {
     fn centroid(&self) -> Vec2 {
         // TODO: we must prevent division by zero

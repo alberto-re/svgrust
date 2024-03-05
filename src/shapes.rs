@@ -18,6 +18,12 @@ impl LineStr {
         Self { points }
     }
 
+    pub fn line(start: Vec2, end: Vec2) -> Self {
+        Self {
+            points: vec![start, end],
+        }
+    }
+
     pub fn from_tuples(points: Vec<(f64, f64)>) -> Self {
         Self::new(
             points

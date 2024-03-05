@@ -7,7 +7,7 @@ pub mod vec2;
 
 use layout::PageLayout;
 use shapes::{Circle, LineStr, Rect};
-use traits::Contains;
+use traits::{Centroid, Contains};
 use vec2::Vec2;
 
 #[derive(Clone)]
@@ -139,6 +139,38 @@ impl Sketch {
 
     pub fn as_rect(&self) -> Rect {
         Rect::new(Vec2 { x: 0., y: 0. }, self.layout.width, self.layout.height)
+    }
+
+    pub fn center(&self) -> Vec2 {
+        self.as_rect().centroid()
+    }
+
+    pub fn top_middle(&self, margin: f64) -> Vec2 {
+        Vec2 {
+            x: self.as_rect().width / 2.,
+            y: margin,
+        }
+    }
+
+    pub fn bottom_middle(&self, margin: f64) -> Vec2 {
+        Vec2 {
+            x: self.as_rect().width / 2.,
+            y: self.as_rect().height - margin,
+        }
+    }
+
+    pub fn left_middle(&self, margin: f64) -> Vec2 {
+        Vec2 {
+            x: margin,
+            y: self.as_rect().height / 2.,
+        }
+    }
+
+    pub fn right_middle(&self, margin: f64) -> Vec2 {
+        Vec2 {
+            x: self.as_rect().width - margin,
+            y: self.as_rect().height / 2.,
+        }
     }
 }
 

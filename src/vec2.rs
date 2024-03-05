@@ -1,5 +1,7 @@
 use std::ops;
 
+use crate::traits::Translate;
+
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Vec2 {
     pub x: f64,
@@ -27,5 +29,11 @@ impl ops::Add<Vec2> for Vec2 {
             x: self.x + _rhs.x,
             y: self.y + _rhs.y,
         }
+    }
+}
+
+impl Translate for Vec2 {
+    fn translate(&self, displacement: Vec2) -> Self {
+        *self + displacement
     }
 }
