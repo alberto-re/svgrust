@@ -1,8 +1,9 @@
-use std::cmp::max;
-
 use anyhow::Result;
+use noise::NoiseFn;
+use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
+use plt::map_range;
 use plt::render::render_svg;
 use plt::shapes::LineStr;
 use plt::vec2::Vec2;
@@ -10,42 +11,50 @@ use plt::Group;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
-use noise::NoiseFn;
-use noise::Perlin;
-use plt::map_range;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
-    let rows = 40;
+    let rows = 30;
     let ydist = sketch.as_rect().height / rows as f64;
 
     let mut rng = rand::thread_rng();
-    let perlin = Perlin::new(rng.gen::<u32>());
+    let perlin = Perlin::new(19);
 
     let mut lines = Group::new();
+    let mut lines2 = Group::new();
+
     for rowi in 0..rows {
-        //let maxdist = sketch.as_rect().width / 2.;
-        //let maxdist = sketch.as_rect().width * rng.gen::<f64>();
-        let val = perlin.get([rowi as f64 * 0.08, rowi as f64 * 0.08]);
+        let mut x = rng.gen::<f64>() * 3.;
+        let val = perlin.get([rowi as f64 * 0.25, (rows - rowi) as f64 * 0.005]);
         let val = map_range(val, -1., 1., 0., 1.);
-        let maxdist = sketch.as_rect().width * val;
-        for coli in (0..sketch.as_rect().width as usize).step_by(2) {
-            let dist = f64::abs(maxdist - coli as f64);
-            let random = rng.gen::<f64>();
-
-            let p = random * (dist / maxdist);
-
-            
-            if p > 0.1 {
-                continue;
-            }
-            let x = coli as f64;
+        while x < sketch.as_rect().width - rng.gen::<f64>() {
             let y1 = ydist * rowi as f64;
-            let y2 = y1 + ydist * 0.95;
-            lines.add_lstr(&LineStr::new(vec![Vec2 { x, y: y1 }, Vec2 { x, y: y2 }]));
+            let y2 = y1 + ydist * 0.9;
+            let x1 = x;
+            let x2 = x;
+            if rng.gen::<f64>() > 0.005 {
+                lines.add_lstr(&LineStr::new(vec![
+                    Vec2 {
+                        x: x1,
+                        y: y1,
+                    },
+                    Vec2 { x: x2, y: y2 },
+                ]));
+            } else {
+                lines2.add_lstr(&LineStr::new(vec![
+                    Vec2 {
+                        x: x1,
+                        y: y1,
+                    },
+                    Vec2 { x: x2, y: y2 },
+                ]));
+            }
+            let val = f64::abs(sketch.as_rect().width * val - x);
+            x += map_range(val.sqrt(), 0., sketch.as_rect().width / 3., 1.2, 20.);
         }
     }
-    sketch.add_group(&lines, &Style::new("black", "1.5px"));
-    render_svg(&sketch, "./samples/straight_lines.svg")?;
+    sketch.add_group(&lines, &Style::new("black", "0.45mm"));
+    //sketch.add_group(&lines2, &Style::new("red", "0.45mm"));
+    render_svg(&sketch, "./samples/straight_lines_2.svg")?;
     Ok(())
 }
