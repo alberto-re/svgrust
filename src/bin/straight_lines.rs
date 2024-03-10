@@ -1,8 +1,9 @@
-use std::cmp::max;
-
 use anyhow::Result;
+use noise::NoiseFn;
+use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
+use plt::map_range;
 use plt::render::render_svg;
 use plt::shapes::LineStr;
 use plt::vec2::Vec2;
@@ -10,9 +11,6 @@ use plt::Group;
 use plt::Sketch;
 use plt::Style;
 use rand::Rng;
-use noise::NoiseFn;
-use noise::Perlin;
-use plt::map_range;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
@@ -35,7 +33,6 @@ fn main() -> Result<()> {
 
             let p = random * (dist / maxdist);
 
-            
             if p > 0.1 {
                 continue;
             }

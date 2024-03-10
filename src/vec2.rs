@@ -2,6 +2,7 @@ use std::{f64::consts::PI, ops};
 
 use crate::traits::Translate;
 
+/// A 2 dimensional vector
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Vec2 {
     pub x: f64,
@@ -9,6 +10,11 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
+    /// Calculates the euclidean distance between two points on a plane.
+    /// 
+    /// # Arguments
+    ///
+    /// * `other` - A Vec2 struct representing the other point
     pub fn euclidean_distance(&self, other: &Vec2) -> f64 {
         ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
     }
@@ -26,12 +32,19 @@ impl Vec2 {
         Vec2 { x, y }
     }
 
-    pub fn signed_angle(self, other: Vec2) -> f64 {
-        f64::atan2(other.y - self.y, other.x - self.x)
+    pub fn signed_angle(self, target: Vec2) -> f64 {
+        f64::atan2(target.y - self.y, target.x - self.x)
     }
 
-    pub fn unsigned_angle(self, other: Vec2) -> f64 {
-        let signed = self.signed_angle(other);
+    /// Calculates the angle in radians respect another point on a plane.
+    /// 
+    /// The returned value range is 0 <= n < TAU.
+    ///
+    /// # Arguments
+    ///
+    /// * `target` - A Vec2 struct representing the target point
+    pub fn angle(self, target: Vec2) -> f64 {
+        let signed = self.signed_angle(target);
         if signed.is_sign_negative() {
             PI + PI - (-1. * signed)
         } else {
@@ -112,34 +125,34 @@ mod tests {
     fn unsigned_angle() {
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: 0. };
-        assert_eq!(a.unsigned_angle(b), 0.);
+        assert_eq!(a.angle(b), 0.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: 100. };
-        assert_eq!(a.unsigned_angle(b), PI / 4.);
+        assert_eq!(a.angle(b), PI / 4.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 0., y: 100. };
-        assert_eq!(a.unsigned_angle(b), PI / 2.);
+        assert_eq!(a.angle(b), PI / 2.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: 100. };
-        assert_eq!(a.unsigned_angle(b), 3. * PI / 4.);
+        assert_eq!(a.angle(b), 3. * PI / 4.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: 0. };
-        assert_eq!(a.unsigned_angle(b), PI);
+        assert_eq!(a.angle(b), PI);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: -100. };
-        assert_eq!(a.unsigned_angle(b), 5. * PI / 4.);
+        assert_eq!(a.angle(b), 5. * PI / 4.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 0., y: -100. };
-        assert_eq!(a.unsigned_angle(b), 3. * PI / 2.);
+        assert_eq!(a.angle(b), 3. * PI / 2.);
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: -100. };
-        assert_eq!(a.unsigned_angle(b), 7. * PI / 4.);
+        assert_eq!(a.angle(b), 7. * PI / 4.);
     }
 }

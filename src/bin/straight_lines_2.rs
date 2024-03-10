@@ -34,18 +34,12 @@ fn main() -> Result<()> {
             let x2 = x;
             if rng.gen::<f64>() > 0.005 {
                 lines.add_lstr(&LineStr::new(vec![
-                    Vec2 {
-                        x: x1,
-                        y: y1,
-                    },
+                    Vec2 { x: x1, y: y1 },
                     Vec2 { x: x2, y: y2 },
                 ]));
             } else {
                 lines2.add_lstr(&LineStr::new(vec![
-                    Vec2 {
-                        x: x1,
-                        y: y1,
-                    },
+                    Vec2 { x: x1, y: y1 },
                     Vec2 { x: x2, y: y2 },
                 ]));
             }

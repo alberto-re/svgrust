@@ -45,7 +45,8 @@ fn main() -> Result<()> {
 
     let curve = ParametricCurve::new(105., 1., 5., 7.);
 
-    let points = curve.points(711, 1.)
+    let points = curve
+        .points(711, 1.)
         .iter()
         .map(|p| p.translate(sketch.as_rect().centroid()))
         .collect::<Vec<Vec2>>();
