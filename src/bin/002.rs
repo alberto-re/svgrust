@@ -1,5 +1,3 @@
-use std::f64::consts::PI;
-
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
@@ -59,6 +57,7 @@ fn main() -> Result<()> {
 
     let mut curve1 = Group::new();
     let mut curve2 = Group::new();
+    let mut curve3 = Group::new();
 
     for z in 0..40 {
         points1 = points1
@@ -72,7 +71,17 @@ fn main() -> Result<()> {
             })
             .collect::<Vec<Vec2>>();
         curve1.add_lstr(&LineStr::new(points1.clone()));
-        curve2.add_lstr(&LineStr::new(points1.iter().map(|p| p.rotate(sketch.center(), PI)).collect::<Vec<_>>().clone()));
+        curve2.add_lstr(&LineStr::new(points1.iter().map(|p| *p + Vec2 { x: 3., y: 1.}).collect::<Vec<_>>().clone()));
+
+        if z == 0 {
+            for factor in 1..16 {
+                let points2 = points1.clone().iter().map(|p| {
+                    let angle = sketch.center().angle(*p);
+                    *p - Vec2::from_angle_length(angle, 6. * factor as f64)
+                }).collect::<Vec<Vec2>>();
+                curve3.add_lstr(&LineStr::new(points2.clone()));
+            }
+        }
     }
 
     let mut plane = Group::new();
@@ -83,6 +92,7 @@ fn main() -> Result<()> {
     sketch.add_group(&plane, &Style::new("black", "0.2mm"));
     sketch.add_group(&curve1, &Style::new("#093c80", "0.3mm"));
     sketch.add_group(&curve2, &Style::new("#a32784", "0.3mm"));
+    sketch.add_group(&curve3, &Style::new("#c9a71e", "2mm"));
     render_svg(&sketch, "./samples/002.svg")?;
     Ok(())
 }
