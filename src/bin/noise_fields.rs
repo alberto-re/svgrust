@@ -1,10 +1,13 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
+use plt::angle::Angle;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
+use plt::map_range;
 use plt::render::render_svg;
-use plt::shapes::{Circle, LineStr};
+use plt::shapes::Circle;
+use plt::shapes::LineStr;
 use plt::traits::packing::CirclePacking;
 use plt::traits::Centroid;
 use plt::traits::Contains;
@@ -12,19 +15,19 @@ use plt::traits::Sample;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
+use plt::Shape;
 use plt::Sketch;
 use plt::Style;
-use plt::{map_range, Shape};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
-fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> f64 {
+fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> Angle {
     // The idea comes from:
     // https://damoonrashidi.me/articles/flow-field-methods#noise-function-alternatives
     let dx = pos.x - focal.x;
     let dy = pos.y - focal.y;
     let val = f64::sqrt(dx.powi(2) + dy.powi(2));
-    map_range(val, 0., max_dist, 0., TAU)
+    Angle::from_radians(map_range(val, 0., max_dist, 0., TAU))
 }
 
 fn main() -> Result<()> {
@@ -124,23 +127,6 @@ fn main() -> Result<()> {
     frame.add_lstr(&bbox.scale_unit(54.).to_linestr(true));
     frame.add_lstr(&bbox.scale_unit(56.).to_linestr(true));
     frame.add_lstr(&bbox.scale_unit(58.).to_linestr(true));
-
-    // frame.elements = frame
-    //     .linestrings()
-    //     .iter()
-    //     .flat_map(|frame| {
-    //         frame.clip_many(
-    //             &glyphs
-    //                 .circles()
-    //                 .iter()
-    //                 .map(|c| c.scale(1.5).to_linestr(15))
-    //                 .collect::<Vec<LineStr>>(),
-    //             true,
-    //         )
-    //     })
-    //     .filter(|linestring| linestring.points.first().unwrap().euclidean_distance(linestring.points.last().unwrap()) > 2.)
-    //     .map(|linestring| Shape::LineString(linestring.clone()))
-    //     .collect::<Vec<Shape>>();
 
     sketch.add_group(&trails, &Style::new("black", "1.5px"));
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));

@@ -46,7 +46,7 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
 
     let curve1 = ParametricCurve::new(50., 1., 1., 1.);
-    
+
     let perlin = Perlin::new(7);
 
     let mut points1 = curve1
@@ -71,14 +71,24 @@ fn main() -> Result<()> {
             })
             .collect::<Vec<Vec2>>();
         curve1.add_lstr(&LineStr::new(points1.clone()));
-        curve2.add_lstr(&LineStr::new(points1.iter().map(|p| *p + Vec2 { x: 3., y: 1.}).collect::<Vec<_>>().clone()));
+        curve2.add_lstr(&LineStr::new(
+            points1
+                .iter()
+                .map(|p| *p + Vec2 { x: 3., y: 1. })
+                .collect::<Vec<_>>()
+                .clone(),
+        ));
 
         if z == 0 {
             for factor in 1..16 {
-                let points2 = points1.clone().iter().map(|p| {
-                    let angle = sketch.center().angle(*p);
-                    *p - Vec2::from_angle_length(angle, 6. * factor as f64)
-                }).collect::<Vec<Vec2>>();
+                let points2 = points1
+                    .clone()
+                    .iter()
+                    .map(|p| {
+                        let angle = sketch.center().angle(*p);
+                        *p - Vec2::from_angle_length(angle, 6. * factor as f64)
+                    })
+                    .collect::<Vec<Vec2>>();
                 curve3.add_lstr(&LineStr::new(points2.clone()));
             }
         }
