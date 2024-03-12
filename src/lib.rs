@@ -146,6 +146,14 @@ impl Sketch {
         self.as_rect().centroid()
     }
 
+    pub fn width(&self) -> f64 {
+        self.as_rect().width
+    }
+
+    pub fn height(&self) -> f64 {
+        self.as_rect().height
+    }
+
     pub fn top_middle(&self, margin: f64) -> Vec2 {
         Vec2 {
             x: self.as_rect().width / 2.,
