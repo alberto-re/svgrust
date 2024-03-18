@@ -3,13 +3,12 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
-use crate::shapes::{Circle, LineStr, Rect};
+use crate::shapes::{Circle, LineStr, Polygon, Rect};
 use crate::vec2::Vec2;
 use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
 use geo::Coord;
 use geo::CoordsIter;
-use geo::Polygon;
 use rand::rngs::StdRng;
 use rand::Rng;
 
@@ -44,6 +43,11 @@ pub trait Contains {
 
 pub trait Translate {
     fn translate(&self, displacement: Vec2) -> Self;
+}
+
+pub trait ToGeoLineString {
+    fn to_geo_linestring(&self) -> geo::LineString;
+    fn to_geo_multilinestring(&self) -> geo::MultiLineString;
 }
 
 impl Centroid for LineStr {
@@ -124,7 +128,7 @@ impl Rotate for LineStr {
     // TODO: add direction (clockwise, anti-clockwise) of rotation
     // TODO: implement from scratch?
     fn rotate(&self, angle: Angle) -> Self {
-        let poly: Polygon = geo::Polygon::new(
+        let poly: geo::Polygon = geo::Polygon::new(
             geo::LineString::new(
                 self.points
                     .clone()
@@ -143,6 +147,64 @@ impl Rotate for LineStr {
                 .map(|p| Vec2 { x: p.x, y: p.y })
                 .collect::<Vec<Vec2>>(),
         )
+    }
+}
+
+impl ToGeoLineString for LineStr {
+    fn to_geo_linestring(&self) -> geo::LineString {
+        geo::LineString::new(
+            self.points
+                .clone()
+                .iter()
+                .map(|v| coord! {x: v.x, y:v.y})
+                .collect::<Vec<Coord>>(),
+        )
+    }
+
+    fn to_geo_multilinestring(&self) -> geo::MultiLineString {
+        geo::MultiLineString::new(vec![self.to_geo_linestring()])
+    }
+}
+
+impl Rotate for Polygon {
+    // TODO: add direction (clockwise, anti-clockwise) of rotation
+    // TODO: implement from scratch?
+    fn rotate(&self, angle: Angle) -> Self {
+        let poly: geo::Polygon = geo::Polygon::new(
+            geo::LineString::new(
+                self.points
+                    .clone()
+                    .iter()
+                    .map(|v| coord! {x: v.x, y: v.y})
+                    .collect::<Vec<Coord>>(),
+            ),
+            vec![],
+        );
+        let degrees = angle.as_radians() * 180.0 / TAU;
+        let poly = poly.rotate_around_centroid(degrees);
+        Polygon::new(
+            poly.exterior()
+                .points()
+                .map(|p| p.coords_iter().nth(0).unwrap())
+                .map(|p| Vec2 { x: p.x, y: p.y })
+                .collect::<Vec<Vec2>>(),
+        )
+    }
+}
+
+impl ToGeoLineString for Polygon {
+    fn to_geo_linestring(&self) -> geo::LineString {
+        geo::LineString::new(
+            self.points
+                .clone()
+                .iter()
+                .map(|v| coord! {x: v.x, y:v.y})
+                .collect::<Vec<Coord>>(),
+        )
+    }
+
+    fn to_geo_multilinestring(&self) -> geo::MultiLineString {
+        geo::MultiLineString::new(vec![self.to_geo_linestring()])
     }
 }
 

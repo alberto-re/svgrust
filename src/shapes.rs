@@ -1,12 +1,11 @@
 use std::f64::consts::TAU;
 
 use crate::grid::SquareGrid;
+use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
 use geo::algorithm::bool_ops::BooleanOps;
-use geo::MultiLineString;
+use geo::Coord;
 use geo::MultiPolygon;
-use geo::Polygon;
-use geo::{coord, Coord};
 
 #[derive(Clone, PartialEq)]
 pub struct LineStr {
@@ -32,26 +31,10 @@ impl LineStr {
         self.clone()
     }
 
-    pub fn clip(&self, other: &LineStr, invert: bool) -> Vec<LineStr> {
-        let ls = geo::LineString(
-            self.points
-                .clone()
-                .iter()
-                .map(|v| coord! {x: v.x, y: v.y})
-                .collect::<Vec<Coord>>(),
-        );
-        let mls = MultiLineString::new(vec![ls]);
-        let poly_lstr = geo::LineString::new(
-            other
-                .points
-                .clone()
-                .iter()
-                .map(|v| coord! {x: v.x, y:v.y})
-                .collect::<Vec<Coord>>(),
-        );
-        let poly = Polygon::new(poly_lstr, vec![]);
+    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineStr> {
+        let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
         let mpoly = MultiPolygon::new(vec![poly]);
-        let clipped = mpoly.clip(&mls, invert);
+        let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
         let mut res = vec![];
         clipped.0.iter().for_each(|l| {
             let mut points: Vec<Coord> = vec![];
@@ -68,13 +51,67 @@ impl LineStr {
         res
     }
 
-    pub fn clip_many(&self, others: &[LineStr], invert: bool) -> Vec<LineStr> {
+    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineStr> {
         let mut retval = vec![self.clone()];
         others.iter().for_each(|other| {
             retval = retval
                 .iter()
                 .flat_map(|l| l.clip(other, invert))
                 .collect::<Vec<_>>();
+        });
+        retval
+    }
+}
+
+#[derive(Clone, PartialEq)]
+pub struct Polygon {
+    pub points: Vec<Vec2>,
+}
+
+impl Polygon {
+    pub fn new(points: Vec<Vec2>) -> Self {
+        Self { points }
+    }
+
+    pub fn add_vec(&mut self, vec: Vec2) -> Self {
+        self.points.iter_mut().for_each(|p| {
+            p.x += vec.x;
+            p.y += vec.y;
+        });
+        self.clone()
+    }
+
+    pub fn to_linestring(&self) -> LineStr {
+        LineStr::new(self.points.clone())
+    }
+
+    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineStr> {
+        let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
+        let mpoly = MultiPolygon::new(vec![poly]);
+        let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
+        let mut res = vec![];
+        clipped.0.iter().for_each(|l| {
+            let mut points: Vec<Coord> = vec![];
+            l.clone().into_points().iter().for_each(|p| {
+                points.push(p.0);
+            });
+            res.push(LineStr::new(
+                points
+                    .iter()
+                    .map(|c| Vec2 { x: c.x, y: c.y })
+                    .collect::<Vec<Vec2>>(),
+            ));
+        });
+        res
+    }
+
+    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineStr> {
+        let mut retval = vec![self.to_linestring()];
+        others.iter().for_each(|other| {
+            retval = retval
+                .iter()
+                .flat_map(|l| l.clip(other, invert))
+                .collect::<Vec<LineStr>>();
         });
         retval
     }
@@ -145,6 +182,28 @@ impl Rect {
             points.push(self.xy);
         }
         LineStr { points }
+    }
+
+    pub fn to_polygon(&self, close: bool) -> Polygon {
+        let mut points = vec![
+            self.xy,
+            Vec2 {
+                x: self.xy.x + self.width,
+                y: self.xy.y,
+            },
+            Vec2 {
+                x: self.xy.x + self.width,
+                y: self.xy.y + self.height,
+            },
+            Vec2 {
+                x: self.xy.x,
+                y: self.xy.y + self.height,
+            },
+        ];
+        if close {
+            points.push(self.xy);
+        }
+        Polygon { points }
     }
 
     pub fn into_square_grid(&self, square_side: f64) -> SquareGrid {

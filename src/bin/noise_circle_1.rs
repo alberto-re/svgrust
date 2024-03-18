@@ -6,6 +6,7 @@ use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::LineStr;
+use plt::shapes::Polygon;
 use plt::shapes::Rect;
 use plt::traits::Rotate;
 use plt::vec2::Vec2;
@@ -16,14 +17,13 @@ use plt::Style;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
     let perlin = Perlin::new(37);
-    let noise_ratio: f64 = 0.0002;
+    let noise_ratio: f64 = 0.00015;
     let mut group = Group::new();
     let mut angle = 0.;
-    let mut polygons: Vec<LineStr> = vec![];
+    let mut polygons: Vec<Polygon> = vec![];
 
-    for x in (60..400).step_by(3) {
-        let rect = &Rect::new(Vec2::new(x as f64, 60.), 50., 50.);
-        let polygon = rect.to_linestr(true);
+    for x in (60..500).step_by(4) {
+        let polygon = &Rect::new(Vec2::new(x as f64, 60.), 50., 50.).to_polygon(true);
         let noise_value = perlin.get([x as f64 * noise_ratio, x as f64]);
         angle += noise_value;
         let polygon = polygon.rotate(Angle::from_radians(angle));
