@@ -20,7 +20,8 @@ fn main() -> Result<()> {
     let mut group = Group::new();
     let mut angle = 0.;
     let mut polygons: Vec<LineStr> = vec![];
-    for x in (60..500).step_by(3) {
+
+    for x in (60..400).step_by(3) {
         let rect = &Rect::new(Vec2::new(x as f64, 60.), 50., 50.);
         let polygon = rect.to_linestr(true);
         let noise_value = perlin.get([x as f64 * noise_ratio, x as f64]);

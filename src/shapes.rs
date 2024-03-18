@@ -24,15 +24,6 @@ impl LineStr {
         }
     }
 
-    pub fn from_tuples(points: Vec<(f64, f64)>) -> Self {
-        Self::new(
-            points
-                .iter()
-                .map(|p| Vec2 { x: p.0, y: p.1 })
-                .collect::<Vec<Vec2>>(),
-        )
-    }
-
     pub fn add_vec(&mut self, vec: Vec2) -> Self {
         self.points.iter_mut().for_each(|p| {
             p.x += vec.x;
