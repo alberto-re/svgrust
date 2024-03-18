@@ -28,12 +28,12 @@ fn main() -> Result<()> {
     let col_size = sketch.width() / cols as f64;
     let row_size = sketch.height() / rows as f64;
 
-    for y in -5..rows+5 {
+    for y in -5..rows + 5 {
         let mut point_set1 = vec![];
         let mut point_set2 = vec![];
         let mut point_set3 = vec![];
         let mut point_set4 = vec![];
-        for x in -5..cols+5 {
+        for x in -5..cols + 5 {
             let noise_val1 = perlin.get([x as f64 * noise_ratio_x, y as f64 * noise_ratio_y, 0.]);
             let noise_val1 = noise_val1 * noise_mul;
             let noise_val2 = perlin.get([x as f64 * noise_ratio_x, y as f64 * noise_ratio_y, 0.25]);
@@ -44,33 +44,45 @@ fn main() -> Result<()> {
             let noise_val4 = noise_val4 * noise_mul;
             point_set1.push(Vec2 {
                 x: x as f64 * col_size,
-                y: y as f64 * row_size + noise_val1 as f64,
+                y: y as f64 * row_size + noise_val1,
             });
             point_set2.push(Vec2 {
                 x: x as f64 * col_size,
-                y: y as f64 * row_size + noise_val2 as f64,
+                y: y as f64 * row_size + noise_val2,
             });
             point_set3.push(Vec2 {
                 x: x as f64 * col_size,
-                y: y as f64 * row_size + noise_val3 as f64,
+                y: y as f64 * row_size + noise_val3,
             });
             point_set4.push(Vec2 {
                 x: x as f64 * col_size,
-                y: y as f64 * row_size + noise_val4 as f64,
+                y: y as f64 * row_size + noise_val4,
             });
         }
-        let _ = &LineStr::new(point_set1).clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false).iter().for_each(|l| {
-            line_set1.add_lstr(&l);
-        });
-        let _ = &LineStr::new(point_set2).clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false).iter().for_each(|l| {
-            line_set2.add_lstr(&l);
-        });
-        let _ = &LineStr::new(point_set3).clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false).iter().for_each(|l| {
-            line_set3.add_lstr(&l);
-        });
-        let _ = &LineStr::new(point_set4).clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false).iter().for_each(|l| {
-            line_set4.add_lstr(&l);
-        });
+        let _ = &LineStr::new(point_set1)
+            .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
+            .iter()
+            .for_each(|l| {
+                line_set1.add_lstr(l);
+            });
+        let _ = &LineStr::new(point_set2)
+            .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
+            .iter()
+            .for_each(|l| {
+                line_set2.add_lstr(l);
+            });
+        let _ = &LineStr::new(point_set3)
+            .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
+            .iter()
+            .for_each(|l| {
+                line_set3.add_lstr(l);
+            });
+        let _ = &LineStr::new(point_set4)
+            .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
+            .iter()
+            .for_each(|l| {
+                line_set4.add_lstr(l);
+            });
     }
 
     line_set5.add_rect(&sketch.as_rect().scale_unit(1.));

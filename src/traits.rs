@@ -2,6 +2,7 @@ pub mod packing;
 
 use std::f64::consts::TAU;
 
+use crate::angle::Angle;
 use crate::shapes::{Circle, LineStr, Rect};
 use crate::vec2::Vec2;
 use geo::algorithm::Rotate as GeoRotate;
@@ -30,7 +31,7 @@ pub trait Chaikin {
 }
 
 pub trait Rotate {
-    fn rotate(&self, radians: f64) -> Self;
+    fn rotate(&self, angle: Angle) -> Self;
 }
 
 pub trait Centroid {
@@ -122,7 +123,7 @@ impl Rotate for LineStr {
     // and represents a polygon.
     // TODO: add direction (clockwise, anti-clockwise) of rotation
     // TODO: implement from scratch?
-    fn rotate(&self, radians: f64) -> Self {
+    fn rotate(&self, angle: Angle) -> Self {
         let poly: Polygon = geo::Polygon::new(
             geo::LineString::new(
                 self.points
@@ -133,7 +134,7 @@ impl Rotate for LineStr {
             ),
             vec![],
         );
-        let degrees = radians * 180.0 / TAU;
+        let degrees = angle.as_radians() * 180.0 / TAU;
         let poly = poly.rotate_around_centroid(degrees);
         LineStr::new(
             poly.exterior()

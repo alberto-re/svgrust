@@ -1,6 +1,7 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
+use plt::angle::Angle;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
@@ -31,7 +32,7 @@ fn add_square_spiral_with_center(
         };
         let rect = rect.scale_perc(scale);
         let rect = rect.to_linestr(true);
-        let rect = rect.rotate(start_angle + TAU * scale);
+        let rect = rect.rotate(Angle::from_radians(start_angle + TAU * scale));
         let rect = rect.upsample(1);
         let rect = rect.chaikin(5, true);
         group.add_lstr(&rect);
