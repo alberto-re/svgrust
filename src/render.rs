@@ -54,6 +54,14 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
+                Shape::Polygon(s) => {
+                    let mut data = Data::new().move_to((s.points[0].x, s.points[0].y));
+                    for p in s.points[1..].iter() {
+                        data = data.line_to((p.x, p.y));
+                    }
+                    let e = svg::node::element::Path::new().set("d", data);
+                    group = group.add(e);
+                }
                 Shape::Arc(s) => {
                     let p1 = coord! {
                         x: s.center.x + s.start.cos() * s.radius,

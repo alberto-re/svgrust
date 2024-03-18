@@ -17,6 +17,7 @@ pub enum Shape {
     Circle(shapes::Circle),
     Rectangle(shapes::Rect),
     LineString(shapes::LineStr),
+    Polygon(shapes::Polygon),
 }
 
 #[derive(Clone)]
@@ -58,6 +59,10 @@ impl Group {
 
     pub fn add_lstr(&mut self, linestr: &shapes::LineStr) {
         self.elements.push(Shape::LineString(linestr.clone()));
+    }
+
+    pub fn add_polygon(&mut self, polygon: &shapes::Polygon) {
+        self.elements.push(Shape::Polygon(polygon.clone()));
     }
 
     pub fn add_lstrs(&mut self, linestr: &[shapes::LineStr]) {
@@ -109,6 +114,9 @@ impl Group {
                 } else {
                     outside.add_lstr(&s.clone());
                 }
+            }
+            Shape::Polygon(_) => {
+                unreachable!();
             }
         });
         (inside, outside)
