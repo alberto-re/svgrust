@@ -3,7 +3,7 @@ use crate::traits::Translate;
 use std::f64::consts::PI;
 use std::ops;
 
-/// A two dimensional vector representation.
+/// A 2 dimensional vector
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Vec2 {
     pub x: f64,
@@ -11,16 +11,17 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
+    /// Construct a new vector using provided x, y and z values
     pub fn new(x: f64, y: f64) -> Self {
         Self { x, y }
     }
 
-    /// Create a Vec2 from an angle and a length.
+    /// Construct a new vector using provided angle and length
     pub fn from_angle_length(angle: Angle, length: f64) -> Self {
         Vec2::new(angle.cos() * length, angle.sin() * length)
     }
 
-    /// Calculate the euclidean distance between this and another Vec2.
+    /// Calculate the euclidean distance between this and another vector
     pub fn euclidean_distance(&self, other: &Vec2) -> f64 {
         ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
     }
@@ -32,7 +33,7 @@ impl Vec2 {
         Vec2 { x, y }
     }
 
-    /// Calculate the angle respect another point on the plane.
+    /// Calculate the angle respect another point on the plane
     pub fn angle(self, target: Vec2) -> Angle {
         let signed = f64::atan2(target.y - self.y, target.x - self.x);
         if signed.is_sign_negative() {
