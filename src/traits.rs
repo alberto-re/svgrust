@@ -3,7 +3,7 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
-use crate::shapes::{Circle, LineStr, Polygon, Rect};
+use crate::shapes::{Circle, LineString, Polygon, Rect};
 use crate::vec2::Vec2;
 use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
@@ -50,7 +50,7 @@ pub trait ToGeoLineString {
     fn to_geo_multilinestring(&self) -> geo::MultiLineString;
 }
 
-impl Centroid for LineStr {
+impl Centroid for LineString {
     fn centroid(&self) -> Vec2 {
         // TODO: we must prevent division by zero
         let mut xsum: f64 = 0.;
@@ -66,7 +66,7 @@ impl Centroid for LineStr {
     }
 }
 
-impl Upsample for LineStr {
+impl Upsample for LineString {
     fn upsample(&self, factor: u64) -> Self {
         // TODO: add wrap bool argument like Chaikin
         let mut points = self.points.clone();
@@ -86,11 +86,11 @@ impl Upsample for LineStr {
             });
             points = upsampled.clone();
         });
-        LineStr::new(points)
+        LineString::new(points)
     }
 }
 
-impl Chaikin for LineStr {
+impl Chaikin for LineString {
     fn chaikin(&self, iterations: u64, closed: bool) -> Self {
         let mut points = self.points.clone();
         (0..iterations).for_each(|_| {
@@ -117,11 +117,11 @@ impl Chaikin for LineStr {
             }
             points = smoothed.clone();
         });
-        LineStr::new(points)
+        LineString::new(points)
     }
 }
 
-impl Rotate for LineStr {
+impl Rotate for LineString {
     // TODO: this should be a polygon method.
     // For simplicity here we assume the linestring is closed
     // and represents a polygon.
@@ -140,7 +140,7 @@ impl Rotate for LineStr {
         );
         let degrees = angle.as_radians() * 180.0 / TAU;
         let poly = poly.rotate_around_centroid(degrees);
-        LineStr::new(
+        LineString::new(
             poly.exterior()
                 .points()
                 .map(|p| p.coords_iter().nth(0).unwrap())
@@ -150,7 +150,7 @@ impl Rotate for LineStr {
     }
 }
 
-impl ToGeoLineString for LineStr {
+impl ToGeoLineString for LineString {
     fn to_geo_linestring(&self) -> geo::LineString {
         geo::LineString::new(
             self.points

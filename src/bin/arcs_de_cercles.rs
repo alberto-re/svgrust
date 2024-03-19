@@ -3,7 +3,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::vec2::Vec2;
 use plt::Group;
@@ -59,7 +59,7 @@ fn main() -> Result<()> {
         ]);
     });
 
-    let mut circles_lstr: Vec<Vec<LineStr>> = vec![];
+    let mut circles_lstr: Vec<Vec<LineString>> = vec![];
     circles.iter().for_each(|circle| {
         circles_lstr.push(
             circle
@@ -69,17 +69,17 @@ fn main() -> Result<()> {
         )
     });
 
-    let mut circles_lstr2: Vec<Vec<LineStr>> = vec![];
+    let mut circles_lstr2: Vec<Vec<LineString>> = vec![];
     for (i, circle) in circles_lstr.iter().enumerate() {
         let other_index = if i == 0 {
             circles_lstr.len() - 1
         } else {
             i - 1
         };
-        let mut newlist: Vec<LineStr> = vec![];
+        let mut newlist: Vec<LineString> = vec![];
         for subc in circle {
-            let parts: Vec<LineStr> = vec![subc.clone()];
-            let mut partsnew: Vec<LineStr> = vec![];
+            let parts: Vec<LineString> = vec![subc.clone()];
+            let mut partsnew: Vec<LineString> = vec![];
             for part in &parts {
                 part.clip(&circles_lstr[other_index][0], true)
                     .iter()

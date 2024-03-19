@@ -4,7 +4,7 @@ use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::vec2::Vec2;
 use plt::Group;
@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let noiseratio: f64 = 0.005;
 
     let mut group = Group::new();
-    let mut lstrs: Vec<LineStr> = vec![];
+    let mut lstrs: Vec<LineString> = vec![];
     let center = sketch.as_rect().centroid();
     (-dy..dy).for_each(|j| {
         let mut points = vec![];
@@ -42,13 +42,13 @@ fn main() -> Result<()> {
                 y: y + val as f64,
             });
         });
-        let lstr = LineStr::new(points);
+        let lstr = LineString::new(points);
         lstrs.push(lstr);
     });
 
-    let mut lstrs2: Vec<LineStr> = vec![];
+    let mut lstrs2: Vec<LineString> = vec![];
     for i in 1..lstrs.len() - 1 {
-        let mut segments: Vec<LineStr> = vec![lstrs[i].clone()];
+        let mut segments: Vec<LineString> = vec![lstrs[i].clone()];
         for other in lstrs.iter().take(lstrs.len() - 1).skip(i + 1) {
             let mut points: Vec<Vec2> = other.points.clone();
             let first = points[0];
@@ -64,8 +64,8 @@ fn main() -> Result<()> {
                 x: last.x,
                 y: -1000.,
             });
-            let other: LineStr = LineStr::new(points);
-            let mut newsegments: Vec<LineStr> = vec![];
+            let other: LineString = LineString::new(points);
+            let mut newsegments: Vec<LineString> = vec![];
             segments.iter().for_each(|s| {
                 let subs = s.clip(&other, false);
                 subs.iter().for_each(|subseg| {
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
     }
     lstrs2.push(lstrs.last().unwrap().clone());
 
-    let mut lstrs3: Vec<LineStr> = vec![];
+    let mut lstrs3: Vec<LineString> = vec![];
     lstrs2.iter().for_each(|l| {
         let s = l.clip(&sketch.as_rect().to_linestr(true), false);
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));

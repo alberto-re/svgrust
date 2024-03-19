@@ -5,7 +5,7 @@ use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::traits::Translate;
 use plt::vec2::Vec2;
@@ -70,8 +70,8 @@ fn main() -> Result<()> {
                 *p + Vec2::from_angle_length(angle, 6. * noise_val)
             })
             .collect::<Vec<Vec2>>();
-        curve1.add_lstr(&LineStr::new(points1.clone()));
-        curve2.add_lstr(&LineStr::new(
+        curve1.add_lstr(&LineString::new(points1.clone()));
+        curve2.add_lstr(&LineString::new(
             points1
                 .iter()
                 .map(|p| *p + Vec2 { x: 3., y: 1. })
@@ -89,7 +89,7 @@ fn main() -> Result<()> {
                         *p - Vec2::from_angle_length(angle, 6. * factor as f64)
                     })
                     .collect::<Vec<Vec2>>();
-                curve3.add_lstr(&LineStr::new(points2.clone()));
+                curve3.add_lstr(&LineString::new(points2.clone()));
             }
         }
     }

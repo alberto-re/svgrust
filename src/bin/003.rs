@@ -3,7 +3,7 @@ use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
@@ -32,7 +32,7 @@ fn main() -> Result<()> {
             x: (step - 300) as f64,
             y: sketch.as_rect().height,
         };
-        let _ = &LineStr::new(vec![start, end])
+        let _ = &LineString::new(vec![start, end])
             .clip(&bbox, false)
             .iter()
             .for_each(|l| lines1.add_lstr(&l.clone()));
@@ -44,7 +44,7 @@ fn main() -> Result<()> {
             x: (step - 303) as f64,
             y: sketch.as_rect().height,
         };
-        let _ = &LineStr::new(vec![start, end])
+        let _ = &LineString::new(vec![start, end])
             .clip(&bbox, false)
             .iter()
             .for_each(|l| lines2.add_lstr(&l.clone()));
@@ -52,7 +52,7 @@ fn main() -> Result<()> {
 
     let bbox = circle.scale_perc(1.10).to_linestr(200);
     for step in (0..1000).step_by(5) {
-        LineStr::new(vec![
+        LineString::new(vec![
             Vec2 {
                 x: 0.,
                 y: step as f64,

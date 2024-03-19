@@ -6,7 +6,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
@@ -38,7 +38,7 @@ fn main() -> Result<()> {
             x: center.x + angle.cos() * square_side,
             y: center.y + angle.sin() * square_side,
         };
-        let arrow = LineStr::new(vec![*center, move_to]);
+        let arrow = LineString::new(vec![*center, move_to]);
         group1.add_lstr(&arrow);
     });
 

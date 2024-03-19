@@ -7,7 +7,7 @@ pub mod traits;
 pub mod vec2;
 
 use layout::PageLayout;
-use shapes::{Circle, LineStr, Rect};
+use shapes::{Circle, LineString, Rect};
 use traits::{Centroid, Contains};
 use vec2::Vec2;
 
@@ -16,7 +16,7 @@ pub enum Shape {
     Arc(shapes::Arc),
     Circle(shapes::Circle),
     Rectangle(shapes::Rect),
-    LineString(shapes::LineStr),
+    LineString(shapes::LineString),
     Polygon(shapes::Polygon),
 }
 
@@ -57,7 +57,7 @@ impl Group {
         self.elements.push(Shape::Rectangle(rect.clone()));
     }
 
-    pub fn add_lstr(&mut self, linestr: &shapes::LineStr) {
+    pub fn add_lstr(&mut self, linestr: &shapes::LineString) {
         self.elements.push(Shape::LineString(linestr.clone()));
     }
 
@@ -65,13 +65,13 @@ impl Group {
         self.elements.push(Shape::Polygon(polygon.clone()));
     }
 
-    pub fn add_lstrs(&mut self, linestr: &[shapes::LineStr]) {
+    pub fn add_lstrs(&mut self, linestr: &[shapes::LineString]) {
         linestr.iter().for_each(|l| {
             self.elements.push(Shape::LineString(l.clone()));
         });
     }
 
-    pub fn linestrings(&self) -> Vec<LineStr> {
+    pub fn linestrings(&self) -> Vec<LineString> {
         let mut lstrs = vec![];
         self.elements.iter().for_each(|e| {
             if let Shape::LineString(s) = e {

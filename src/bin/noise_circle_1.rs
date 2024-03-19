@@ -7,10 +7,11 @@ use plt::angle::Angle;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::shapes::Polygon;
 use plt::shapes::Rect;
 use plt::traits::Rotate;
+use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
@@ -31,9 +32,9 @@ fn main() -> Result<()> {
     let mut y = 15.;
     let mut x = 10.;
     let mut t = 0.;
-    while y < sketch.height() - y_step - side {
+    while y < sketch.height() - side / 2. {
         angle = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU;
-        while x < sketch.width() - 60. {
+        while x < sketch.width() - side - x_step * 4. {
             let xy = Vec2::new(x, y);
             let polygon = &Rect::new(xy, side, side).to_polygon(true);
             let noise_value = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU / 20.;
@@ -47,7 +48,7 @@ fn main() -> Result<()> {
         t += 0.001;
     }
 
-    let mut clipped: Vec<LineStr> = vec![];
+    let mut clipped: Vec<LineString> = vec![];
 
     for (i, polygon) in polygons.iter().enumerate() {
         let segments = polygon.clip_many(&polygons[i + 1..], true);
@@ -55,6 +56,8 @@ fn main() -> Result<()> {
     }
 
     clipped.iter().for_each(|p| group.add_lstr(&p.clone()));
+
+    group.add_rect(&sketch.as_rect().scale_perc(0.99));
 
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
     render_svg(&sketch, "./samples/noise_circle_1.svg")?;

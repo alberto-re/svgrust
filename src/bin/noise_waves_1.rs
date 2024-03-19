@@ -4,7 +4,7 @@ use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
@@ -59,25 +59,25 @@ fn main() -> Result<()> {
                 y: y as f64 * row_size + noise_val4,
             });
         }
-        let _ = &LineStr::new(point_set1)
+        let _ = &LineString::new(point_set1)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
                 line_set1.add_lstr(l);
             });
-        let _ = &LineStr::new(point_set2)
+        let _ = &LineString::new(point_set2)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
                 line_set2.add_lstr(l);
             });
-        let _ = &LineStr::new(point_set3)
+        let _ = &LineString::new(point_set3)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
                 line_set3.add_lstr(l);
             });
-        let _ = &LineStr::new(point_set4)
+        let _ = &LineString::new(point_set4)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {

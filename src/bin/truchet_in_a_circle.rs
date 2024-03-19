@@ -5,7 +5,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
@@ -51,7 +51,7 @@ fn main() -> Result<()> {
                 y: c.xy.y + c.height,
             });
         }
-        layer.add_lstr(&LineStr::new(points).add_vec(enclosing.xy));
+        layer.add_lstr(&LineString::new(points).add_vec(enclosing.xy));
     });
 
     let circle = Circle::new(

@@ -8,11 +8,11 @@ use geo::Coord;
 use geo::MultiPolygon;
 
 #[derive(Clone, PartialEq)]
-pub struct LineStr {
+pub struct LineString {
     pub points: Vec<Vec2>,
 }
 
-impl LineStr {
+impl LineString {
     pub fn new(points: Vec<Vec2>) -> Self {
         Self { points }
     }
@@ -31,7 +31,7 @@ impl LineStr {
         self.clone()
     }
 
-    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineStr> {
+    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineString> {
         let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
         let mpoly = MultiPolygon::new(vec![poly]);
         let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
@@ -41,7 +41,7 @@ impl LineStr {
             l.clone().into_points().iter().for_each(|p| {
                 points.push(p.0);
             });
-            res.push(LineStr::new(
+            res.push(LineString::new(
                 points
                     .iter()
                     .map(|c| Vec2 { x: c.x, y: c.y })
@@ -51,7 +51,7 @@ impl LineStr {
         res
     }
 
-    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineStr> {
+    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineString> {
         let mut retval = vec![self.clone()];
         others.iter().for_each(|other| {
             retval = retval
@@ -81,11 +81,11 @@ impl Polygon {
         self.clone()
     }
 
-    pub fn to_linestring(&self) -> LineStr {
-        LineStr::new(self.points.clone())
+    pub fn to_linestring(&self) -> LineString {
+        LineString::new(self.points.clone())
     }
 
-    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineStr> {
+    pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineString> {
         let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
         let mpoly = MultiPolygon::new(vec![poly]);
         let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
@@ -95,7 +95,7 @@ impl Polygon {
             l.clone().into_points().iter().for_each(|p| {
                 points.push(p.0);
             });
-            res.push(LineStr::new(
+            res.push(LineString::new(
                 points
                     .iter()
                     .map(|c| Vec2 { x: c.x, y: c.y })
@@ -105,13 +105,13 @@ impl Polygon {
         res
     }
 
-    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineStr> {
+    pub fn clip_many<T: ToGeoLineString>(&self, others: &[T], invert: bool) -> Vec<LineString> {
         let mut retval = vec![self.to_linestring()];
         others.iter().for_each(|other| {
             retval = retval
                 .iter()
                 .flat_map(|l| l.clip(other, invert))
-                .collect::<Vec<LineStr>>();
+                .collect::<Vec<LineString>>();
         });
         retval
     }
@@ -162,7 +162,7 @@ impl Rect {
         cells
     }
 
-    pub fn to_linestr(&self, close: bool) -> LineStr {
+    pub fn to_linestr(&self, close: bool) -> LineString {
         let mut points = vec![
             self.xy,
             Vec2 {
@@ -181,7 +181,7 @@ impl Rect {
         if close {
             points.push(self.xy);
         }
-        LineStr { points }
+        LineString { points }
     }
 
     pub fn to_polygon(&self, close: bool) -> Polygon {
@@ -233,7 +233,7 @@ impl Circle {
         )
     }
 
-    pub fn to_linestr(&self, points: usize) -> LineStr {
+    pub fn to_linestr(&self, points: usize) -> LineString {
         let mut pvec = vec![];
         for i in 0..points {
             let angle = TAU / points as f64 * i as f64;
@@ -243,7 +243,7 @@ impl Circle {
         }
         pvec.push(*pvec.first().unwrap());
 
-        LineStr { points: pvec }
+        LineString { points: pvec }
     }
 }
 
@@ -268,7 +268,7 @@ impl Arc {
         }
     }
 
-    pub fn to_linestr(&self, points: usize) -> LineStr {
+    pub fn to_linestr(&self, points: usize) -> LineString {
         let mut pvec = vec![];
         let arc_size: f64 = self.end - self.start;
         let step = arc_size / points as f64;
@@ -277,6 +277,6 @@ impl Arc {
             let y = (self.start + step * i as f64).sin() * self.radius + self.center.y;
             pvec.push(Vec2 { x, y });
         }
-        LineStr { points: pvec }
+        LineString { points: pvec }
     }
 }

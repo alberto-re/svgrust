@@ -7,7 +7,7 @@ use plt::layout::PageLayout;
 use plt::map_range;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::packing::CirclePacking;
 use plt::traits::Centroid;
 use plt::traits::Contains;
@@ -53,7 +53,7 @@ fn main() -> Result<()> {
             x: center.x + angle.cos() * 5.,
             y: center.y + angle.sin() * 5.,
         };
-        let arrow = LineStr::new(vec![*center, move_to]);
+        let arrow = LineString::new(vec![*center, move_to]);
         field.add_lstr(&arrow);
     });
 
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
                 }
                 trail_points.push(pos);
             }
-            let trail = LineStr::new(trail_points);
+            let trail = LineString::new(trail_points);
             trails.add_lstr(&trail);
         });
 

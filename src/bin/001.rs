@@ -3,7 +3,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Circle;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::traits::Translate;
 use plt::vec2::Vec2;
@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         .collect::<Vec<Vec2>>();
 
     let mut curve = Group::new();
-    curve.add_lstr(&LineStr::new(points));
+    curve.add_lstr(&LineString::new(points));
 
     let mut plane = Group::new();
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {

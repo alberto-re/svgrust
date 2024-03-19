@@ -5,7 +5,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
@@ -33,12 +33,12 @@ fn main() -> Result<()> {
             let x1 = x;
             let x2 = x;
             if rng.gen::<f64>() > 0.005 {
-                lines.add_lstr(&LineStr::new(vec![
+                lines.add_lstr(&LineString::new(vec![
                     Vec2 { x: x1, y: y1 },
                     Vec2 { x: x2, y: y2 },
                 ]));
             } else {
-                lines2.add_lstr(&LineStr::new(vec![
+                lines2.add_lstr(&LineString::new(vec![
                     Vec2 { x: x1, y: y1 },
                     Vec2 { x: x2, y: y2 },
                 ]));

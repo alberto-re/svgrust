@@ -5,7 +5,7 @@ use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::render::render_svg;
 use plt::shapes::Arc;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::shapes::Rect;
 use plt::traits::Centroid;
 use plt::traits::Scale;
@@ -22,7 +22,7 @@ fn main() -> Result<()> {
     let step = 2.;
     let arcs = 150;
 
-    let mut lines: Vec<LineStr> = vec![];
+    let mut lines: Vec<LineString> = vec![];
     (0..arcs).for_each(|i| {
         let start = rng.gen::<f64>() * TAU;
         let end = rng.gen::<f64>() * TAU;

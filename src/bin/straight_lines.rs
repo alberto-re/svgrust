@@ -5,7 +5,7 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
 use plt::render::render_svg;
-use plt::shapes::LineStr;
+use plt::shapes::LineString;
 use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
@@ -39,7 +39,7 @@ fn main() -> Result<()> {
             let x = coli as f64;
             let y1 = ydist * rowi as f64;
             let y2 = y1 + ydist * 0.95;
-            lines.add_lstr(&LineStr::new(vec![Vec2 { x, y: y1 }, Vec2 { x, y: y2 }]));
+            lines.add_lstr(&LineString::new(vec![Vec2 { x, y: y1 }, Vec2 { x, y: y2 }]));
         }
     }
     sketch.add_group(&lines, &Style::new("black", "1.5px"));

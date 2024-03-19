@@ -1,10 +1,10 @@
-use crate::shapes::{Circle, LineStr};
+use crate::shapes::{Circle, LineString};
 
 pub trait CirclePacking {
     fn pack_with_circles(&self, r: f64, circles: &mut Vec<Circle>, min_dist: f64) -> Vec<Circle>;
 }
 
-impl CirclePacking for LineStr {
+impl CirclePacking for LineString {
     fn pack_with_circles(&self, r: f64, circles: &mut Vec<Circle>, min_dist: f64) -> Vec<Circle> {
         let mut candidates: Vec<Circle> = vec![];
         if self.points.len() < 3 {
