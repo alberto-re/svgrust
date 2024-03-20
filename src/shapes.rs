@@ -7,6 +7,7 @@ use geo::algorithm::bool_ops::BooleanOps;
 use geo::Coord;
 use geo::MultiPolygon;
 
+/// A series of contiguous line segments represented by two or more points
 #[derive(Clone, PartialEq)]
 pub struct LineString {
     pub points: Vec<Vec2>,
@@ -63,6 +64,7 @@ impl LineString {
     }
 }
 
+/// A bounded area represented by a LineString exterior ring
 #[derive(Clone, PartialEq)]
 pub struct Polygon {
     pub points: Vec<Vec2>,
@@ -117,6 +119,7 @@ impl Polygon {
     }
 }
 
+/// A rectangle represented by an upper-left corner plus width and height dimesions
 #[derive(Clone, PartialEq)]
 pub struct Rect {
     pub xy: Vec2,
@@ -211,6 +214,7 @@ impl Rect {
     }
 }
 
+/// A circle represented by a center and a radius
 #[derive(Clone, PartialEq)]
 pub struct Circle {
     pub center: Vec2,
@@ -247,6 +251,7 @@ impl Circle {
     }
 }
 
+/// An arc represented by a center, a radius, and two angles
 #[derive(Clone, PartialEq)]
 pub struct Arc {
     pub center: Vec2,

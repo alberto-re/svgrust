@@ -24,13 +24,13 @@ fn main() -> Result<()> {
     let mut group = Group::new();
     let mut angle;
     let mut polygons: Vec<Polygon> = vec![];
-    let side = 20.;
+    let side = 32.;
 
-    let y_step = 35.;
-    let x_step = 2.5;
+    let y_step = 50.;
+    let x_step = 3.5;
 
-    let mut y = 15.;
-    let mut x = 10.;
+    let mut y = 10.;
+    let mut x = 5.;
     let mut t = 0.;
     while y < sketch.height() - side / 2. {
         angle = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU;
@@ -57,7 +57,7 @@ fn main() -> Result<()> {
 
     clipped.iter().for_each(|p| group.add_lstr(&p.clone()));
 
-    group.add_rect(&sketch.as_rect().scale_perc(0.99));
+    // group.add_rect(&sketch.as_rect().scale_perc(0.99));
 
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
     render_svg(&sketch, "./samples/noise_circle_1.svg")?;
