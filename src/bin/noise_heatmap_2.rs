@@ -3,7 +3,6 @@ use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::traits::Scale;
 use plt::Group;
@@ -45,6 +44,9 @@ fn main() -> Result<()> {
     sketch.add_group(&group1, &Style::new("blue", "1.0px"));
     sketch.add_group(&group2, &Style::new("violet", "1.0px"));
 
-    render_svg(&sketch, "./samples/noise_heatmap_2.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/noise_heatmap_2.svg")?;
     Ok(())
 }

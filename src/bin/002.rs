@@ -3,7 +3,6 @@ use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::Centroid;
@@ -103,6 +102,6 @@ fn main() -> Result<()> {
     sketch.add_group(&curve1, &Style::new("#093c80", "0.3mm"));
     sketch.add_group(&curve2, &Style::new("#a32784", "0.3mm"));
     sketch.add_group(&curve3, &Style::new("#c9a71e", "2mm"));
-    render_svg(&sketch, "./samples/002.svg")?;
+    sketch.debug().render().save_to_file("./samples/002.svg")?;
     Ok(())
 }

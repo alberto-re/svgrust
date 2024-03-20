@@ -1,7 +1,6 @@
 use anyhow::Result;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::Centroid;
@@ -97,6 +96,9 @@ fn main() -> Result<()> {
 
     sketch.add_group(&group, &Style::new("black", "1.5px"));
 
-    render_svg(&sketch, "./samples/arcs_de_cercles.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/arcs_de_cercles.svg")?;
     Ok(())
 }

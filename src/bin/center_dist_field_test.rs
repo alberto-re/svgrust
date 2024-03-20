@@ -4,7 +4,6 @@ use anyhow::Result;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
-use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::traits::Centroid;
 use plt::traits::Scale;
@@ -42,6 +41,9 @@ fn main() -> Result<()> {
     });
 
     sketch.add_group(&group1, &Style::new("black", "1.0px"));
-    render_svg(&sketch, "./samples/center_dist_field_test.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/center_dist_field_test.svg")?;
     Ok(())
 }

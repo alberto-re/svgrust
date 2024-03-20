@@ -3,13 +3,11 @@ use std::f64::consts::TAU;
 
 use crate::Shape;
 use crate::Sketch;
-use anyhow::Context;
-use anyhow::Result;
 use geo::coord;
 use svg::node::element::path::Data;
 use svg::Document;
 
-pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
+pub fn render_svg(sketch: &Sketch) -> Document {
     let mut doc = Document::new()
         .set(
             "xmlns:inkscape",
@@ -84,7 +82,5 @@ pub fn render_svg(sketch: &Sketch, path: &str) -> Result<()> {
         }
         doc = doc.add(group);
     }
-    svg::save(path, &doc).context("Cannot save SVG file")?;
-    println!("Output written in '{path}'");
-    Ok(())
+    doc
 }

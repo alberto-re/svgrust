@@ -1,7 +1,6 @@
 use anyhow::Result;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::Scale;
@@ -72,6 +71,6 @@ fn main() -> Result<()> {
     sketch.add_group(&lines1, &Style::new("#093c80", "0.45mm"));
     sketch.add_group(&lines2, &Style::new("#a32784", "0.45mm"));
     //sketch.add_group(&lines3, &Style::new("black", "0.45mm"));
-    render_svg(&sketch, "./samples/003.svg")?;
+    sketch.debug().render().save_to_file("./samples/003.svg")?;
     Ok(())
 }

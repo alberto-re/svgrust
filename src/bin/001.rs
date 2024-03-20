@@ -1,7 +1,6 @@
 use anyhow::Result;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::Centroid;
@@ -62,6 +61,6 @@ fn main() -> Result<()> {
     sketch.add_group(&plane, &Style::new("black", "0.2mm"));
     sketch.add_group(&curve, &Style::new("#093c80", "0.2mm"));
 
-    render_svg(&sketch, "./samples/001.svg")?;
+    sketch.debug().render().save_to_file("./samples/001.svg")?;
     Ok(())
 }

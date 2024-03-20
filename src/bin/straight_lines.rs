@@ -4,7 +4,6 @@ use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
-use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::vec2::Vec2;
 use plt::Group;
@@ -43,6 +42,9 @@ fn main() -> Result<()> {
         }
     }
     sketch.add_group(&lines, &Style::new("black", "1.5px"));
-    render_svg(&sketch, "./samples/straight_lines.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/straight_lines.svg")?;
     Ok(())
 }

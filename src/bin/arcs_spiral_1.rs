@@ -3,7 +3,6 @@ use std::f64::consts::TAU;
 use anyhow::Result;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Arc;
 use plt::shapes::LineString;
 use plt::shapes::Rect;
@@ -47,6 +46,9 @@ fn main() -> Result<()> {
     });
     group.add_lstrs(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));
-    render_svg(&sketch, "./samples/arcs_spiral_1.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/arcs_spiral_1.svg")?;
     Ok(())
 }

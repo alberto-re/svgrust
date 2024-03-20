@@ -4,7 +4,6 @@ use anyhow::Result;
 use plt::angle::Angle;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Rect;
 use plt::traits::Centroid;
 use plt::traits::Chaikin;
@@ -50,6 +49,9 @@ fn main() -> Result<()> {
         &mut group,
     );
     sketch.add_group(&group, &Style::new("black", "1.0px"));
-    render_svg(&sketch, "./samples/cercle_carre.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/cercle_carre.svg")?;
     Ok(())
 }

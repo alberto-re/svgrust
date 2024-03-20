@@ -3,7 +3,6 @@ use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
@@ -96,6 +95,9 @@ fn main() -> Result<()> {
     sketch.add_group(&line_set3, &Style::new("black", "0.4mm"));
     sketch.add_group(&line_set4, &Style::new("yellow", "0.4mm"));
     sketch.add_group(&line_set5, &Style::new("black", "0.5mm"));
-    render_svg(&sketch, "./samples/noise_waves_1.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/noise_waves_1.svg")?;
     Ok(())
 }

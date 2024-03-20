@@ -6,8 +6,12 @@ pub mod shapes;
 pub mod traits;
 pub mod vec2;
 
+use anyhow::Context;
+use anyhow::Result;
 use layout::PageLayout;
+use render::render_svg;
 use shapes::{Circle, LineString, Rect};
+use svg::Document;
 use traits::{Centroid, Contains};
 use vec2::Vec2;
 
@@ -132,6 +136,8 @@ impl Default for Group {
 pub struct Sketch {
     pub layout: PageLayout,
     groups: Vec<(Group, Style)>,
+    doc: Document,
+    debug: bool,
 }
 
 impl Sketch {
@@ -139,6 +145,8 @@ impl Sketch {
         Self {
             layout: layout.clone(),
             groups: vec![],
+            doc: Document::new(),
+            debug: false,
         }
     }
 
@@ -188,6 +196,27 @@ impl Sketch {
             x: self.as_rect().width - margin,
             y: self.as_rect().height / 2.,
         }
+    }
+
+    pub fn debug(&mut self) -> &mut Self {
+        self.debug = true;
+        self
+    }
+
+    pub fn render(&mut self) -> &Self {
+        if self.debug {
+            let mut debug = Group::new();
+            debug.add_rect(&self.as_rect());
+            self.add_group(&debug, &Style::new("black", "0.2mm"))
+        }
+        self.doc = render_svg(self);
+        self
+    }
+
+    pub fn save_to_file(&self, path: &str) -> Result<()> {
+        svg::save(path, &self.doc).context("Cannot save SVG file")?;
+        println!("Output written in '{path}'");
+        Ok(())
     }
 }
 

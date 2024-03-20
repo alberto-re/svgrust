@@ -5,7 +5,6 @@ use plt::angle::Angle;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::map_range;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::packing::CirclePacking;
@@ -132,6 +131,9 @@ fn main() -> Result<()> {
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));
     sketch.add_group(&frame, &Style::new("silver", "1.5px"));
 
-    render_svg(&sketch, "./samples/noise_fields.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/noise_fields.svg")?;
     Ok(())
 }

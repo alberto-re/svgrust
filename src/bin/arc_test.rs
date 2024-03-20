@@ -3,7 +3,6 @@ use std::f64::consts::TAU;
 use anyhow::Result;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Arc;
 use plt::shapes::Circle;
 use plt::vec2::Vec2;
@@ -107,6 +106,9 @@ fn main() -> Result<()> {
     sketch.add_group(&circles, &Style::new("black", "8.0px"));
     sketch.add_group(&arcs, &Style::new("red", "8.0px"));
 
-    render_svg(&sketch, "./samples/arc_test.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/arc_test.svg")?;
     Ok(())
 }

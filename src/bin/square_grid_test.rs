@@ -1,7 +1,6 @@
 use anyhow::Result;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::{Circle, Rect};
 use plt::traits::Scale;
 use plt::Group;
@@ -30,6 +29,9 @@ fn main() -> Result<()> {
 
     sketch.add_group(&group, &Style::new("black", "1.0px"));
 
-    render_svg(&sketch, "./samples/square_grid_test.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/square_grid_test.svg")?;
     Ok(())
 }

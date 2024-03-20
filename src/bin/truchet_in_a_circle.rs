@@ -3,7 +3,6 @@ use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
 use plt::traits::Centroid;
@@ -83,6 +82,9 @@ fn main() -> Result<()> {
 
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 
-    render_svg(&sketch, "./samples/truchet_in_a_circle.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/truchet_in_a_circle.svg")?;
     Ok(())
 }

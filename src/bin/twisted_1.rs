@@ -6,12 +6,10 @@ use noise::Perlin;
 use plt::angle::Angle;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::shapes::Polygon;
 use plt::shapes::Rect;
 use plt::traits::Rotate;
-use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
 use plt::Sketch;
@@ -20,7 +18,7 @@ use plt::Style;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
     let perlin = Perlin::new(109);
-    let noise_ratio: f64 = 0.0005;
+    let noise_ratio: f64 = 0.008;
     let mut group = Group::new();
     let mut angle;
     let mut polygons: Vec<Polygon> = vec![];
@@ -29,12 +27,12 @@ fn main() -> Result<()> {
     let y_step = 50.;
     let x_step = 3.5;
 
-    let mut y = 10.;
-    let mut x = 5.;
+    let mut y = 20.;
+    let mut x = 7.;
     let mut t = 0.;
     while y < sketch.height() - side / 2. {
         angle = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU;
-        while x < sketch.width() - side - x_step * 4. {
+        while x < sketch.width() - side - x_step * 3. {
             let xy = Vec2::new(x, y);
             let polygon = &Rect::new(xy, side, side).to_polygon(true);
             let noise_value = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU / 20.;
@@ -57,9 +55,10 @@ fn main() -> Result<()> {
 
     clipped.iter().for_each(|p| group.add_lstr(&p.clone()));
 
-    // group.add_rect(&sketch.as_rect().scale_perc(0.99));
-
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
-    render_svg(&sketch, "./samples/noise_circle_1.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/twisted_1.svg")?;
     Ok(())
 }

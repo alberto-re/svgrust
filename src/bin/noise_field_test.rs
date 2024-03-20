@@ -5,7 +5,6 @@ use noise::NoiseFn;
 use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
-use plt::render::render_svg;
 use plt::shapes::LineString;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
@@ -45,6 +44,9 @@ fn main() -> Result<()> {
 
     sketch.add_group(&group1, &Style::new("black", "1.0px"));
 
-    render_svg(&sketch, "./samples/noise_field_test.svg")?;
+    sketch
+        .debug()
+        .render()
+        .save_to_file("./samples/noise_field_test.svg")?;
     Ok(())
 }
