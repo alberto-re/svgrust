@@ -8,7 +8,7 @@ use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group = Group::new();
 
     let square_side = 5.;
@@ -29,9 +29,6 @@ fn main() -> Result<()> {
 
     sketch.add_group(&group, &Style::new("black", "1.0px"));
 
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/square_grid_test.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

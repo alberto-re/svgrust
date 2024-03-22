@@ -23,7 +23,7 @@ use rand::SeedableRng;
 // - repetition is good, but a bit of unexpected makes the plot more interesting to the eye
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut layer = Group::new();
     let enclosing = sketch.as_rect();
 
@@ -82,9 +82,6 @@ fn main() -> Result<()> {
 
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/truchet_in_a_circle.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

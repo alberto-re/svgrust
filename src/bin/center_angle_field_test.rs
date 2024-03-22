@@ -23,7 +23,7 @@ fn focal_angle(focal: Vec2, pos: Vec2) -> f64 {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group1 = Group::new();
 
     let square_side = 10.;
@@ -42,9 +42,6 @@ fn main() -> Result<()> {
     });
 
     sketch.add_group(&group1, &Style::new("black", "1.0px"));
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/center_angle_field_test.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

@@ -6,6 +6,7 @@ pub mod shapes;
 pub mod traits;
 pub mod vec2;
 
+use anyhow::anyhow;
 use anyhow::Context;
 use anyhow::Result;
 use layout::PageLayout;
@@ -141,12 +142,12 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn new(layout: &PageLayout) -> Self {
+    pub fn new(layout: &PageLayout, debug: bool) -> Self {
         Self {
             layout: layout.clone(),
             groups: vec![],
             doc: Document::new(),
-            debug: false,
+            debug,
         }
     }
 
@@ -198,11 +199,6 @@ impl Sketch {
         }
     }
 
-    pub fn debug(&mut self) -> &mut Self {
-        self.debug = true;
-        self
-    }
-
     pub fn render(&mut self) -> &Self {
         if self.debug {
             let mut debug = Group::new();
@@ -213,9 +209,21 @@ impl Sketch {
         self
     }
 
-    pub fn save_to_file(&self, path: &str) -> Result<()> {
+    pub fn save_to(&self, path: &str) -> Result<()> {
         svg::save(path, &self.doc).context("Cannot save SVG file")?;
         println!("Output written in '{path}'");
+        Ok(())
+    }
+
+    pub fn save_default(&self) -> Result<()> {
+        let bin_name = std::env::current_exe()?
+            .file_name()
+            .ok_or_else(|| anyhow!("Cannot determine binary filename"))?
+            .to_owned()
+            .into_string()
+            .unwrap();
+        let path = format!("samples/{bin_name}.svg");
+        self.save_to(&path)?;
         Ok(())
     }
 }

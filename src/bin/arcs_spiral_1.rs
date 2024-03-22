@@ -14,7 +14,7 @@ use plt::Style;
 use rand::Rng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
     let center = sketch.as_rect().centroid();
     let mut rng = rand::thread_rng();
 
@@ -46,9 +46,6 @@ fn main() -> Result<()> {
     });
     group.add_lstrs(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/arcs_spiral_1.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

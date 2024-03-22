@@ -39,7 +39,7 @@ fn add_square_spiral_with_center(
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group = Group::new();
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
@@ -49,9 +49,6 @@ fn main() -> Result<()> {
         &mut group,
     );
     sketch.add_group(&group, &Style::new("black", "1.0px"));
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/cercle_carre.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

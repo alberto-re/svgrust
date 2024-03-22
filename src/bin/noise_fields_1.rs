@@ -32,7 +32,7 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> Angle {
 fn main() -> Result<()> {
     let mut layout = PageLayout::axidraw_minikit(Landscape);
     let layout = layout.set_style("background-color: white");
-    let mut sketch = Sketch::new(layout);
+    let mut sketch = Sketch::new(layout, false);
     let mut field = Group::new();
     let mut trails = Group::new();
     let mut glyphs = Group::new();
@@ -131,9 +131,6 @@ fn main() -> Result<()> {
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));
     sketch.add_group(&frame, &Style::new("silver", "1.5px"));
 
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/noise_fields.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

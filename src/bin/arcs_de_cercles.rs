@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     let inner_radius: f64 = 110.;
     let other_radius = 75.;
 
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group = Group::new();
 
     let angles: Vec<f64> = vec![
@@ -96,9 +96,6 @@ fn main() -> Result<()> {
 
     sketch.add_group(&group, &Style::new("black", "1.5px"));
 
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/arcs_de_cercles.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

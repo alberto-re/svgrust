@@ -11,7 +11,7 @@ use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
     let mut arcs = Group::new();
     let mut circles = Group::new();
 
@@ -106,9 +106,6 @@ fn main() -> Result<()> {
     sketch.add_group(&circles, &Style::new("black", "8.0px"));
     sketch.add_group(&arcs, &Style::new("red", "8.0px"));
 
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/arc_test.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

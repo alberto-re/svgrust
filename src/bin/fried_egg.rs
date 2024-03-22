@@ -42,7 +42,7 @@ impl ParametricCurve {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
 
     let curve1 = ParametricCurve::new(50., 1., 1., 1.);
 
@@ -102,6 +102,6 @@ fn main() -> Result<()> {
     sketch.add_group(&curve1, &Style::new("#093c80", "0.3mm"));
     sketch.add_group(&curve2, &Style::new("#a32784", "0.3mm"));
     sketch.add_group(&curve3, &Style::new("#c9a71e", "2mm"));
-    sketch.debug().render().save_to_file("./samples/002.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

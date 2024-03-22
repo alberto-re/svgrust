@@ -16,7 +16,7 @@ use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let perlin = Perlin::new(109);
     let noise_ratio: f64 = 0.008;
     let mut group = Group::new();
@@ -56,9 +56,6 @@ fn main() -> Result<()> {
     clipped.iter().for_each(|p| group.add_lstr(&p.clone()));
 
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/twisted_1.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }

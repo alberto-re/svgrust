@@ -11,7 +11,7 @@ use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape));
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
     let perlin = Perlin::new(37);
     let rows = 70;
     let cols = 120;
@@ -95,9 +95,6 @@ fn main() -> Result<()> {
     sketch.add_group(&line_set3, &Style::new("black", "0.4mm"));
     sketch.add_group(&line_set4, &Style::new("yellow", "0.4mm"));
     sketch.add_group(&line_set5, &Style::new("black", "0.5mm"));
-    sketch
-        .debug()
-        .render()
-        .save_to_file("./samples/noise_waves_1.svg")?;
+    sketch.render().save_default()?;
     Ok(())
 }
