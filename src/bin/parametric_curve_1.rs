@@ -3,11 +3,11 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
+use plt::sketch::Sketch;
 use plt::traits::Centroid;
 use plt::traits::Translate;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 struct ParametricCurve {

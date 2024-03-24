@@ -3,18 +3,12 @@ pub mod grid;
 pub mod layout;
 pub mod render;
 pub mod shapes;
+pub mod sketch;
 pub mod traits;
 pub mod vec2;
 
-use anyhow::anyhow;
-use anyhow::Context;
-use anyhow::Result;
-use layout::PageLayout;
-use render::render_svg;
-use shapes::{Circle, LineString, Rect};
-use svg::Document;
-use traits::{Centroid, Contains};
-use vec2::Vec2;
+use shapes::{Circle, LineString};
+use traits::Contains;
 
 #[derive(Clone)]
 pub enum Shape {
@@ -131,100 +125,6 @@ impl Group {
 impl Default for Group {
     fn default() -> Self {
         Self::new()
-    }
-}
-
-pub struct Sketch {
-    pub layout: PageLayout,
-    groups: Vec<(Group, Style)>,
-    doc: Document,
-    debug: bool,
-}
-
-impl Sketch {
-    pub fn new(layout: &PageLayout, debug: bool) -> Self {
-        Self {
-            layout: layout.clone(),
-            groups: vec![],
-            doc: Document::new(),
-            debug,
-        }
-    }
-
-    pub fn add_group(&mut self, layer: &Group, style: &Style) {
-        self.groups.push((layer.clone(), style.clone()));
-    }
-
-    pub fn as_rect(&self) -> Rect {
-        Rect::new(Vec2 { x: 0., y: 0. }, self.layout.width, self.layout.height)
-    }
-
-    pub fn center(&self) -> Vec2 {
-        self.as_rect().centroid()
-    }
-
-    pub fn width(&self) -> f64 {
-        self.as_rect().width
-    }
-
-    pub fn height(&self) -> f64 {
-        self.as_rect().height
-    }
-
-    pub fn top_middle(&self, margin: f64) -> Vec2 {
-        Vec2 {
-            x: self.as_rect().width / 2.,
-            y: margin,
-        }
-    }
-
-    pub fn bottom_middle(&self, margin: f64) -> Vec2 {
-        Vec2 {
-            x: self.as_rect().width / 2.,
-            y: self.as_rect().height - margin,
-        }
-    }
-
-    pub fn left_middle(&self, margin: f64) -> Vec2 {
-        Vec2 {
-            x: margin,
-            y: self.as_rect().height / 2.,
-        }
-    }
-
-    pub fn right_middle(&self, margin: f64) -> Vec2 {
-        Vec2 {
-            x: self.as_rect().width - margin,
-            y: self.as_rect().height / 2.,
-        }
-    }
-
-    pub fn render(&mut self) -> &Self {
-        if self.debug {
-            let mut debug = Group::new();
-            debug.add_rect(&self.as_rect());
-            self.add_group(&debug, &Style::new("black", "0.2mm"))
-        }
-        self.doc = render_svg(self);
-        self
-    }
-
-    pub fn save_to(&self, path: &str) -> Result<()> {
-        svg::save(path, &self.doc).context("Cannot save SVG file")?;
-        println!("Output written in '{path}'");
-        Ok(())
-    }
-
-    pub fn save_default(&self) -> Result<()> {
-        let bin_name = std::env::current_exe()?
-            .file_name()
-            .ok_or_else(|| anyhow!("Cannot determine binary filename"))?
-            .to_owned()
-            .into_string()
-            .unwrap();
-        let path = format!("samples/{bin_name}.svg");
-        self.save_to(&path)?;
-        Ok(())
     }
 }
 

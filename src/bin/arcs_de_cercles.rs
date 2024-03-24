@@ -3,10 +3,10 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::shapes::Circle;
 use plt::shapes::LineString;
+use plt::sketch::Sketch;
 use plt::traits::Centroid;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 use std::f64::consts::TAU;
 

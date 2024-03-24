@@ -6,10 +6,10 @@ use plt::layout::PageLayout;
 use plt::shapes::Arc;
 use plt::shapes::LineString;
 use plt::shapes::Rect;
+use plt::sketch::Sketch;
 use plt::traits::Centroid;
 use plt::traits::Scale;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 use rand::Rng;
 

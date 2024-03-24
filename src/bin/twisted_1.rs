@@ -9,10 +9,10 @@ use plt::layout::PageLayout;
 use plt::shapes::LineString;
 use plt::shapes::Polygon;
 use plt::shapes::Rect;
+use plt::sketch::Sketch;
 use plt::traits::Rotate;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {

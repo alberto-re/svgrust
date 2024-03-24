@@ -4,9 +4,9 @@ use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::shapes::Circle;
+use plt::sketch::Sketch;
 use plt::traits::Scale;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {

@@ -6,10 +6,10 @@ use noise::Perlin;
 use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::shapes::LineString;
+use plt::sketch::Sketch;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 fn perlin_angle(perlin: &Perlin, smooth: f64, pos: Vec2) -> f64 {

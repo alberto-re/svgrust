@@ -6,11 +6,11 @@ use plt::layout::Orientation::Portrait;
 use plt::layout::PageLayout;
 use plt::map_range;
 use plt::shapes::LineString;
+use plt::sketch::Sketch;
 use plt::traits::Centroid;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 fn focal_angle(focal: Vec2, pos: Vec2) -> f64 {

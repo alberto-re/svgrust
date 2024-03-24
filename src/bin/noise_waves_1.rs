@@ -4,10 +4,10 @@ use noise::Perlin;
 use plt::layout::Orientation::Landscape;
 use plt::layout::PageLayout;
 use plt::shapes::LineString;
+use plt::sketch::Sketch;
 use plt::traits::Scale;
 use plt::vec2::Vec2;
 use plt::Group;
-use plt::Sketch;
 use plt::Style;
 
 fn main() -> Result<()> {

@@ -1,8 +1,8 @@
 use std::f64::consts::PI;
 use std::f64::consts::TAU;
 
+use crate::sketch::Sketch;
 use crate::Shape;
-use crate::Sketch;
 use geo::coord;
 use svg::node::element::path::Data;
 use svg::Document;
