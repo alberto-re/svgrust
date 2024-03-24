@@ -30,17 +30,22 @@ impl Vec2 {
     pub fn rotate(&self, center: Vec2, theta: f64) -> Self {
         let x = theta.cos() * (self.x - center.x) - theta.sin() * (self.y - center.y) + center.x;
         let y = theta.sin() * (self.x - center.x) + theta.cos() * (self.y - center.y) + center.y;
-        Vec2 { x, y }
+        Vec2::new(x, y)
     }
 
     /// Calculate the angle respect another point on the plane
-    pub fn angle(self, target: Vec2) -> Angle {
+    pub fn angle(&self, target: Vec2) -> Angle {
         let signed = f64::atan2(target.y - self.y, target.x - self.x);
         if signed.is_sign_negative() {
             Angle::from_radians(PI + PI - (-1. * signed))
         } else {
             Angle::from_radians(signed)
         }
+    }
+
+    /// Multiply this vector with a scalar value
+    pub fn mul(&self, scalar: f64) -> Vec2 {
+        Vec2::new(self.x * scalar, self.y * scalar)
     }
 }
 
@@ -64,6 +69,18 @@ impl ops::Sub<Vec2> for Vec2 {
         Vec2 {
             x: self.x - _rhs.x,
             y: self.y - _rhs.y,
+        }
+    }
+}
+
+impl ops::Mul<Vec2> for Vec2 {
+    type Output = Vec2;
+
+    /// Multiply another vector.
+    fn mul(self, _rhs: Vec2) -> Vec2 {
+        Vec2 {
+            x: self.x * _rhs.x,
+            y: self.y * _rhs.y,
         }
     }
 }
