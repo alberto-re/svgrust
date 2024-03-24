@@ -53,7 +53,7 @@ fn main() -> Result<()> {
             y: center.y + angle.sin() * 5.,
         };
         let arrow = LineString::new(vec![*center, move_to]);
-        field.add_lstr(&arrow);
+        field.add_linestring(&arrow);
     });
 
     bbox.sample_uniform(&mut rng, 400)
@@ -78,7 +78,7 @@ fn main() -> Result<()> {
                 trail_points.push(pos);
             }
             let trail = LineString::new(trail_points);
-            trails.add_lstr(&trail);
+            trails.add_linestring(&trail);
         });
 
     trails.elements = trails
@@ -121,11 +121,11 @@ fn main() -> Result<()> {
         .map(|(_, linestring)| Shape::LineString(linestring.clone()))
         .collect::<Vec<Shape>>();
 
-    frame.add_lstr(&bbox.scale_unit(50.).to_linestr(true));
-    frame.add_lstr(&bbox.scale_unit(52.).to_linestr(true));
-    frame.add_lstr(&bbox.scale_unit(54.).to_linestr(true));
-    frame.add_lstr(&bbox.scale_unit(56.).to_linestr(true));
-    frame.add_lstr(&bbox.scale_unit(58.).to_linestr(true));
+    frame.add_linestring(&bbox.scale_unit(50.).to_linestr(true));
+    frame.add_linestring(&bbox.scale_unit(52.).to_linestr(true));
+    frame.add_linestring(&bbox.scale_unit(54.).to_linestr(true));
+    frame.add_linestring(&bbox.scale_unit(56.).to_linestr(true));
+    frame.add_linestring(&bbox.scale_unit(58.).to_linestr(true));
 
     sketch.add_group(&trails, &Style::new("black", "1.5px"));
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));

@@ -38,7 +38,7 @@ fn main() -> Result<()> {
             y: center.y + angle.sin() * square_side,
         };
         let arrow = LineString::new(vec![*center, move_to]);
-        group1.add_lstr(&arrow);
+        group1.add_linestring(&arrow);
     });
 
     sketch.add_group(&group1, &Style::new("black", "1.0px"));

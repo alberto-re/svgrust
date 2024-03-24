@@ -51,7 +51,7 @@ fn main() -> Result<()> {
         .collect::<Vec<Vec2>>();
 
     let mut curve = Group::new();
-    curve.add_lstr(&LineString::new(points));
+    curve.add_linestring(&LineString::new(points));
 
     let mut plane = Group::new();
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {

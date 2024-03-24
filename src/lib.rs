@@ -62,8 +62,8 @@ impl Group {
         self.elements.push(Shape::Rectangle(rect.clone()));
     }
 
-    pub fn add_lstr(&mut self, linestr: &shapes::LineString) {
-        self.elements.push(Shape::LineString(linestr.clone()));
+    pub fn add_linestring(&mut self, linesting: &shapes::LineString) {
+        self.elements.push(Shape::LineString(linesting.clone()));
     }
 
     pub fn add_polygon(&mut self, polygon: &shapes::Polygon) {
@@ -115,9 +115,9 @@ impl Group {
             }
             Shape::LineString(s) => {
                 if bbox.contains(s) {
-                    inside.add_lstr(&s.clone());
+                    inside.add_linestring(&s.clone());
                 } else {
-                    outside.add_lstr(&s.clone());
+                    outside.add_linestring(&s.clone());
                 }
             }
             Shape::Polygon(_) => {

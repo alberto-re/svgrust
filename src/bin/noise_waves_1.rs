@@ -62,25 +62,25 @@ fn main() -> Result<()> {
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
-                line_set1.add_lstr(l);
+                line_set1.add_linestring(l);
             });
         let _ = &LineString::new(point_set2)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
-                line_set2.add_lstr(l);
+                line_set2.add_linestring(l);
             });
         let _ = &LineString::new(point_set3)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
-                line_set3.add_lstr(l);
+                line_set3.add_linestring(l);
             });
         let _ = &LineString::new(point_set4)
             .clip(&sketch.as_rect().scale_perc(0.985).to_linestr(true), false)
             .iter()
             .for_each(|l| {
-                line_set4.add_lstr(l);
+                line_set4.add_linestring(l);
             });
     }
 

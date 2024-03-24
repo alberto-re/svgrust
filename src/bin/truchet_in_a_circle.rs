@@ -50,7 +50,7 @@ fn main() -> Result<()> {
                 y: c.xy.y + c.height,
             });
         }
-        layer.add_lstr(&LineString::new(points).add_vec(enclosing.xy));
+        layer.add_linestring(&LineString::new(points).add_vec(enclosing.xy));
     });
 
     let circle = Circle::new(

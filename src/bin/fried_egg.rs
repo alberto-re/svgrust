@@ -69,8 +69,8 @@ fn main() -> Result<()> {
                 *p + Vec2::from_angle_length(angle, 6. * noise_val)
             })
             .collect::<Vec<Vec2>>();
-        curve1.add_lstr(&LineString::new(points1.clone()));
-        curve2.add_lstr(&LineString::new(
+        curve1.add_linestring(&LineString::new(points1.clone()));
+        curve2.add_linestring(&LineString::new(
             points1
                 .iter()
                 .map(|p| *p + Vec2 { x: 3., y: 1. })
@@ -88,7 +88,7 @@ fn main() -> Result<()> {
                         *p - Vec2::from_angle_length(angle, 6. * factor as f64)
                     })
                     .collect::<Vec<Vec2>>();
-                curve3.add_lstr(&LineString::new(points2.clone()));
+                curve3.add_linestring(&LineString::new(points2.clone()));
             }
         }
     }

@@ -92,7 +92,7 @@ fn main() -> Result<()> {
     circles_lstr2
         .iter()
         .flatten()
-        .for_each(|c| group.add_lstr(c));
+        .for_each(|c| group.add_linestring(c));
 
     sketch.add_group(&group, &Style::new("black", "1.5px"));
 
