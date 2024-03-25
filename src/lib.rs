@@ -6,6 +6,7 @@ pub mod shapes;
 pub mod sketch;
 pub mod traits;
 pub mod vec2;
+pub mod vectorfield;
 
 use shapes::{Circle, LineString};
 use traits::Contains;
