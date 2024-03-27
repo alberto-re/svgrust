@@ -1,14 +1,7 @@
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::layout::Orientation::Landscape;
-use plt::layout::PageLayout;
-use plt::shapes::LineString;
-use plt::sketch::Sketch;
-use plt::traits::Centroid;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
@@ -20,7 +13,7 @@ fn main() -> Result<()> {
     let spcx: isize = 8;
     let minrad: usize = 0;
     let maxrad: usize = 5;
-    let noiseratio: f64 = 0.005;
+    let noiseratio: f64 = 0.008;
 
     let mut group = Group::new();
     let mut lstrs: Vec<LineString> = vec![];
@@ -83,7 +76,7 @@ fn main() -> Result<()> {
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
-    group.add_lstrs(&lstrs3);
+    group.add_linestrings(&lstrs3);
 
     sketch.add_group(&group, &Style::new("black", "2.5px"));
 

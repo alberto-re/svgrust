@@ -1,6 +1,7 @@
 pub mod angle;
 pub mod grid;
 pub mod layout;
+pub mod prelude;
 pub mod render;
 pub mod shapes;
 pub mod sketch;
@@ -65,7 +66,7 @@ impl Group {
         self.elements.push(Shape::Polygon(polygon.clone()));
     }
 
-    pub fn add_lstrs(&mut self, linestr: &[shapes::LineString]) {
+    pub fn add_linestrings(&mut self, linestr: &[shapes::LineString]) {
         linestr.iter().for_each(|l| {
             self.elements.push(Shape::LineString(l.clone()));
         });

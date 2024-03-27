@@ -47,6 +47,11 @@ impl Vec2 {
     pub fn mul(&self, scalar: f64) -> Vec2 {
         Vec2::new(self.x * scalar, self.y * scalar)
     }
+
+    /// Divide this vector with a scalar value
+    pub fn div(&self, scalar: f64) -> Vec2 {
+        Vec2::new(self.x / scalar, self.y / scalar)
+    }
 }
 
 impl ops::Add<Vec2> for Vec2 {

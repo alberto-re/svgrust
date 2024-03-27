@@ -1,23 +1,11 @@
-use std::f64::consts::TAU;
-
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::angle::Angle;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::LineString;
-use plt::shapes::Polygon;
-use plt::shapes::Rect;
-use plt::sketch::Sketch;
-use plt::traits::Rotate;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
-    let perlin = Perlin::new(109);
+    let perlin = Perlin::new(200);
     let noise_ratio: f64 = 0.008;
     let mut group = Group::new();
     let mut angle;

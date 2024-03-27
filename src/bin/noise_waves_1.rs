@@ -1,14 +1,7 @@
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::layout::Orientation::Landscape;
-use plt::layout::PageLayout;
-use plt::shapes::LineString;
-use plt::sketch::Sketch;
-use plt::traits::Scale;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
@@ -17,7 +10,7 @@ fn main() -> Result<()> {
     let cols = 120;
     let noise_ratio_x: f64 = 0.02;
     let noise_ratio_y: f64 = 0.02;
-    let noise_mul: f64 = 10.;
+    let noise_mul: f64 = 15.;
     let mut line_set1 = Group::new();
     let mut line_set2 = Group::new();
     let mut line_set3 = Group::new();

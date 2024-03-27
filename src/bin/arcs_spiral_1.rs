@@ -1,16 +1,5 @@
-use std::f64::consts::TAU;
-
 use anyhow::Result;
-use plt::layout::Orientation::Landscape;
-use plt::layout::PageLayout;
-use plt::shapes::Arc;
-use plt::shapes::LineString;
-use plt::shapes::Rect;
-use plt::sketch::Sketch;
-use plt::traits::Centroid;
-use plt::traits::Scale;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 use rand::Rng;
 
 fn main() -> Result<()> {
@@ -44,7 +33,7 @@ fn main() -> Result<()> {
     (0..3).for_each(|i| {
         group.add_rect(&frame.scale_perc((100. + i as f64) / 100.));
     });
-    group.add_lstrs(&lines);
+    group.add_linestrings(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));
     sketch.render().save_default()?;
     Ok(())

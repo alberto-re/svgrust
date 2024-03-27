@@ -301,3 +301,34 @@ impl Centroid for Vec2 {
         *self
     }
 }
+
+impl Rotate for Vec<LineString> {
+    fn rotate(&self, angle: Angle) -> Self {
+        let mut newvec = vec![];
+        let mut centroid_x: f64 = 0.;
+        let mut centroid_y: f64 = 0.;
+        let mut points = 0.;
+        self.iter().for_each(|linestring| {
+            linestring.points.iter().for_each(|point| {
+                centroid_x += point.x;
+                centroid_y += point.y;
+                points += 1.;
+            });
+        });
+        let centroid_x = centroid_x / points;
+        let centroid_y = centroid_y / points;
+        let centroid = Vec2::new(centroid_x, centroid_y);
+        println!("centroid {:?}", centroid);
+        self.iter().for_each(|linestring| {
+            let newlinestring = LineString::new(
+                linestring
+                    .points
+                    .iter()
+                    .map(|point| point.rotate(centroid, angle.as_radians()))
+                    .collect::<Vec<Vec2>>(),
+            );
+            newvec.push(newlinestring);
+        });
+        newvec
+    }
+}

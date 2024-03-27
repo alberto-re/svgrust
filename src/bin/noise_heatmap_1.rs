@@ -1,13 +1,7 @@
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::Circle;
-use plt::sketch::Sketch;
-use plt::traits::Scale;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);

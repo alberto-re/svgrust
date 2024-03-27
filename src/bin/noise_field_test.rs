@@ -1,16 +1,7 @@
-use std::f64::consts::TAU;
-
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::LineString;
-use plt::sketch::Sketch;
-use plt::traits::Scale;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn perlin_angle(perlin: &Perlin, smooth: f64, pos: Vec2) -> f64 {
     let val = perlin.get([pos.x * smooth, pos.y * smooth]);
@@ -25,7 +16,7 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group1 = Group::new();
 
-    let perlin = Perlin::new(4);
+    let perlin = Perlin::new(12);
     let square_side = 10.;
     let smooth = 0.004;
     let bbox = sketch.as_rect().scale_perc(0.98);

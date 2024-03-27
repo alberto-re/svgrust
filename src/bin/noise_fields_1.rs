@@ -1,22 +1,8 @@
 use std::f64::consts::TAU;
 
 use anyhow::Result;
-use plt::angle::Angle;
-use plt::layout::Orientation::Landscape;
-use plt::layout::PageLayout;
-use plt::map_range;
-use plt::shapes::Circle;
-use plt::shapes::LineString;
-use plt::sketch::Sketch;
-use plt::traits::packing::CirclePacking;
-use plt::traits::Centroid;
-use plt::traits::Contains;
-use plt::traits::Sample;
-use plt::traits::Scale;
-use plt::vec2::Vec2;
-use plt::Group;
+use plt::prelude::*;
 use plt::Shape;
-use plt::Style;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
@@ -38,7 +24,7 @@ fn main() -> Result<()> {
     let mut glyphs = Group::new();
     let mut frame = Group::new();
 
-    let mut rng = StdRng::seed_from_u64(48);
+    let mut rng = StdRng::seed_from_u64(30);
 
     let square_side = 10.;
     let focal_max_dist = 310.;

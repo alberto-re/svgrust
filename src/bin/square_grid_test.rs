@@ -1,17 +1,11 @@
 use anyhow::Result;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::{Circle, Rect};
-use plt::sketch::Sketch;
-use plt::traits::Scale;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group = Group::new();
 
-    let square_side = 5.;
+    let square_side = 10.;
     let grid_box = sketch.as_rect();
     let grid_box = grid_box.scale_perc(0.90);
 

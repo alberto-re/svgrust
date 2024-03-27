@@ -1,19 +1,5 @@
-use std::f64::consts::TAU;
-
 use anyhow::Result;
-use plt::angle::Angle;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::Rect;
-use plt::sketch::Sketch;
-use plt::traits::Centroid;
-use plt::traits::Chaikin;
-use plt::traits::Rotate;
-use plt::traits::Scale;
-use plt::traits::Upsample;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn add_square_spiral_with_center(
     center: Vec2,

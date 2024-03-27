@@ -1,17 +1,7 @@
 use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
-use plt::layout::Orientation::Portrait;
-use plt::layout::PageLayout;
-use plt::shapes::Circle;
-use plt::shapes::LineString;
-use plt::sketch::Sketch;
-use plt::traits::Centroid;
-use plt::traits::Scale;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Shape;
-use plt::Style;
+use plt::prelude::*;
 use rand::rngs::StdRng;
 use rand::Rng;
 use rand::SeedableRng;
@@ -61,14 +51,12 @@ fn main() -> Result<()> {
     let (inner, _) = layer.split_shape(&circle.scale_perc(0.9));
     let mut inner1 = Group::new();
 
-    let perlin = Perlin::new(38);
+    let perlin = Perlin::new(43);
 
-    inner.elements.iter().for_each(|e| {
-        if let Shape::LineString(s) = e {
-            let val = perlin.get([s.centroid().x * 0.015, s.centroid().y * 0.02]);
-            if val < 0.5 && rng.gen::<f64>() < 0.85 {
-                inner1.elements.push(e.clone());
-            }
+    inner.linestrings().iter().for_each(|e| {
+        let val = perlin.get([e.centroid().x * 0.015, e.centroid().y * 0.02]);
+        if val < 0.5 && rng.gen::<f64>() < 0.85 {
+            inner1.add_linestring(e)
         }
     });
 

@@ -1,14 +1,5 @@
-use std::f64::consts::TAU;
-
 use anyhow::Result;
-use plt::layout::Orientation::Landscape;
-use plt::layout::PageLayout;
-use plt::shapes::Arc;
-use plt::shapes::Circle;
-use plt::sketch::Sketch;
-use plt::vec2::Vec2;
-use plt::Group;
-use plt::Style;
+use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
