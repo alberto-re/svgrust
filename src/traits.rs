@@ -318,7 +318,6 @@ impl Rotate for Vec<LineString> {
         let centroid_x = centroid_x / points;
         let centroid_y = centroid_y / points;
         let centroid = Vec2::new(centroid_x, centroid_y);
-        println!("centroid {:?}", centroid);
         self.iter().for_each(|linestring| {
             let newlinestring = LineString::new(
                 linestring
