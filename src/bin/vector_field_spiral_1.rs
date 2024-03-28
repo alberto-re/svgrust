@@ -8,6 +8,8 @@ use rand::SeedableRng;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
     let mut group = Group::new();
+    let mut group2 = Group::new();
+    let mut group3 = Group::new();
 
     let vector_field = Spiral2dVectorField::new(sketch.center());
     let vector_factor = 2.;
@@ -24,7 +26,7 @@ fn main() -> Result<()> {
             for _ in 0..1000 {
                 let force = vector_field.vector_at(pos);
                 pos = pos + force.mul(vector_factor);
-                if pos.euclidean_distance(&sketch.center()) < 4. {
+                if pos.euclidean_distance(&sketch.center()) < 3. {
                     break;
                 }
                 if !bbox.contains(&pos) {
@@ -44,9 +46,11 @@ fn main() -> Result<()> {
             }
         });
 
+    let mut lines: Vec<LineString> = vec![];
+
     let clip_box = sketch
         .as_rect()
-        .scale_perc(0.7)
+        .scale_perc(0.8)
         .to_polygon(true)
         .rotate(Angle::from_degrees(-15.));
     let mut outside: Vec<LineString> = vec![];
@@ -60,10 +64,10 @@ fn main() -> Result<()> {
         .iter()
         .filter(|l| l.points.len() > 5)
         .for_each(|linestring| {
-            group.add_linestring(linestring);
+            lines.push(linestring.clone());
         });
 
-    let clip_box = sketch.as_rect().scale_perc(0.55).to_linestr(true);
+    let clip_box = sketch.as_rect().scale_perc(0.65).to_linestr(true);
     let mut inside: Vec<LineString> = vec![];
     linestrings.iter().for_each(|linestring| {
         linestring
@@ -72,15 +76,18 @@ fn main() -> Result<()> {
             .for_each(|segment| inside.push(segment.clone()));
     });
 
-    let inside = inside.rotate(Angle::from_degrees(-18.));
     inside
         .iter()
         .filter(|l| l.points.len() > 5)
         .for_each(|linestring| {
-            group.add_linestring(linestring);
+            lines.push(linestring.clone());
         });
+    
+    group.add_linestrings(&lines);
 
     sketch.add_group(&group, &Style::new("black", "0.5mm"));
+    sketch.add_group(&group2, &Style::new("blue", "0.5mm"));
+    sketch.add_group(&group3, &Style::new("red", "0.5mm"));
 
     sketch.render().save_default()?;
     Ok(())

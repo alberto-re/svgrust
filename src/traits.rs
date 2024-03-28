@@ -208,6 +208,57 @@ impl ToGeoLineString for Polygon {
     }
 }
 
+impl Upsample for Polygon {
+    fn upsample(&self, factor: u64) -> Self {
+        // TODO: add wrap bool argument like Chaikin
+        let mut points = self.points.clone();
+        (0..factor).for_each(|_| {
+            let mut upsampled = vec![];
+            for i in 1..points.len() {
+                upsampled.push(points[i - 1]);
+                let middle_point = Vec2 {
+                    x: (points[i - 1].x + points[i].x) * 0.5,
+                    y: (points[i - 1].y + points[i].y) * 0.5,
+                };
+                upsampled.push(middle_point);
+            }
+            upsampled.push(Vec2 {
+                x: (points[0].x + points[points.len() - 1].x) * 0.5,
+                y: (points[0].y + points[points.len() - 1].y) * 0.5,
+            });
+            points = upsampled.clone();
+        });
+        Polygon::new(points)
+    }
+}
+
+impl Chaikin for Polygon {
+    fn chaikin(&self, iterations: u64, closed: bool) -> Self {
+        let mut points = self.points.clone();
+        (0..iterations).for_each(|_| {
+            let mut smoothed = vec![];
+            for i in 1..points.len() {
+                smoothed.push(Vec2 {
+                    x: points[i - 1].x * 0.75 + points[i].x * 0.25,
+                    y: points[i - 1].y * 0.75 + points[i].y * 0.25,
+                });
+                smoothed.push(Vec2 {
+                    x: points[i - 1].x * 0.25 + points[i].x * 0.75,
+                    y: points[i - 1].y * 0.25 + points[i].y * 0.75,
+                });
+            }
+            if closed {
+                smoothed.push(Vec2 {
+                    x: points[points.len() - 1].x * 0.75 + points[1].x * 0.25,
+                    y: points[points.len() - 1].y * 0.75 + points[1].y * 0.25,
+                });
+            }
+            points = smoothed.clone();
+        });
+        Polygon::new(points)
+    }
+}
+
 impl Scale<Rect> for Rect {
     fn scale_perc(&self, perc: f64) -> Rect {
         Rect::new(
