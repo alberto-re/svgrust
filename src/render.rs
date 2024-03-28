@@ -57,6 +57,7 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                     for p in s.points[1..].iter() {
                         data = data.line_to((p.x, p.y));
                     }
+                    data = data.close();
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
