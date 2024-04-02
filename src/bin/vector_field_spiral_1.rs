@@ -82,7 +82,7 @@ fn main() -> Result<()> {
         .for_each(|linestring| {
             lines.push(linestring.clone());
         });
-    
+
     group.add_linestrings(&lines);
 
     sketch.add_group(&group, &Style::new("black", "0.5mm"));

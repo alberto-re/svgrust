@@ -16,13 +16,19 @@ impl Particle {
             x,
             y,
             trail: vec![Vec2::new(x, y)],
-            i: 0.
+            i: 0.,
         }
     }
 
     pub fn update(&mut self, noise: Perlin) {
         let noise = noise.get([self.x * 0.02, self.y * 0.02, self.i * 0.1]);
-        let theta = map_range(noise, -1., 1., Angle::from_degrees(90.).as_radians(), Angle::from_degrees(270.).as_radians());
+        let theta = map_range(
+            noise,
+            -1.,
+            1.,
+            Angle::from_degrees(90.).as_radians(),
+            Angle::from_degrees(270.).as_radians(),
+        );
         let v = Vec2::from_angle_length(Angle::from_radians(theta), 2.);
         self.x += v.x;
         self.y += v.y;
@@ -45,7 +51,9 @@ fn main() -> Result<()> {
 
     for i in 0..n_particles {
         let theta = map_range(i as f64, 0., n_particles as f64, 0., TAU);
-        let pos = sketch.center() + Vec2::new(110., 0.) + Vec2::from_angle_length(Angle::from_radians(theta), 130.);
+        let pos = sketch.center()
+            + Vec2::new(110., 0.)
+            + Vec2::from_angle_length(Angle::from_radians(theta), 130.);
         particles.push(Particle::new(pos.x, pos.y));
     }
 

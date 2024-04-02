@@ -20,7 +20,7 @@ impl Particle {
             startx: x,
             starty: y,
             trail: vec![],
-            i: 0.
+            i: 0.,
         }
     }
 
@@ -67,7 +67,7 @@ fn main() -> Result<()> {
     let mut particles_left: Vec<Particle> = vec![];
 
     for i in (0..sketch.height() as usize).step_by(2) {
-        let noise = perlin.get([i as f64 * 0.004, i  as f64 * 0.004]);
+        let noise = perlin.get([i as f64 * 0.004, i as f64 * 0.004]);
         particles_left.push(Particle::new(sketch.center().x + noise * 50., i as f64));
     }
 
@@ -75,9 +75,21 @@ fn main() -> Result<()> {
         // let iters = sketch.center().y - (f64::abs(p.y - sketch.center().y));
         // let iters = iters * 1.;
         let noisel = perlin.get([p.y * 0.002, p.y * 0.002, 10.]);
-        let maxwl = map_range(sketch.center().y - (f64::abs(p.y - sketch.center().y)), 0., 150., 0., sketch.width() / 2.);
+        let maxwl = map_range(
+            sketch.center().y - (f64::abs(p.y - sketch.center().y)),
+            0.,
+            150.,
+            0.,
+            sketch.width() / 2.,
+        );
         let noiser = perlin.get([p.y * 0.002, p.y * 0.002, 40.]);
-        let maxwr = map_range(sketch.center().y - (f64::abs(p.y - sketch.center().y)), 0., 150., 0., sketch.width() / 2.);
+        let maxwr = map_range(
+            sketch.center().y - (f64::abs(p.y - sketch.center().y)),
+            0.,
+            150.,
+            0.,
+            sketch.width() / 2.,
+        );
         let itersl = map_range(noisel, -1., 1., 5., 300.);
         let itersl = itersl as usize;
         let itersr = map_range(noiser, -1., 1., 5., 300.);
@@ -101,7 +113,7 @@ fn main() -> Result<()> {
     });
 
     group1.add_linestring(&LineString::new(uberlinestring));
-   
+
     sketch.add_group(&group1, &Style::new("rgba(255,0,0,0.7)", "0.4mm"));
     sketch.render().save_default()?;
     Ok(())
