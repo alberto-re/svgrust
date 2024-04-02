@@ -5,7 +5,9 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
-    let perlin = Perlin::new(301);
+    let seed = Seed::from_number(2669496390);
+    let perlin = Perlin::new(seed.into());
+
     let noise_ratio: f64 = 0.01;
     let mut group = Group::new();
     let mut angle;

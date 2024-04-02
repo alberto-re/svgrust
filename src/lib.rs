@@ -3,6 +3,7 @@ pub mod grid;
 pub mod layout;
 pub mod prelude;
 pub mod render;
+pub mod seed;
 pub mod shapes;
 pub mod sketch;
 pub mod traits;

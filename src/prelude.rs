@@ -5,6 +5,7 @@ pub use crate::clamp;
 pub use crate::layout::Orientation::{Landscape, Portrait};
 pub use crate::layout::PageLayout;
 pub use crate::map_range;
+pub use crate::seed::Seed;
 pub use crate::shapes::Arc;
 pub use crate::shapes::Circle;
 pub use crate::shapes::LineString;
