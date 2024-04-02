@@ -85,28 +85,24 @@ fn main() -> Result<()> {
         p.update(perlin, itersl, itersr);
     });
 
-    particles_left.iter_mut().for_each(|p| {
-        group1.add_linestring(&LineString::new(p.trail.clone()));
-    });
-
-    // let mut uberlinestring: Vec<Vec2> = vec![];
-
-    // particles_left.iter_mut().enumerate().for_each(|(i, p)| {
-    //     if i % 2 == 0 {
-    //         p.trail.reverse();
-    //         uberlinestring.append(&mut p.trail);
-    //     } else {
-    //         uberlinestring.append(&mut p.trail);
-    //     }
-    // });
-
-    // group1.add_linestring(&LineString::new(uberlinestring));
-
     // particles_left.iter_mut().for_each(|p| {
     //     group1.add_linestring(&LineString::new(p.trail.clone()));
     // });
+
+    let mut uberlinestring: Vec<Vec2> = vec![];
+
+    particles_left.iter_mut().enumerate().for_each(|(i, p)| {
+        if i % 2 == 0 {
+            p.trail.reverse();
+            uberlinestring.append(&mut p.trail);
+        } else {
+            uberlinestring.append(&mut p.trail);
+        }
+    });
+
+    group1.add_linestring(&LineString::new(uberlinestring));
    
-    sketch.add_group(&group1, &Style::new("rgba(255,0,0,0.4)", "0.4mm"));
+    sketch.add_group(&group1, &Style::new("rgba(255,0,0,0.7)", "0.4mm"));
     sketch.render().save_default()?;
     Ok(())
 }
