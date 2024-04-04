@@ -61,6 +61,18 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
+                Shape::MultiPolygon(s) => {
+                    for polygon in s.polygons.clone() {
+                        let mut data =
+                            Data::new().move_to((polygon.points[0].x, polygon.points[0].y));
+                        for p in polygon.points[1..].iter() {
+                            data = data.line_to((p.x, p.y));
+                        }
+                        data = data.close();
+                        let e = svg::node::element::Path::new().set("d", data);
+                        group = group.add(e);
+                    }
+                }
                 Shape::Arc(s) => {
                     let p1 = coord! {
                         x: s.center.x + s.start.cos() * s.radius,

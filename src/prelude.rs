@@ -9,6 +9,7 @@ pub use crate::seed::Seed;
 pub use crate::shapes::Arc;
 pub use crate::shapes::Circle;
 pub use crate::shapes::LineString;
+pub use crate::shapes::MultiPolygon;
 pub use crate::shapes::Polygon;
 pub use crate::shapes::Rect;
 pub use crate::sketch::Sketch;

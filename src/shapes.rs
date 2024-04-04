@@ -5,7 +5,7 @@ use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
 use geo::algorithm::bool_ops::BooleanOps;
 use geo::Coord;
-use geo::MultiPolygon;
+use geo::MultiPolygon as GeoMultiPolygon;
 
 /// A series of contiguous line segments represented by two or more points
 #[derive(Clone, PartialEq)]
@@ -34,7 +34,7 @@ impl LineString {
 
     pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineString> {
         let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
-        let mpoly = MultiPolygon::new(vec![poly]);
+        let mpoly = GeoMultiPolygon::new(vec![poly]);
         let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
         let mut res = vec![];
         clipped.0.iter().for_each(|l| {
@@ -89,7 +89,7 @@ impl Polygon {
 
     pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineString> {
         let poly = geo::Polygon::new(other.to_geo_linestring(), vec![]);
-        let mpoly = MultiPolygon::new(vec![poly]);
+        let mpoly = GeoMultiPolygon::new(vec![poly]);
         let clipped = mpoly.clip(&self.to_geo_multilinestring(), invert);
         let mut res = vec![];
         clipped.0.iter().for_each(|l| {
@@ -283,5 +283,16 @@ impl Arc {
             pvec.push(Vec2 { x, y });
         }
         LineString { points: pvec }
+    }
+}
+
+#[derive(Clone, PartialEq)]
+pub struct MultiPolygon {
+    pub polygons: Vec<Polygon>,
+}
+
+impl MultiPolygon {
+    pub fn new(polygons: Vec<Polygon>) -> Self {
+        Self { polygons }
     }
 }

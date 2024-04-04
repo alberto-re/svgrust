@@ -20,6 +20,7 @@ pub enum Shape {
     Rectangle(shapes::Rect),
     LineString(shapes::LineString),
     Polygon(shapes::Polygon),
+    MultiPolygon(shapes::MultiPolygon),
 }
 
 #[derive(Clone)]
@@ -55,6 +56,7 @@ impl Group {
             Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
             Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
             Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
+            Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
         }
     }
 
@@ -109,6 +111,9 @@ impl Group {
                 }
             }
             Shape::Polygon(_) => {
+                unreachable!();
+            }
+            Shape::MultiPolygon(_) => {
                 unreachable!();
             }
         });
