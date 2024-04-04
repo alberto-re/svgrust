@@ -11,7 +11,7 @@ pub mod vec2;
 pub mod vectorfield;
 
 use shapes::{Circle, LineString};
-use traits::Contains;
+use traits::{Contains, ToShape};
 
 #[derive(Clone)]
 pub enum Shape {
@@ -47,24 +47,15 @@ impl Group {
         Self { elements: vec![] }
     }
 
-    pub fn add_circle(&mut self, circle: &shapes::Circle) {
-        self.elements.push(Shape::Circle(circle.clone()));
-    }
-
-    pub fn add_arc(&mut self, arc: &shapes::Arc) {
-        self.elements.push(Shape::Arc(arc.clone()));
-    }
-
-    pub fn add_rect(&mut self, rect: &shapes::Rect) {
-        self.elements.push(Shape::Rectangle(rect.clone()));
-    }
-
-    pub fn add_linestring(&mut self, linesting: &shapes::LineString) {
-        self.elements.push(Shape::LineString(linesting.clone()));
-    }
-
-    pub fn add_polygon(&mut self, polygon: &shapes::Polygon) {
-        self.elements.push(Shape::Polygon(polygon.clone()));
+    pub fn add<T: ToShape>(&mut self, element: T) {
+        let shape = element.to_shape();
+        match shape {
+            Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
+            Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
+            Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
+            Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
+            Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
+        }
     }
 
     pub fn add_linestrings(&mut self, linestr: &[shapes::LineString]) {
@@ -87,7 +78,7 @@ impl Group {
         let mut circles = vec![];
         self.elements.iter().for_each(|e| {
             if let Shape::Circle(s) = e {
-                circles.push(s.clone())
+                circles.push(*s)
             }
         });
         circles
@@ -105,16 +96,16 @@ impl Group {
             }
             Shape::Rectangle(s) => {
                 if bbox.contains(s) {
-                    inside.add_rect(&s.clone());
+                    inside.add(s.clone());
                 } else {
-                    outside.add_rect(&s.clone());
+                    outside.add(s.clone());
                 }
             }
             Shape::LineString(s) => {
                 if bbox.contains(s) {
-                    inside.add_linestring(&s.clone());
+                    inside.add(s.clone());
                 } else {
-                    outside.add_linestring(&s.clone());
+                    outside.add(s.clone());
                 }
             }
             Shape::Polygon(_) => {

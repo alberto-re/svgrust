@@ -5,7 +5,8 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
-    let perlin = Perlin::new(29);
+    let seed = Seed::from_number(300);
+    let perlin = Perlin::new(seed.into());
 
     let dx: isize = 35;
     let dy: isize = 42;

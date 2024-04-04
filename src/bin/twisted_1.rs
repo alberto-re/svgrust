@@ -5,7 +5,8 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
-    let perlin = Perlin::new(200);
+    let seed = Seed::from_number(200);
+    let perlin = Perlin::new(seed.into());
     let noise_ratio: f64 = 0.008;
     let mut group = Group::new();
     let mut angle;
@@ -13,7 +14,7 @@ fn main() -> Result<()> {
     let side = 32.;
 
     let y_step = 50.;
-    let x_step = 3.5;
+    let x_step = 3.;
 
     let mut y = 20.;
     let mut x = 7.;
@@ -41,9 +42,7 @@ fn main() -> Result<()> {
         segments.iter().for_each(|s| clipped.push(s.clone()));
     }
 
-    clipped
-        .iter()
-        .for_each(|p| group.add_linestring(&p.clone()));
+    clipped.iter().for_each(|p| group.add(p));
 
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
     sketch.render().save_default()?;

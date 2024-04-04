@@ -42,11 +42,11 @@ fn main() -> Result<()> {
         .collect::<Vec<Vec2>>();
 
     let mut curve = Group::new();
-    curve.add_linestring(&LineString::new(points));
+    curve.add(&LineString::new(points));
 
     let mut plane = Group::new();
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {
-        plane.add_circle(&Circle::new(rect.centroid(), 0.1));
+        plane.add(&Circle::new(rect.centroid(), 0.1));
     });
 
     sketch.add_group(&plane, &Style::new("black", "0.2mm"));

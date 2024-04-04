@@ -31,7 +31,7 @@ fn main() -> Result<()> {
 
     let mut group = Group::new();
     (0..3).for_each(|i| {
-        group.add_rect(&frame.scale_perc((100. + i as f64) / 100.));
+        group.add(frame.scale_perc((100. + i as f64) / 100.));
     });
     group.add_linestrings(&lines);
     sketch.add_group(&group, &Style::new("black", "1px"));

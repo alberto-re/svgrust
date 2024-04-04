@@ -2,6 +2,7 @@ use rand::Rng;
 use std::convert::Into;
 
 /// A seed value for deterministic pseudorandom number generators
+#[derive(Clone)]
 pub struct Seed {
     seed: u32,
 }
@@ -24,5 +25,11 @@ impl Seed {
 impl Into<u32> for Seed {
     fn into(self) -> u32 {
         self.seed
+    }
+}
+
+impl Into<u64> for Seed {
+    fn into(self) -> u64 {
+        self.seed as u64
     }
 }

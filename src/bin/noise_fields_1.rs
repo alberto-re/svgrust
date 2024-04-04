@@ -24,7 +24,8 @@ fn main() -> Result<()> {
     let mut glyphs = Group::new();
     let mut frame = Group::new();
 
-    let mut rng = StdRng::seed_from_u64(30);
+    let seed = Seed::from_number(300);
+    let mut rng = StdRng::seed_from_u64(seed.into());
 
     let square_side = 10.;
     let focal_max_dist = 310.;
@@ -39,7 +40,7 @@ fn main() -> Result<()> {
             y: center.y + angle.sin() * 5.,
         };
         let arrow = LineString::new(vec![*center, move_to]);
-        field.add_linestring(&arrow);
+        field.add(&arrow);
     });
 
     bbox.sample_uniform(&mut rng, 400)
@@ -64,7 +65,7 @@ fn main() -> Result<()> {
                 trail_points.push(pos);
             }
             let trail = LineString::new(trail_points);
-            trails.add_linestring(&trail);
+            trails.add(&trail);
         });
 
     trails.elements = trails
@@ -92,10 +93,10 @@ fn main() -> Result<()> {
         });
 
     circles.iter().for_each(|circle| {
-        glyphs.add_circle(circle);
-        glyphs.add_circle(&circle.scale_perc(0.6));
+        glyphs.add(circle);
+        glyphs.add(&circle.scale_perc(0.6));
         if circle.radius > 2. {
-            glyphs.add_circle(&circle.scale_perc(0.3));
+            glyphs.add(&circle.scale_perc(0.3));
         }
     });
 
@@ -107,11 +108,11 @@ fn main() -> Result<()> {
         .map(|(_, linestring)| Shape::LineString(linestring.clone()))
         .collect::<Vec<Shape>>();
 
-    frame.add_linestring(&bbox.scale_unit(50.).to_linestr(true));
-    frame.add_linestring(&bbox.scale_unit(52.).to_linestr(true));
-    frame.add_linestring(&bbox.scale_unit(54.).to_linestr(true));
-    frame.add_linestring(&bbox.scale_unit(56.).to_linestr(true));
-    frame.add_linestring(&bbox.scale_unit(58.).to_linestr(true));
+    frame.add(&bbox.scale_unit(50.).to_linestr(true));
+    frame.add(&bbox.scale_unit(52.).to_linestr(true));
+    frame.add(&bbox.scale_unit(54.).to_linestr(true));
+    frame.add(&bbox.scale_unit(56.).to_linestr(true));
+    frame.add(&bbox.scale_unit(58.).to_linestr(true));
 
     sketch.add_group(&trails, &Style::new("black", "1.5px"));
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));

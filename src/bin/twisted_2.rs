@@ -44,9 +44,7 @@ fn main() -> Result<()> {
         segments.iter().for_each(|s| clipped.push(s.clone()));
     }
 
-    clipped
-        .iter()
-        .for_each(|p| group.add_linestring(&p.clone()));
+    clipped.iter().for_each(|p| group.add(p));
 
     sketch.add_group(&group, &Style::new("black", "0.2mm"));
     sketch.render().save_default()?;

@@ -3,8 +3,9 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
-use crate::shapes::{Circle, LineString, Polygon, Rect};
+use crate::shapes::{Arc, Circle, LineString, Polygon, Rect};
 use crate::vec2::Vec2;
+use crate::Shape;
 use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
 use geo::Coord;
@@ -48,6 +49,10 @@ pub trait Translate {
 pub trait ToGeoLineString {
     fn to_geo_linestring(&self) -> geo::LineString;
     fn to_geo_multilinestring(&self) -> geo::MultiLineString;
+}
+
+pub trait ToShape {
+    fn to_shape(&self) -> Shape;
 }
 
 impl Centroid for LineString {
@@ -166,6 +171,18 @@ impl ToGeoLineString for LineString {
     }
 }
 
+impl ToShape for LineString {
+    fn to_shape(&self) -> Shape {
+        Shape::LineString(self.clone())
+    }
+}
+
+impl ToShape for &LineString {
+    fn to_shape(&self) -> Shape {
+        Shape::LineString(LineString::new(self.points.clone()))
+    }
+}
+
 impl Rotate for Polygon {
     // TODO: add direction (clockwise, anti-clockwise) of rotation
     // TODO: implement from scratch?
@@ -259,6 +276,12 @@ impl Chaikin for Polygon {
     }
 }
 
+impl ToShape for Polygon {
+    fn to_shape(&self) -> Shape {
+        Shape::Polygon(self.clone())
+    }
+}
+
 impl Scale<Rect> for Rect {
     fn scale_perc(&self, perc: f64) -> Rect {
         Rect::new(
@@ -311,6 +334,12 @@ impl Centroid for Rect {
     }
 }
 
+impl ToShape for Rect {
+    fn to_shape(&self) -> Shape {
+        Shape::Rectangle(self.clone())
+    }
+}
+
 impl Sample for Circle {
     fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2> {
         let mut samples = vec![];
@@ -347,6 +376,18 @@ impl Scale<Circle> for Circle {
     }
 }
 
+impl ToShape for Circle {
+    fn to_shape(&self) -> Shape {
+        Shape::Circle(*self)
+    }
+}
+
+impl ToShape for &Circle {
+    fn to_shape(&self) -> Shape {
+        Shape::Circle(**self)
+    }
+}
+
 impl Centroid for Vec2 {
     fn centroid(&self) -> Vec2 {
         *self
@@ -380,5 +421,17 @@ impl Rotate for Vec<LineString> {
             newvec.push(newlinestring);
         });
         newvec
+    }
+}
+
+impl ToShape for Arc {
+    fn to_shape(&self) -> Shape {
+        Shape::Arc(self.clone())
+    }
+}
+
+impl ToShape for &Arc {
+    fn to_shape(&self) -> Shape {
+        Shape::Arc(Arc::new(self.center, self.radius, self.start, self.end))
     }
 }

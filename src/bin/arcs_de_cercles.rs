@@ -80,10 +80,7 @@ fn main() -> Result<()> {
         circles_lstr2.push(newlist);
     }
 
-    circles_lstr2
-        .iter()
-        .flatten()
-        .for_each(|c| group.add_linestring(c));
+    circles_lstr2.iter().flatten().for_each(|c| group.add(c));
 
     sketch.add_group(&group, &Style::new("black", "1.5px"));
 

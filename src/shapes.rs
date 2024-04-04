@@ -215,7 +215,7 @@ impl Rect {
 }
 
 /// A circle represented by a center and a radius
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Copy)]
 pub struct Circle {
     pub center: Vec2,
     pub radius: f64,

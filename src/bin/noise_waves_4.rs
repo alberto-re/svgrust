@@ -61,7 +61,8 @@ impl Particle {
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), true);
-    let perlin = Perlin::new(51);
+    let seed = Seed::from_number(51);
+    let perlin = Perlin::new(seed.into());
     let mut group1 = Group::new();
 
     let mut particles_left: Vec<Particle> = vec![];
@@ -72,34 +73,14 @@ fn main() -> Result<()> {
     }
 
     particles_left.iter_mut().for_each(|p| {
-        // let iters = sketch.center().y - (f64::abs(p.y - sketch.center().y));
-        // let iters = iters * 1.;
         let noisel = perlin.get([p.y * 0.002, p.y * 0.002, 10.]);
-        let maxwl = map_range(
-            sketch.center().y - (f64::abs(p.y - sketch.center().y)),
-            0.,
-            150.,
-            0.,
-            sketch.width() / 2.,
-        );
         let noiser = perlin.get([p.y * 0.002, p.y * 0.002, 40.]);
-        let maxwr = map_range(
-            sketch.center().y - (f64::abs(p.y - sketch.center().y)),
-            0.,
-            150.,
-            0.,
-            sketch.width() / 2.,
-        );
         let itersl = map_range(noisel, -1., 1., 5., 300.);
         let itersl = itersl as usize;
         let itersr = map_range(noiser, -1., 1., 5., 300.);
         let itersr = itersr as usize;
         p.update(perlin, itersl, itersr);
     });
-
-    // particles_left.iter_mut().for_each(|p| {
-    //     group1.add_linestring(&LineString::new(p.trail.clone()));
-    // });
 
     let mut uberlinestring: Vec<Vec2> = vec![];
 
@@ -112,7 +93,7 @@ fn main() -> Result<()> {
         }
     });
 
-    group1.add_linestring(&LineString::new(uberlinestring));
+    group1.add(&LineString::new(uberlinestring));
 
     sketch.add_group(&group1, &Style::new("rgba(255,0,0,0.7)", "0.4mm"));
     sketch.render().save_default()?;

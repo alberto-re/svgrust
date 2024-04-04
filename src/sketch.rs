@@ -86,7 +86,7 @@ impl Sketch {
     pub fn render(&mut self) -> &Self {
         if self.debug {
             let mut debug = Group::new();
-            debug.add_rect(&self.as_rect());
+            debug.add(self.as_rect());
             self.add_group(&debug, &Style::new("black", "0.2mm"))
         }
         self.doc = render_svg(self);
