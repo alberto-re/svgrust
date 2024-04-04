@@ -5,17 +5,17 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
-    let seed = Seed::from_number(2669496390);
+    let seed = Seed::from_number(1944909223);
     let perlin = Perlin::new(seed.into());
 
     let noise_ratio: f64 = 0.01;
     let mut group = Group::new();
     let mut angle;
     let mut polygons: Vec<Polygon> = vec![];
-    let side = 32.;
+    let side = 35.;
 
-    let y_step = 50.;
-    let x_step = 4.;
+    let y_step = 60.;
+    let x_step = 6.;
 
     let mut y = 20.;
     let mut x = 7.;
