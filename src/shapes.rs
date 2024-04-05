@@ -75,6 +75,10 @@ impl Polygon {
         Self { points }
     }
 
+    pub fn triangle(p1: Vec2, p2: Vec2, p3: Vec2) -> Self {
+        Self { points: vec![p1, p2, p3] }
+    }
+
     pub fn add_vec(&mut self, vec: Vec2) -> Self {
         self.points.iter_mut().for_each(|p| {
             p.x += vec.x;
@@ -237,7 +241,7 @@ impl Circle {
         )
     }
 
-    pub fn to_linestr(&self, points: usize) -> LineString {
+    pub fn to_polygon(&self, points: usize) -> Polygon {
         let mut pvec = vec![];
         for i in 0..points {
             let angle = TAU / points as f64 * i as f64;
@@ -247,7 +251,7 @@ impl Circle {
         }
         pvec.push(*pvec.first().unwrap());
 
-        LineString { points: pvec }
+        Polygon { points: pvec }
     }
 }
 

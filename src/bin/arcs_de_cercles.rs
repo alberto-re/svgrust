@@ -49,12 +49,12 @@ fn main() -> Result<()> {
         ]);
     });
 
-    let mut circles_lstr: Vec<Vec<LineString>> = vec![];
+    let mut circles_lstr: Vec<Vec<Polygon>> = vec![];
     circles.iter().for_each(|circle| {
         circles_lstr.push(
             circle
                 .iter()
-                .map(|subcircle| subcircle.to_linestr(150))
+                .map(|subcircle| subcircle.to_polygon(150))
                 .collect(),
         )
     });
@@ -68,7 +68,7 @@ fn main() -> Result<()> {
         };
         let mut newlist: Vec<LineString> = vec![];
         for subc in circle {
-            let parts: Vec<LineString> = vec![subc.clone()];
+            let parts: Vec<Polygon> = vec![subc.clone()];
             let mut partsnew: Vec<LineString> = vec![];
             for part in &parts {
                 part.clip(&circles_lstr[other_index][0], true)

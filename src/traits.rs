@@ -143,7 +143,7 @@ impl Rotate for LineString {
             ),
             vec![],
         );
-        let degrees = angle.as_radians() * 180.0 / TAU;
+        let degrees = angle.to_radians() * 180.0 / TAU;
         let poly = poly.rotate_around_centroid(degrees);
         LineString::new(
             poly.exterior()
@@ -197,7 +197,7 @@ impl Rotate for Polygon {
             ),
             vec![],
         );
-        let degrees = angle.as_radians() * 180.0 / TAU;
+        let degrees = angle.to_radians() * 180.0 / TAU;
         let poly = poly.rotate_around_centroid(degrees);
         Polygon::new(
             poly.exterior()
@@ -279,6 +279,22 @@ impl Chaikin for Polygon {
 impl ToShape for Polygon {
     fn to_shape(&self) -> Shape {
         Shape::Polygon(self.clone())
+    }
+}
+
+impl Centroid for Polygon {
+    fn centroid(&self) -> Vec2 {
+        // TODO: we must prevent division by zero
+        let mut xsum: f64 = 0.;
+        let mut ysum: f64 = 0.;
+        self.points.iter().for_each(|p| {
+            xsum += p.x;
+            ysum += p.y;
+        });
+        Vec2 {
+            x: xsum / self.points.len() as f64,
+            y: ysum / self.points.len() as f64,
+        }
     }
 }
 
@@ -415,7 +431,7 @@ impl Rotate for Vec<LineString> {
                 linestring
                     .points
                     .iter()
-                    .map(|point| point.rotate(centroid, angle.as_radians()))
+                    .map(|point| point.rotate(centroid, angle.to_radians()))
                     .collect::<Vec<Vec2>>(),
             );
             newvec.push(newlinestring);

@@ -33,7 +33,7 @@ impl VectorAt for PerlinNoise2dVectorField {
         let noise_val = self
             .noise_fn
             .get([pos.x * self.x_factor, pos.y * self.y_factor]);
-        let angle = Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
+        let angle = Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
         Vec2::from_angle_length(angle, 1.)
     }
 }
@@ -55,6 +55,6 @@ impl VectorAt for Spiral2dVectorField {
         let val = f64::atan2(dy, dx);
         let angle = map_range(val, -PI, PI, 0., TAU);
         let angle = angle + PI / 2.5;
-        Vec2::from_angle_length(Angle::from_radians(angle), 0.5)
+        Vec2::from_angle_length(Angle::radians(angle), 0.5)
     }
 }

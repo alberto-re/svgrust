@@ -12,7 +12,7 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> Angle {
     let dx = pos.x - focal.x;
     let dy = pos.y - focal.y;
     let val = f64::sqrt(dx.powi(2) + dy.powi(2));
-    Angle::from_radians(map_range(val, 0., max_dist, 0., TAU))
+    Angle::radians(map_range(val, 0., max_dist, 0., TAU))
 }
 
 fn main() -> Result<()> {

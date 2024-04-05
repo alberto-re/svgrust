@@ -17,7 +17,7 @@ fn add_square_spiral_with_center(
         };
         let rect = rect.scale_perc(scale);
         let rect = rect.to_polygon(true);
-        let rect = rect.rotate(Angle::from_radians(start_angle + TAU * scale));
+        let rect = rect.rotate(Angle::radians(start_angle + TAU * scale));
         let rect = rect.upsample(1);
         let rect = rect.chaikin(5, true);
         group.add(rect);

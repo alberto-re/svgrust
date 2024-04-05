@@ -9,24 +9,24 @@ pub struct Angle {
 
 impl Angle {
     /// Create an angle from a value in degrees.
-    pub fn from_degrees(degrees: f64) -> Self {
+    pub fn degrees(degrees: f64) -> Self {
         Angle {
             radians: degrees * PI / 180.,
         }
     }
 
     /// Create an angle from a value in radians.
-    pub fn from_radians(radians: f64) -> Self {
+    pub fn radians(radians: f64) -> Self {
         Angle { radians }
     }
 
     /// Return this angle expressed in degrees.
-    pub fn as_degrees(&self) -> f64 {
+    pub fn to_degrees(&self) -> f64 {
         self.radians * 180. / PI
     }
 
     /// Return this angle expressed in radians.
-    pub fn as_radians(&self) -> f64 {
+    pub fn to_radians(&self) -> f64 {
         self.radians
     }
 
@@ -70,31 +70,31 @@ mod tests {
 
     #[test]
     fn as_degrees() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_radians(PI / 2.);
-        assert_eq!(a.as_degrees(), 90.);
-        assert_eq!(b.as_degrees(), 90.);
+        let a = Angle::degrees(90.);
+        let b = Angle::radians(PI / 2.);
+        assert_eq!(a.to_degrees(), 90.);
+        assert_eq!(b.to_degrees(), 90.);
     }
 
     #[test]
     fn as_radians() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_radians(PI / 2.);
-        assert_eq!(a.as_radians(), PI / 2.);
-        assert_eq!(b.as_radians(), PI / 2.);
+        let a = Angle::degrees(90.);
+        let b = Angle::radians(PI / 2.);
+        assert_eq!(a.to_radians(), PI / 2.);
+        assert_eq!(b.to_radians(), PI / 2.);
     }
 
     #[test]
     fn add() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_degrees(90.);
-        assert_eq!(a + b, Angle::from_degrees(180.));
+        let a = Angle::degrees(90.);
+        let b = Angle::degrees(90.);
+        assert_eq!(a + b, Angle::degrees(180.));
     }
 
     #[test]
     fn sub() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_degrees(90.);
-        assert_eq!(a - b, Angle::from_degrees(0.));
+        let a = Angle::degrees(90.);
+        let b = Angle::degrees(90.);
+        assert_eq!(a - b, Angle::degrees(0.));
     }
 }

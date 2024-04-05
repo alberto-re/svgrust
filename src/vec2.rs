@@ -37,9 +37,9 @@ impl Vec2 {
     pub fn angle(&self, target: Vec2) -> Angle {
         let signed = f64::atan2(target.y - self.y, target.x - self.x);
         if signed.is_sign_negative() {
-            Angle::from_radians(PI + PI - (-1. * signed))
+            Angle::radians(PI + PI - (-1. * signed))
         } else {
-            Angle::from_radians(signed)
+            Angle::radians(signed)
         }
     }
 
@@ -105,35 +105,35 @@ mod tests {
     fn angle() {
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: 0. };
-        assert_eq!(a.angle(b), Angle::from_degrees(0.));
+        assert_eq!(a.angle(b), Angle::degrees(0.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: 100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(45.));
+        assert_eq!(a.angle(b), Angle::degrees(45.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 0., y: 100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(90.));
+        assert_eq!(a.angle(b), Angle::degrees(90.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: 100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(135.));
+        assert_eq!(a.angle(b), Angle::degrees(135.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: 0. };
-        assert_eq!(a.angle(b), Angle::from_degrees(180.));
+        assert_eq!(a.angle(b), Angle::degrees(180.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: -100., y: -100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(225.));
+        assert_eq!(a.angle(b), Angle::degrees(225.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 0., y: -100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(270.));
+        assert_eq!(a.angle(b), Angle::degrees(270.));
 
         let a = Vec2 { x: 0., y: 0. };
         let b = Vec2 { x: 100., y: -100. };
-        assert_eq!(a.angle(b), Angle::from_degrees(315.));
+        assert_eq!(a.angle(b), Angle::degrees(315.));
     }
 
     #[test]

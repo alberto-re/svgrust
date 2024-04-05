@@ -30,7 +30,7 @@ impl Particle {
         for _ in 0..itersl {
             let noise = noise.get([self.x * 0.005, self.y * 0.01, self.i * 0.7]);
             let theta = map_range(noise, -1., 1., 0., TAU);
-            let v = Vec2::from_angle_length(Angle::from_radians(theta), 1.);
+            let v = Vec2::from_angle_length(Angle::radians(theta), 1.);
             self.x += v.x;
             self.y += v.y;
             self.i += 1.;
@@ -43,7 +43,7 @@ impl Particle {
             let noise = noise.get([self.x * 0.005, self.y * 0.01, -self.i * 0.7]);
             let theta = map_range(noise, -1., 1., 0., TAU);
             let theta = theta + PI;
-            let v = Vec2::from_angle_length(Angle::from_radians(theta), 1.);
+            let v = Vec2::from_angle_length(Angle::radians(theta), 1.);
             self.x += v.x;
             self.y += v.y;
             self.i += 1.;

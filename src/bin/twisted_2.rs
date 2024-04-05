@@ -28,7 +28,7 @@ fn main() -> Result<()> {
             let noise_value =
                 perlin.get([x * noise_ratio, y * noise_ratio, t * 50000.]) * TAU / 20.;
             angle += noise_value;
-            let polygon = polygon.rotate(Angle::from_radians(angle));
+            let polygon = polygon.rotate(Angle::radians(angle));
             polygons.push(polygon);
             x += x_step;
         }
