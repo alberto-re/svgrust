@@ -76,7 +76,9 @@ impl Polygon {
     }
 
     pub fn triangle(p1: Vec2, p2: Vec2, p3: Vec2) -> Self {
-        Self { points: vec![p1, p2, p3] }
+        Self {
+            points: vec![p1, p2, p3],
+        }
     }
 
     pub fn add_vec(&mut self, vec: Vec2) -> Self {

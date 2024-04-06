@@ -21,6 +21,11 @@ impl Vec2 {
         Vec2::new(angle.cos() * length, angle.sin() * length)
     }
 
+    /// Construct a new vector from a slice
+    pub fn from_slice(slice: &[f64]) -> Self {
+        Vec2::new(slice[0], slice[1])
+    }
+
     /// Calculate the euclidean distance between this and another vector
     pub fn euclidean_distance(&self, other: &Vec2) -> f64 {
         ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()

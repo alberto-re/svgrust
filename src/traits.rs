@@ -8,6 +8,7 @@ use crate::vec2::Vec2;
 use crate::Shape;
 use geo::algorithm::Rotate as GeoRotate;
 use geo::coord;
+use geo::Contains as GeoContains;
 use geo::Coord;
 use geo::CoordsIter;
 use rand::rngs::StdRng;
@@ -295,6 +296,35 @@ impl Centroid for Polygon {
             x: xsum / self.points.len() as f64,
             y: ysum / self.points.len() as f64,
         }
+    }
+}
+
+impl Sample for Polygon {
+    fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2> {
+        let poly = geo::Polygon::new(self.to_geo_linestring(), vec![]);
+        let miny = self.points.iter().map(|p| p.y as usize).min().unwrap();
+        let maxy = self.points.iter().map(|p| p.y as usize).max().unwrap();
+        let minx = self.points.iter().map(|p| p.x as usize).min().unwrap();
+        let maxx = self.points.iter().map(|p| p.x as usize).max().unwrap();
+        let width = (maxx - minx) as f64;
+        let height = (maxy - miny) as f64;
+        let mut samples = vec![];
+        while samples.len() < n as usize {
+            let x = rng.gen::<f64>() * width + minx as f64;
+            let y = rng.gen::<f64>() * height + miny as f64;
+            if poly.contains(&coord! { x: x, y: y}) {
+                samples.push(Vec2 { x, y });
+            }
+        }
+        samples
+    }
+}
+
+impl Contains for Polygon {
+    fn contains<T: Centroid>(&self, shape: &T) -> bool {
+        let poly = geo::Polygon::new(self.to_geo_linestring(), vec![]);
+        let other_centroid = shape.centroid();
+        poly.contains(&coord! { x: other_centroid.x, y: other_centroid.y })
     }
 }
 
