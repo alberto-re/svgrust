@@ -60,6 +60,20 @@ impl Group {
         }
     }
 
+    pub fn add_many<T: ToShape>(&mut self, elements: Vec<T>) {
+        for element in elements {
+            let shape = element.to_shape();
+            match shape {
+                Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
+                Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
+                Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
+                Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
+                Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
+                Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
+            }
+        }
+    }
+
     pub fn add_linestrings(&mut self, linestr: &[shapes::LineString]) {
         linestr.iter().for_each(|l| {
             self.elements.push(Shape::LineString(l.clone()));

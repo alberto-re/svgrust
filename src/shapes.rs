@@ -1,6 +1,7 @@
 use std::f64::consts::TAU;
 
 use crate::grid::SquareGrid;
+use crate::seed::Seed;
 use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
 use geo::algorithm::bool_ops::BooleanOps;
@@ -217,6 +218,14 @@ impl Rect {
 
     pub fn into_square_grid(&self, square_side: f64) -> SquareGrid {
         SquareGrid::new(self.xy.x, self.xy.y, self.width, self.height, square_side)
+    }
+
+    pub fn sample_poisson2d(&self, radius: f64, seed: u64) -> Vec<Vec2> {
+        let samples = fast_poisson::Poisson2D::new()
+            .with_seed(seed)
+            .with_dimensions([self.width, self.height], radius);
+
+        samples.iter().map(|s| Vec2::from_slice(&s)).collect()
     }
 }
 

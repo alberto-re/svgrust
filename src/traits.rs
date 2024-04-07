@@ -19,6 +19,10 @@ pub trait Scale<T> {
     fn scale_unit(&self, unit: f64) -> T;
 }
 
+pub trait Clip {
+    fn clip(&self, bbox: &Polygon) -> Vec<LineString>;
+}
+
 pub trait Sample {
     fn sample_uniform(&self, rng: &mut StdRng, n: u64) -> Vec<Vec2>;
 }
@@ -54,6 +58,10 @@ pub trait ToGeoLineString {
 
 pub trait ToShape {
     fn to_shape(&self) -> Shape;
+}
+
+pub trait Triangulate {
+    fn triangulate(&self) -> Vec<Polygon>;
 }
 
 impl Centroid for LineString {
@@ -328,6 +336,17 @@ impl Contains for Polygon {
     }
 }
 
+impl Clip for Vec<Polygon> {
+    fn clip(&self, bbox: &Polygon) -> Vec<LineString> {
+        let mut segments = vec![];
+        for polygon in self {
+            let mut clipped = polygon.clip(bbox, false);
+            segments.append(&mut clipped);
+        }
+        segments
+    }
+}
+
 impl Scale<Rect> for Rect {
     fn scale_perc(&self, perc: f64) -> Rect {
         Rect::new(
@@ -437,6 +456,26 @@ impl ToShape for &Circle {
 impl Centroid for Vec2 {
     fn centroid(&self) -> Vec2 {
         *self
+    }
+}
+impl Triangulate for Vec<Vec2> {
+    fn triangulate(&self) -> Vec<Polygon> {
+        let points: Vec<delaunator::Point> = self.iter().map(|v| {
+            delaunator::Point { x: v.x, y: v.y }
+        }).collect();
+        let triangulation = delaunator::triangulate(&points);
+        let mut triangles: Vec<Polygon> = vec![];
+        for i in (0..triangulation.triangles.len()).step_by(3) {
+            let p1 = &points[triangulation.triangles[i]];
+            let p2 = &points[triangulation.triangles[i + 1]];
+            let p3 = &points[triangulation.triangles[i + 2]];
+            triangles.push(Polygon::triangle(
+                Vec2::new(p1.x, p1.y),
+                Vec2::new(p2.x, p2.y),
+                Vec2::new(p3.x, p3.y),
+            ));
+        }
+        triangles
     }
 }
 

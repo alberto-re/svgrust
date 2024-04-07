@@ -22,6 +22,7 @@ pub use crate::traits::Sample;
 pub use crate::traits::Scale;
 pub use crate::traits::Translate;
 pub use crate::traits::Upsample;
+pub use crate::traits::Clip;
 pub use crate::vec2::Vec2;
 pub use crate::Group;
 pub use crate::Style;
