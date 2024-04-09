@@ -108,11 +108,11 @@ fn main() -> Result<()> {
         .map(|(_, linestring)| Shape::LineString(linestring.clone()))
         .collect::<Vec<Shape>>();
 
-    frame.add(&bbox.scale_unit(50.).to_linestr(true));
-    frame.add(&bbox.scale_unit(52.).to_linestr(true));
-    frame.add(&bbox.scale_unit(54.).to_linestr(true));
-    frame.add(&bbox.scale_unit(56.).to_linestr(true));
-    frame.add(&bbox.scale_unit(58.).to_linestr(true));
+    frame.add(&bbox.scale_perc(50.).to_linestr(true));
+    frame.add(&bbox.scale_perc(52.).to_linestr(true));
+    frame.add(&bbox.scale_perc(54.).to_linestr(true));
+    frame.add(&bbox.scale_perc(56.).to_linestr(true));
+    frame.add(&bbox.scale_perc(58.).to_linestr(true));
 
     sketch.add_group(&trails, &Style::new("black", "1.5px"));
     sketch.add_group(&glyphs, &Style::new("black", "1.5px"));

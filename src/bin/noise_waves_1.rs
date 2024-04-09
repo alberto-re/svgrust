@@ -78,11 +78,11 @@ fn main() -> Result<()> {
             });
     }
 
-    line_set5.add(sketch.as_rect().scale_unit(1.));
-    line_set5.add(sketch.as_rect().scale_unit(3.));
-    line_set5.add(sketch.as_rect().scale_unit(5.));
-    line_set5.add(sketch.as_rect().scale_unit(7.));
-    line_set5.add(sketch.as_rect().scale_unit(9.));
+    line_set5.add(sketch.as_rect().scale_perc(1.));
+    line_set5.add(sketch.as_rect().scale_perc(3.));
+    line_set5.add(sketch.as_rect().scale_perc(5.));
+    line_set5.add(sketch.as_rect().scale_perc(7.));
+    line_set5.add(sketch.as_rect().scale_perc(9.));
 
     sketch.add_group(&line_set1, &Style::new("blue", "0.4mm"));
     sketch.add_group(&line_set2, &Style::new("red", "0.4mm"));

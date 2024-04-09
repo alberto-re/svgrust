@@ -14,9 +14,13 @@ use geo::CoordsIter;
 use rand::rngs::StdRng;
 use rand::Rng;
 
-pub trait Scale<T> {
-    fn scale_perc(&self, perc: f64) -> T;
-    fn scale_unit(&self, unit: f64) -> T;
+
+pub trait ScalePerc {
+    fn scale_perc(&self, percentage: f64) -> Self;
+}
+
+pub trait ScaleDist {
+    fn scale_dist(&self, distance: f64) -> Self;
 }
 
 pub trait Clip {
@@ -336,6 +340,58 @@ impl Contains for Polygon {
     }
 }
 
+impl ScaleDist for Polygon {
+    fn scale_dist(&self, distance: f64) -> Polygon {
+        // This is a very raw and fragile adaptation of this code:
+        // https://codepen.io/HansMuller/pen/AgLWaz
+        let mut edges: Vec<(Vec2, Vec2)> = vec![];
+        for i in 0..self.points.len() {
+            let curpoint = self.points[i];
+            let nextpoint = self.points[(i+1) % self.points.len()];
+            edges.push((curpoint, nextpoint));
+        }
+
+        fn inward_normal(p1: Vec2, p2: Vec2) -> Vec2 {
+            let dx = p2.x - p1.x;
+            let dy = p2.y - p1.y;
+            let edge_length = f64::sqrt(dx*dx + dy*dy);
+            Vec2::new(-dy / edge_length, dx / edge_length)
+        }
+
+        let mut offset_edges: Vec<(Vec2, Vec2)> = vec![];
+        for i in 0..edges.len() {
+            let edge = edges[i];
+            let normal = inward_normal(edge.0, edge.1);
+            let dx = normal.x * distance;
+            let dy = normal.y * distance;
+            let offset_edge = (Vec2::new(edge.0.x + dx, edge.0.y + dy), Vec2::new(edge.1.x + dx, edge.1.y + dy));
+            offset_edges.push(
+                offset_edge
+            )
+        }
+
+        fn edges_intersection(edge1: (Vec2, Vec2), edge2: (Vec2, Vec2)) -> Vec2 {
+            let den = (edge2.1.y - edge2.0.y) * (edge1.1.x - edge1.0.x) - (edge2.1.x - edge2.0.x) * (edge1.1.y - edge1.0.y);
+            if den == 0. {
+                panic!();   // lines are parallel or conincident
+            }
+
+            let ua = ((edge2.1.x - edge2.0.x) * (edge1.0.y - edge2.0.y) - (edge2.1.y - edge2.0.y) * (edge1.0.x - edge2.0.x)) / den;
+
+            Vec2::new(edge1.0.x + ua * (edge1.1.x - edge1.0.x), edge1.0.y + ua * (edge1.1.y - edge1.0.y))
+        }
+
+        let mut vertices: Vec<Vec2> = vec![];
+        for i in 0..offset_edges.len() {
+            let this_edge = offset_edges[i];
+            let prev_edge = offset_edges[(i + offset_edges.len() - 1) % offset_edges.len()];
+            let vertex = edges_intersection(prev_edge, this_edge);
+            vertices.push(vertex);
+        }
+        Polygon::new(vertices)
+    }
+}
+
 impl Clip for Vec<Polygon> {
     fn clip(&self, bbox: &Polygon) -> Vec<LineString> {
         let mut segments = vec![];
@@ -347,26 +403,15 @@ impl Clip for Vec<Polygon> {
     }
 }
 
-impl Scale<Rect> for Rect {
-    fn scale_perc(&self, perc: f64) -> Rect {
+impl ScalePerc for Rect {
+    fn scale_perc(&self, percentage: f64) -> Rect {
         Rect::new(
             Vec2 {
-                x: self.xy.x + self.width * ((1. - perc) / 2.),
-                y: self.xy.y + self.height * ((1. - perc) / 2.),
+                x: self.xy.x + self.width * ((1. - percentage) / 2.),
+                y: self.xy.y + self.height * ((1. - percentage) / 2.),
             },
-            self.width * perc,
-            self.height * perc,
-        )
-    }
-
-    fn scale_unit(&self, unit: f64) -> Rect {
-        Rect::new(
-            Vec2 {
-                x: self.xy.x + unit / 2.,
-                y: self.xy.y + unit / 2.,
-            },
-            self.width - unit,
-            self.height - unit,
+            self.width * percentage,
+            self.height * percentage,
         )
     }
 }
@@ -431,13 +476,9 @@ impl Contains for Circle {
     }
 }
 
-impl Scale<Circle> for Circle {
-    fn scale_perc(&self, perc: f64) -> Circle {
-        Circle::new(self.center, self.radius * perc)
-    }
-
-    fn scale_unit(&self, unit: f64) -> Circle {
-        Circle::new(self.center, self.radius - unit)
+impl ScalePerc for Circle {
+    fn scale_perc(&self, percentage: f64) -> Circle {
+        Circle::new(self.center, self.radius * percentage)
     }
 }
 
@@ -460,9 +501,10 @@ impl Centroid for Vec2 {
 }
 impl Triangulate for Vec<Vec2> {
     fn triangulate(&self) -> Vec<Polygon> {
-        let points: Vec<delaunator::Point> = self.iter().map(|v| {
-            delaunator::Point { x: v.x, y: v.y }
-        }).collect();
+        let points: Vec<delaunator::Point> = self
+            .iter()
+            .map(|v| delaunator::Point { x: v.x, y: v.y })
+            .collect();
         let triangulation = delaunator::triangulate(&points);
         let mut triangles: Vec<Polygon> = vec![];
         for i in (0..triangulation.triangles.len()).step_by(3) {

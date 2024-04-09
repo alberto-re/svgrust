@@ -1,9 +1,5 @@
-use delaunator::{triangulate, Point};
-
 use anyhow::Result;
 use plt::prelude::*;
-use rand::rngs::StdRng;
-use rand::SeedableRng;
 
 // How to draw a Penrose triangle with a compass:
 // https://www.instructables.com/Draw-a-Penrose-Triangle/
@@ -41,7 +37,7 @@ fn penrose_triangle(center: Vec2, side: f64, width: f64) -> Vec<Polygon> {
         g,
         k + Vec2::from_angle_length(Angle::degrees(300.), width),
     ]);
-    let lshape3 = Polygon::new(vec![
+    let mut lshape3 = Polygon::new(vec![
         i,
         j,
         a,
@@ -49,99 +45,61 @@ fn penrose_triangle(center: Vec2, side: f64, width: f64) -> Vec<Polygon> {
         g + Vec2::from_angle_length(Angle::degrees(180.), width),
         c,
     ]);
+    lshape3.points.reverse();
     vec![lshape1, lshape2, lshape3]
 }
 
-fn delaunay(polygon: &Polygon, n: usize, rng: &mut StdRng) -> Vec<Polygon> {
-    // let mut points = polygon.sample_uniform(rng, n as u64);
-    // points.append(&mut polygon.upsample(1).points.clone());
-    let mut points = polygon.points.clone();
-    println!("len on points {}", points.len());
-    let mut triangles = vec![];
-    let mut m = n;
-
-    while m > 0 {
-        let points2 = points
-            .clone()
-            .iter()
-            .map(|v| Point { x: v.x, y: v.y })
-            .collect::<Vec<Point>>();
-        let result = triangulate(&points2);
-        let mut newpoints: Vec<Vec2> = vec![];
-        for i in (0..result.triangles.len()).step_by(3) {
-            let p1 = points[result.triangles[i]];
-            let p2 = points[result.triangles[i + 1]];
-            let p3 = points[result.triangles[i + 2]];
-            newpoints.push(p1);
-            newpoints.push(p2);
-            newpoints.push(p3);
-            newpoints.push((p1 + p2).div(2.));
-            newpoints.push((p2 + p3).div(2.));
-            newpoints.push((p1 + p3).div(2.));
+fn hatch_fill(polygon: &Polygon) -> Vec<LineString> {
+    let mut lines = vec![];
+    let bbox = polygon.scale_dist(-2.0);
+    lines.push(bbox.to_linestring());
+    lines.push(polygon.scale_dist(-1.0).to_linestring());
+    let mut miny = 1000000.;
+    let mut maxy = 0.;
+    let mut minx = 1000000.;
+    let mut maxx = 0.;
+    polygon.points.iter().for_each(|p| {
+        if p.x > maxx {
+            maxx = p.x;
         }
-        points = newpoints;
-        m = m - 1;
-    }
-
-    let points2 = points
-        .clone()
-        .iter()
-        .map(|v| Point { x: v.x, y: v.y })
-        .collect::<Vec<Point>>();
-    println!("len on points2 {}", points2.len());
-    let result = triangulate(&points2);
-    println!("result triangles {:?}", result.triangles);
-    for i in result.triangles.iter() {
-        // println!("- {:?}", i);
-    }
-    for i in (0..result.triangles.len()).step_by(3) {
-        let p1 = points[result.triangles[i]];
-        let p2 = points[result.triangles[i + 1]];
-        let p3 = points[result.triangles[i + 2]];
-        println!("{:?} {:?} {:?}", p1, p2, p3);
-        triangles.push(Polygon::triangle(p1, p2, p3));
-    }
-
-    // let outer = geo::Polygon::new(polygon.to_geo_linestring(), vec![]);
-    // triangles = triangles
-    //     .iter()
-    //     .filter(|t| {
-    //         let inner = geo::Polygon::new(t.to_geo_linestring(), vec![]);
-    //         outer.contains(&inner)
-    //     })
-    //     .cloned()
-    //     .collect::<Vec<Polygon>>();
-
-    triangles
+        if p.y > maxy {
+            maxy = p.y;
+        }
+        if p.x < minx {
+            minx = p.x;
+        }
+        if p.y < miny {
+            miny = p.y;
+        }
+    });
+    let mut cury = miny;
+    while cury < maxy {
+        let p1 = Vec2::new(minx, cury);
+        let p2 = Vec2::new(maxx, cury);
+        for segment in LineString::line(p1, p2).clip(&bbox, false) {
+            lines.push(segment);
+        }
+        cury += 1.;
+    };
+    lines
 }
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), true);
-    let seed = Seed::new();
-    let mut rng = StdRng::seed_from_u64(seed.clone().into());
 
     let mut group = Group::new();
     let mut hatch = Group::new();
 
-    let triangle = penrose_triangle(sketch.center(), 120., 35.);
-    triangle.iter().for_each(|p| group.add(p.clone()));
-
-    // println!("len on &triangle[0].points {}", &triangle[0].points.len());
-
-    // for point in &triangle[0].points {
-    //     group.add(Circle::new(*point, 2.));
-    // }
-
-    // delaunay(&triangle[0], 0, &mut rng)
-    //     .iter()
-    //     .for_each(|p| hatch.add(p.clone()));
-
-    // delaunay(&triangle[1], 50, &mut rng)
-    //     .iter()
-    //     .for_each(|p| hatch.add(p.clone()));
+    let triangle = penrose_triangle(sketch.center(), 140., 50.);
+    group.add(triangle[0].clone());
+    group.add(triangle[1].clone());
+    group.add(triangle[2].clone());
+    for line in &hatch_fill(&triangle[0]) {
+        hatch.add(line);
+    }
 
     sketch.add_group(&group, &Style::new("black", "0.5mm"));
-    sketch.add_group(&hatch, &Style::new("black", "0.2mm"));
+    sketch.add_group(&hatch, &Style::new("black", "0.5mm"));
     sketch.render().save_default()?;
     Ok(())
 }

@@ -39,6 +39,10 @@ impl Angle {
     pub fn cos(&self) -> f64 {
         self.radians.cos()
     }
+
+    pub fn div(&self, scalar: f64) -> Self{
+        Angle::radians(self.radians / scalar)
+    }
 }
 
 impl ops::Add<Angle> for Angle {

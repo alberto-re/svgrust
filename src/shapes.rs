@@ -90,7 +90,11 @@ impl Polygon {
     }
 
     pub fn to_linestring(&self) -> LineString {
-        LineString::new(self.points.clone())
+        let mut points = self.points.clone();
+        if points[0] != points[points.len() - 1] {
+            points.push(points[0]);
+        }
+        LineString::new(points)
     }
 
     pub fn clip<T: ToGeoLineString>(&self, other: &T, invert: bool) -> Vec<LineString> {

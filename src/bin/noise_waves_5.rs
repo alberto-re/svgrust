@@ -16,7 +16,6 @@ fn main() -> Result<()> {
     let mut line_set2 = Group::new();
     let mut line_set3 = Group::new();
     let mut line_set4 = Group::new();
-    let line_set5 = Group::new();
 
     let col_size = sketch.width() / cols as f64;
     let row_size = sketch.height() / rows as f64;
@@ -78,17 +77,10 @@ fn main() -> Result<()> {
             });
     }
 
-    // line_set5.add(sketch.as_rect().scale_unit(1.));
-    // line_set5.add(sketch.as_rect().scale_unit(3.));
-    // line_set5.add(sketch.as_rect().scale_unit(5.));
-    // line_set5.add(sketch.as_rect().scale_unit(7.));
-    // line_set5.add(sketch.as_rect().scale_unit(9.));
-
     sketch.add_group(&line_set1, &Style::new("blue", "0.4mm"));
     sketch.add_group(&line_set2, &Style::new("red", "0.4mm"));
     sketch.add_group(&line_set3, &Style::new("black", "0.4mm"));
     sketch.add_group(&line_set4, &Style::new("yellow", "0.4mm"));
-    //sketch.add_group(&line_set5, &Style::new("black", "0.5mm"));
     sketch.render().save_default()?;
     Ok(())
 }

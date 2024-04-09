@@ -20,10 +20,13 @@ fn main() -> Result<()> {
 
     let poisson_dist = sketch.as_rect().sample_poisson2d(radius, seed.into());
 
-    let points = poisson_dist.iter().map(|p| {
-        let angle = focal_dist_angle(sketch.center(), focal_max_dist, *p);
-        *p + Vec2::from_angle_length(angle, displacement)
-    }).collect::<Vec<_>>();
+    let points = poisson_dist
+        .iter()
+        .map(|p| {
+            let angle = focal_dist_angle(sketch.center(), focal_max_dist, *p);
+            *p + Vec2::from_angle_length(angle, displacement)
+        })
+        .collect::<Vec<_>>();
 
     let triangles = points.triangulate();
 
