@@ -1,11 +1,7 @@
 use delaunator::{triangulate, Point};
 
 use anyhow::Result;
-use geo::Contains;
-use noise::NoiseFn;
-use noise::Perlin;
 use plt::prelude::*;
-use plt::traits::ToGeoLineString;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 

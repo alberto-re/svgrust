@@ -1,7 +1,6 @@
 use std::f64::consts::TAU;
 
 use crate::grid::SquareGrid;
-use crate::seed::Seed;
 use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
 use geo::algorithm::bool_ops::BooleanOps;

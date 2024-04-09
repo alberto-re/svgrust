@@ -16,7 +16,7 @@ fn main() -> Result<()> {
     let mut line_set2 = Group::new();
     let mut line_set3 = Group::new();
     let mut line_set4 = Group::new();
-    let mut line_set5 = Group::new();
+    let line_set5 = Group::new();
 
     let col_size = sketch.width() / cols as f64;
     let row_size = sketch.height() / rows as f64;
