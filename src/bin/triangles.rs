@@ -80,7 +80,7 @@ fn hatch_fill(polygon: &Polygon) -> Vec<LineString> {
             lines.push(segment);
         }
         cury += 1.;
-    };
+    }
     lines
 }
 

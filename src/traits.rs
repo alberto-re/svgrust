@@ -14,7 +14,6 @@ use geo::CoordsIter;
 use rand::rngs::StdRng;
 use rand::Rng;
 
-
 pub trait ScalePerc {
     fn scale_perc(&self, percentage: f64) -> Self;
 }
@@ -347,14 +346,14 @@ impl ScaleDist for Polygon {
         let mut edges: Vec<(Vec2, Vec2)> = vec![];
         for i in 0..self.points.len() {
             let curpoint = self.points[i];
-            let nextpoint = self.points[(i+1) % self.points.len()];
+            let nextpoint = self.points[(i + 1) % self.points.len()];
             edges.push((curpoint, nextpoint));
         }
 
         fn inward_normal(p1: Vec2, p2: Vec2) -> Vec2 {
             let dx = p2.x - p1.x;
             let dy = p2.y - p1.y;
-            let edge_length = f64::sqrt(dx*dx + dy*dy);
+            let edge_length = f64::sqrt(dx * dx + dy * dy);
             Vec2::new(-dy / edge_length, dx / edge_length)
         }
 
@@ -364,21 +363,28 @@ impl ScaleDist for Polygon {
             let normal = inward_normal(edge.0, edge.1);
             let dx = normal.x * distance;
             let dy = normal.y * distance;
-            let offset_edge = (Vec2::new(edge.0.x + dx, edge.0.y + dy), Vec2::new(edge.1.x + dx, edge.1.y + dy));
-            offset_edges.push(
-                offset_edge
-            )
+            let offset_edge = (
+                Vec2::new(edge.0.x + dx, edge.0.y + dy),
+                Vec2::new(edge.1.x + dx, edge.1.y + dy),
+            );
+            offset_edges.push(offset_edge)
         }
 
         fn edges_intersection(edge1: (Vec2, Vec2), edge2: (Vec2, Vec2)) -> Vec2 {
-            let den = (edge2.1.y - edge2.0.y) * (edge1.1.x - edge1.0.x) - (edge2.1.x - edge2.0.x) * (edge1.1.y - edge1.0.y);
+            let den = (edge2.1.y - edge2.0.y) * (edge1.1.x - edge1.0.x)
+                - (edge2.1.x - edge2.0.x) * (edge1.1.y - edge1.0.y);
             if den == 0. {
-                panic!();   // lines are parallel or conincident
+                panic!(); // lines are parallel or conincident
             }
 
-            let ua = ((edge2.1.x - edge2.0.x) * (edge1.0.y - edge2.0.y) - (edge2.1.y - edge2.0.y) * (edge1.0.x - edge2.0.x)) / den;
+            let ua = ((edge2.1.x - edge2.0.x) * (edge1.0.y - edge2.0.y)
+                - (edge2.1.y - edge2.0.y) * (edge1.0.x - edge2.0.x))
+                / den;
 
-            Vec2::new(edge1.0.x + ua * (edge1.1.x - edge1.0.x), edge1.0.y + ua * (edge1.1.y - edge1.0.y))
+            Vec2::new(
+                edge1.0.x + ua * (edge1.1.x - edge1.0.x),
+                edge1.0.y + ua * (edge1.1.y - edge1.0.y),
+            )
         }
 
         let mut vertices: Vec<Vec2> = vec![];

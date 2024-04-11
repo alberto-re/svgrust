@@ -40,7 +40,7 @@ impl Angle {
         self.radians.cos()
     }
 
-    pub fn div(&self, scalar: f64) -> Self{
+    pub fn div(&self, scalar: f64) -> Self {
         Angle::radians(self.radians / scalar)
     }
 }
