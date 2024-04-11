@@ -57,6 +57,12 @@ impl Vec2 {
     pub fn div(&self, scalar: f64) -> Vec2 {
         Vec2::new(self.x / scalar, self.y / scalar)
     }
+
+    pub fn lerp(&self, other: &Vec2, t: f64) -> Vec2 {
+        let x = self.x + t * (other.x - self.x);
+        let y = self.y + t * (other.y - self.y);
+        Vec2::new(x, y)
+    }
 }
 
 impl ops::Add<Vec2> for Vec2 {

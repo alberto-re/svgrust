@@ -24,7 +24,7 @@ fn main() -> Result<()> {
         angle = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU;
         while x < sketch.width() - side - x_step * 3. {
             let xy = Vec2::new(x, y);
-            let polygon = &Rect::new(xy, side, side).to_polygon(true);
+            let polygon = &Rect::new(xy, side, side).to_polygon();
             let noise_value =
                 perlin.get([x * noise_ratio, y * noise_ratio, t * 50000.]) * TAU / 20.;
             angle += noise_value;

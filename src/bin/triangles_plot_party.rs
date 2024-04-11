@@ -16,7 +16,7 @@ fn main() -> Result<()> {
     let radius = 10.;
     let focal_max_dist = 180.;
 
-    let bbox = sketch.as_rect().scale_perc(0.9).to_polygon(true);
+    let bbox = sketch.as_rect().scale_perc(0.9).to_polygon();
 
     let poisson_dist = sketch.as_rect().sample_poisson2d(radius, seed.into());
 

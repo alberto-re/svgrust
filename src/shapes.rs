@@ -127,6 +127,16 @@ impl Polygon {
         });
         retval
     }
+
+    pub fn edges(&self) -> Vec<(Vec2, Vec2)> {
+        let mut edges: Vec<(Vec2, Vec2)> = vec![];
+        for i in 0..self.points.len() {
+            let curpoint = self.points[i];
+            let nextpoint = self.points[(i + 1) % self.points.len()];
+            edges.push((curpoint, nextpoint));
+        }
+        edges
+    }
 }
 
 /// A rectangle represented by an upper-left corner plus width and height dimesions
@@ -197,8 +207,8 @@ impl Rect {
         LineString { points }
     }
 
-    pub fn to_polygon(&self, close: bool) -> Polygon {
-        let mut points = vec![
+    pub fn to_polygon(&self) -> Polygon {
+        let points = vec![
             self.xy,
             Vec2 {
                 x: self.xy.x + self.width,
@@ -213,9 +223,6 @@ impl Rect {
                 y: self.xy.y + self.height,
             },
         ];
-        if close {
-            points.push(self.xy);
-        }
         Polygon { points }
     }
 

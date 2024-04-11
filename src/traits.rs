@@ -343,12 +343,7 @@ impl ScaleDist for Polygon {
     fn scale_dist(&self, distance: f64) -> Polygon {
         // This is a very raw and fragile adaptation of this code:
         // https://codepen.io/HansMuller/pen/AgLWaz
-        let mut edges: Vec<(Vec2, Vec2)> = vec![];
-        for i in 0..self.points.len() {
-            let curpoint = self.points[i];
-            let nextpoint = self.points[(i + 1) % self.points.len()];
-            edges.push((curpoint, nextpoint));
-        }
+        let edges: Vec<(Vec2, Vec2)> = self.edges();
 
         fn inward_normal(p1: Vec2, p2: Vec2) -> Vec2 {
             let dx = p2.x - p1.x;
