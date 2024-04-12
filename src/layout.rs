@@ -48,6 +48,10 @@ impl PageLayout {
         Self::new(11.7 * DPI, 8.3 * DPI, Uom::In, orientation)
     }
 
+    pub fn a3(orientation: Orientation) -> Self {
+        Self::new(16.5 * DPI, 11.7 * DPI, Uom::In, orientation)
+    }
+
     pub fn set_style(&mut self, style: &str) -> &Self {
         self.style = Some(style.to_string());
         self

@@ -270,8 +270,6 @@ impl Circle {
             let y = angle.sin() * self.radius + self.center.y;
             pvec.push(Vec2 { x, y });
         }
-        pvec.push(*pvec.first().unwrap());
-
         Polygon { points: pvec }
     }
 }

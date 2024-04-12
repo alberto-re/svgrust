@@ -69,6 +69,13 @@ impl Sketch {
         }
     }
 
+    pub fn bottom_left(&self, margin: f64) -> Vec2 {
+        Vec2 {
+            x: margin,
+            y: self.as_rect().height - margin,
+        }
+    }
+
     pub fn left_middle(&self, margin: f64) -> Vec2 {
         Vec2 {
             x: margin,
@@ -81,6 +88,10 @@ impl Sketch {
             x: self.as_rect().width - margin,
             y: self.as_rect().height / 2.,
         }
+    }
+
+    pub fn min_len(&self) -> f64 {
+        f64::min(self.width(), self.height())
     }
 
     pub fn render(&mut self) -> &Self {

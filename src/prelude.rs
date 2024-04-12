@@ -24,6 +24,7 @@ pub use crate::traits::ScaleDist;
 pub use crate::traits::ScalePerc;
 pub use crate::traits::Translate;
 pub use crate::traits::Upsample;
+pub use crate::traits::Triangulate;
 pub use crate::vec2::Vec2;
 pub use crate::Group;
 pub use crate::Style;
