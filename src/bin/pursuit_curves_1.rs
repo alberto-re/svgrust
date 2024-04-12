@@ -45,7 +45,7 @@ fn main() -> Result<()> {
 
     let mut shapes: Vec<Polygon> = vec![];
 
-    sketch.as_rect().grid(rows, cols).iter().enumerate().for_each(|(i, rect)| {
+    Rect::new(Vec2::new(50., 50.), sketch.width() - 100., sketch.height() - 100.).grid(rows, cols).iter().enumerate().for_each(|(i, rect)| {
         let row = i / cols as usize;
         let col = i % cols as usize;
         let polygon = rect.to_polygon();

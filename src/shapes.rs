@@ -174,8 +174,8 @@ impl Rect {
             (0..cols).for_each(|c| {
                 cells.push(Rect::new(
                     Vec2 {
-                        x: c as f64 * w,
-                        y: r as f64 * h,
+                        x: c as f64 * w + self.xy.x,
+                        y: r as f64 * h + self.xy.y,
                     },
                     w,
                     h,
