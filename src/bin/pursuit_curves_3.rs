@@ -24,7 +24,7 @@ fn pursuit_polygons_times(polygon: &Polygon, t: f64, t_step: f64, times: usize) 
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a3(Portrait), true);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), false);
 
     let mut group = Group::new();
 
@@ -33,7 +33,7 @@ fn main() -> Result<()> {
     let steps: Vec<(f64, usize)> = vec![(0.48, 19), (0.40, 16), (0.30, 13), (0.20, 8), (0.10, 5)];
 
     for (step_radius, step_n_poly) in steps {
-        Circle::new(sketch.center(), sketch.min_len() * step_radius)
+        Circle::new(sketch.center(), sketch.min_len() * 0.9 * step_radius)
             .to_polygon(step_n_poly)
             .points
             .iter()
@@ -42,8 +42,8 @@ fn main() -> Result<()> {
 
     pset.triangulate().iter().for_each(|triangle| {
         group.add(triangle.clone());
-        let times = map_range(triangle.centroid().euclidean_distance(&Vec2::new(100., 1000.)), 0., 400., 8., 14.);
-        group.add_many(pursuit_polygons_times(&triangle, 0.07, 0.0, times as usize));
+        let times = map_range(triangle.centroid().euclidean_distance(&Vec2::new(100., 1000.)), 0., 300., 10., 15.);
+        group.add_many(pursuit_polygons_times(&triangle, 0.06, 0.0, times as usize));
     });
 
     sketch.add_group(&group, &Style::new("black", "0.4mm"));
