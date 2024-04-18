@@ -1,10 +1,12 @@
 use crate::render::render_svg;
 use crate::shapes::Rect;
 use crate::traits::Centroid;
+use crate::uom::Uom;
 use crate::vec2::Vec2;
 use anyhow::anyhow;
 use anyhow::Context;
 use anyhow::Result;
+use geo::skew;
 use svg::Document;
 
 use crate::layout::PageLayout;
@@ -15,17 +17,19 @@ use crate::Style;
 pub struct Sketch {
     pub layout: PageLayout,
     pub groups: Vec<(Group, Style)>,
+    pub uom: Uom,
     doc: Document,
     debug: bool,
 }
 
 impl Sketch {
     /// Construct a new sketch
-    pub fn new(layout: &PageLayout, debug: bool) -> Self {
+    pub fn new(layout: &PageLayout, uom: Uom, debug: bool) -> Self {
         Self {
             layout: layout.clone(),
             groups: vec![],
             doc: Document::new(),
+            uom,
             debug,
         }
     }
@@ -37,7 +41,11 @@ impl Sketch {
 
     /// Return a Rect representing the sketch area
     pub fn as_rect(&self) -> Rect {
-        Rect::new(Vec2 { x: 0., y: 0. }, self.layout.width, self.layout.height)
+        Rect::new(
+            Vec2 { x: 0., y: 0. },
+            Uom::convert_scalar(self.layout.width, Uom::Px, self.uom),
+            Uom::convert_scalar(self.layout.height, Uom::Px, self.uom),
+        )
     }
 
     /// Return a 2d vector representing the center point of the sketch

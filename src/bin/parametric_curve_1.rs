@@ -31,7 +31,7 @@ impl ParametricCurve {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
 
     let curve = ParametricCurve::new(105., 1., 5., 7.);
 

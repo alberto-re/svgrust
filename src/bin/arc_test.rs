@@ -2,7 +2,7 @@ use anyhow::Result;
 use plt::prelude::*;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), Uom::Px, false);
     let mut arcs = Group::new();
     let mut circles = Group::new();
 

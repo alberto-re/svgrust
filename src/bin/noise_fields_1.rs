@@ -18,7 +18,7 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> Angle {
 fn main() -> Result<()> {
     let mut layout = PageLayout::axidraw_minikit(Landscape);
     let layout = layout.set_style("background-color: white");
-    let mut sketch = Sketch::new(layout, false);
+    let mut sketch = Sketch::new(layout, Uom::Px, false);
     let mut field = Group::new();
     let mut trails = Group::new();
     let mut glyphs = Group::new();

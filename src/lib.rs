@@ -7,6 +7,7 @@ pub mod seed;
 pub mod shapes;
 pub mod sketch;
 pub mod traits;
+pub mod uom;
 pub mod vec2;
 pub mod vectorfield;
 
@@ -21,6 +22,7 @@ pub enum Shape {
     LineString(shapes::LineString),
     Polygon(shapes::Polygon),
     MultiPolygon(shapes::MultiPolygon),
+    Text(shapes::Text),
 }
 
 #[derive(Clone)]
@@ -57,6 +59,7 @@ impl Group {
             Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
             Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
             Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
+            Shape::Text(s) => self.elements.push(Shape::Text(s)),
         }
     }
 
@@ -70,6 +73,7 @@ impl Group {
                 Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
                 Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
                 Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
+                Shape::Text(s) => self.elements.push(Shape::Text(s)),
             }
         }
     }
@@ -128,6 +132,9 @@ impl Group {
                 unreachable!();
             }
             Shape::MultiPolygon(_) => {
+                unreachable!();
+            }
+            Shape::Text(_) => {
                 unreachable!();
             }
         });

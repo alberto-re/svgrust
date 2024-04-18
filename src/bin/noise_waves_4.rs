@@ -60,7 +60,7 @@ impl Particle {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), true);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, true);
     let seed = Seed::from_number(51);
     let perlin = Perlin::new(seed.into());
     let mut group1 = Group::new();

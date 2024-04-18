@@ -4,7 +4,7 @@ use noise::Perlin;
 use plt::prelude::*;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
     let seed = Seed::from_number(200);
     let perlin = Perlin::new(seed.into());
     let noise_ratio: f64 = 0.008;

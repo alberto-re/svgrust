@@ -3,7 +3,7 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
-use crate::shapes::{Arc, Circle, LineString, MultiPolygon, Polygon, Rect};
+use crate::shapes::{Arc, Circle, LineString, MultiPolygon, Polygon, Rect, Text};
 use crate::vec2::Vec2;
 use crate::Shape;
 use geo::algorithm::Rotate as GeoRotate;
@@ -500,6 +500,7 @@ impl Centroid for Vec2 {
         *self
     }
 }
+
 impl Triangulate for Vec<Vec2> {
     fn triangulate(&self) -> Vec<Polygon> {
         let points: Vec<delaunator::Point> = self
@@ -573,5 +574,11 @@ impl ToShape for MultiPolygon {
 impl ToShape for &MultiPolygon {
     fn to_shape(&self) -> Shape {
         Shape::MultiPolygon(MultiPolygon::new(self.polygons.clone()))
+    }
+}
+
+impl ToShape for Text {
+    fn to_shape(&self) -> Shape {
+        Shape::Text(self.clone())
     }
 }

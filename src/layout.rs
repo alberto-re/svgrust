@@ -1,14 +1,4 @@
-// This is the default resolution both for web (CSS) and Inkscape:
-// - https://developer.mozilla.org/en-US/docs/Web/CSS/resolution
-// - https://inkscape.org/forums/beyond/resolution-change/
-const DPI: f64 = 96.0;
-
-#[derive(Clone)]
-pub enum Uom {
-    In,
-    Mm,
-    Px,
-}
+use crate::uom::Uom;
 
 #[derive(Clone)]
 pub enum Orientation {
@@ -20,13 +10,13 @@ pub enum Orientation {
 pub struct PageLayout {
     pub width: f64,
     pub height: f64,
-    pub uom: Uom,
     pub orientation: Orientation,
     pub style: Option<String>,
 }
 
+// https://www.adobe.com/uk/creativecloud/design/discover/a4-format.html
 impl PageLayout {
-    pub fn new(width: f64, height: f64, uom: Uom, orientation: Orientation) -> Self {
+    pub fn new(width: f64, height: f64, orientation: Orientation) -> Self {
         let (height, width) = match &orientation {
             Orientation::Portrait => (width, height),
             Orientation::Landscape => (height, width),
@@ -34,22 +24,33 @@ impl PageLayout {
         Self {
             height,
             width,
-            uom,
             orientation,
             style: None,
         }
     }
 
     pub fn axidraw_minikit(orientation: Orientation) -> Self {
-        Self::new(6.0 * DPI, 4.0 * DPI, Uom::In, orientation)
+        Self::new(
+            Uom::convert_scalar(6.0, Uom::In, Uom::Px),
+            Uom::convert_scalar(4.0, Uom::In, Uom::Px),
+            orientation,
+        )
     }
 
     pub fn a4(orientation: Orientation) -> Self {
-        Self::new(11.7 * DPI, 8.3 * DPI, Uom::In, orientation)
+        Self::new(
+            Uom::convert_scalar(11.7, Uom::In, Uom::Px),
+            Uom::convert_scalar(8.3, Uom::In, Uom::Px),
+            orientation,
+        )
     }
 
     pub fn a3(orientation: Orientation) -> Self {
-        Self::new(16.5 * DPI, 11.7 * DPI, Uom::In, orientation)
+        Self::new(
+            Uom::convert_scalar(16.5, Uom::In, Uom::Px),
+            Uom::convert_scalar(11.7, Uom::In, Uom::Px),
+            orientation,
+        )
     }
 
     pub fn set_style(&mut self, style: &str) -> &Self {

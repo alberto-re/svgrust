@@ -24,7 +24,7 @@ fn pursuit_polygons_times(polygon: &Polygon, t: f64, t_step: f64, times: usize) 
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, false);
 
     let mut group = Group::new();
 
@@ -42,7 +42,15 @@ fn main() -> Result<()> {
 
     pset.triangulate().iter().for_each(|triangle| {
         group.add(triangle.clone());
-        let times = map_range(triangle.centroid().euclidean_distance(&Vec2::new(100., 1000.)), 0., 300., 10., 15.);
+        let times = map_range(
+            triangle
+                .centroid()
+                .euclidean_distance(&Vec2::new(100., 1000.)),
+            0.,
+            300.,
+            10.,
+            15.,
+        );
         group.add_many(pursuit_polygons_times(&triangle, 0.06, 0.0, times as usize));
     });
 

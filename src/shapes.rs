@@ -319,3 +319,18 @@ impl MultiPolygon {
         Self { polygons }
     }
 }
+
+#[derive(Clone, PartialEq)]
+pub struct Text {
+    pub pos: Vec2,
+    pub string: String,
+}
+
+impl Text {
+    pub fn new(pos: Vec2, string: &str) -> Self {
+        Self {
+            pos,
+            string: string.to_string(),
+        }
+    }
+}
