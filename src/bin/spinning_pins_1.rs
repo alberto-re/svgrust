@@ -6,9 +6,9 @@ fn main() -> Result<()> {
     let mut group = Group::new();
 
     let mut n: f64 = -10.0;
-    let nend = 10.;
+    let nend = 9.5;
     let mend = 10.;
-    let stepn = 0.6;
+    let stepn = 0.4;
     let stepm = 0.05;
     
     while n <= nend {
@@ -28,7 +28,7 @@ fn main() -> Result<()> {
         group.add(LineString::new(points).chaikin(2, false));
     }
 
-    sketch.add_group(&group, &Style::new("rgba(16, 56, 125, 0.7)", "0.5mm"));
+    sketch.add_group(&group, &Style::new("rgba(16, 56, 125, 0.7)", "0.6mm"));
     sketch.render().save_default()?;
     Ok(())
 }

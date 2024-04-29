@@ -6,7 +6,6 @@ use crate::vec2::Vec2;
 use anyhow::anyhow;
 use anyhow::Context;
 use anyhow::Result;
-use geo::skew;
 use svg::Document;
 
 use crate::layout::PageLayout;
