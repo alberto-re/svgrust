@@ -1,5 +1,6 @@
 use std::f64::consts::TAU;
 
+use crate::angle::Angle;
 use crate::grid::SquareGrid;
 use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
@@ -79,6 +80,18 @@ impl Polygon {
         Self {
             points: vec![p1, p2, p3],
         }
+    }
+
+    pub fn hexagon(center: Vec2, radius: f64) -> Self {
+        let step = TAU / 6.;
+        let points = (0..6)
+            .into_iter()
+            .map(|i| {
+                let theta = Angle::radians(i as f64 * step);
+                center  + Vec2::from_angle_length(theta, radius)
+            })
+            .collect::<Vec<Vec2>>();
+        Polygon::new(points)
     }
 
     pub fn add_vec(&mut self, vec: Vec2) -> Self {

@@ -77,7 +77,7 @@ fn main() -> Result<()> {
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
-    group.add_linestrings(&lstrs3);
+    group.add_many(lstrs3);
 
     sketch.add_group(&group, &Style::new("black", "2.5px"));
 

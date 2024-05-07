@@ -78,12 +78,6 @@ impl Group {
         }
     }
 
-    pub fn add_linestrings(&mut self, linestr: &[shapes::LineString]) {
-        linestr.iter().for_each(|l| {
-            self.elements.push(Shape::LineString(l.clone()));
-        });
-    }
-
     pub fn linestrings(&self) -> Vec<LineString> {
         let mut lstrs = vec![];
         self.elements.iter().for_each(|e| {

@@ -33,7 +33,7 @@ fn main() -> Result<()> {
     (0..3).for_each(|i| {
         group.add(frame.scale_perc((100. + i as f64) / 100.));
     });
-    group.add_linestrings(&lines);
+    group.add_many(lines);
     sketch.add_group(&group, &Style::new("black", "1px"));
     sketch.render().save_default()?;
     Ok(())

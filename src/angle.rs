@@ -43,6 +43,11 @@ impl Angle {
     pub fn div(&self, scalar: f64) -> Self {
         Angle::radians(self.radians / scalar)
     }
+
+    pub fn lerp(&self, other: &Angle, t: f64) -> Self {
+        let radians = self.radians + t * (other.radians - self.radians);
+        Angle::radians(radians)
+    }
 }
 
 impl ops::Add<Angle> for Angle {
