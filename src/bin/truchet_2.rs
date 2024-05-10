@@ -2,6 +2,8 @@ use anyhow::Result;
 use rand::Rng;
 use plt::prelude::*;
 
+// https://www.gorillasun.de/blog/a-guide-to-hexagonal-grids-in-p5js/
+
 fn truchet(hexagon: &Polygon) -> Vec<LineString> {
     let mut linestrings = vec![];
     for i in (0..6).step_by(2) {
@@ -15,7 +17,7 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
         if f64::abs(angle_start.to_degrees() - angle_end.to_degrees()) > 180. {
             angle_end = Angle::degrees(angle_end.to_degrees() - 360.);
         }
-        for offset in (-8..=8).step_by(3) {
+        for offset in (-8..=8).step_by(2) {
             let mut points: Vec<Vec2> = vec![];
             for step in 0..=20 {
                 let angle_step = angle_start.lerp(&angle_end, step as f64 / 20.);
@@ -34,6 +36,7 @@ fn main() -> Result<()> {
     let mut layer1 = Group::new();
     let mut layer2 = Group::new();
     let mut layer3 = Group::new();
+    let mut layer4 = Group::new();
 
     let mut rng = rand::thread_rng();
 
@@ -55,7 +58,10 @@ fn main() -> Result<()> {
             let center = Vec2::new(curx, y);
             let hx = Polygon::hexagon(center, hex_side / 2.);
             let lines = truchet(&hx);
-            let rotate = Angle::degrees(rng.gen_range(0..3) as f64 * 60.);
+            let mut rotate = Angle::degrees((count % 3) as f64 * 60.);
+            if rng.gen::<f64>() < 0.4 {
+                rotate = Angle::degrees(((count + 1) % 3) as f64 * 60.);
+            }
             lines_tot.extend_from_slice(&lines.rotate(rotate));
             // layer.add(hx);
             x += hex_side * 1.50;
@@ -63,6 +69,30 @@ fn main() -> Result<()> {
         y += hex_side / 2.3;
         count += 1;
     }
+
+    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 4.).rotate(Angle::degrees(60.)));
+    layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 1.).rotate(Angle::degrees(60.)));
+    layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 2.).rotate(Angle::degrees(60.)));
+    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45).rotate(Angle::degrees(60.)));
+    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 - 2.).rotate(Angle::degrees(60.)));
+    // layer4.add(
+    //     &LineString::line(
+    //         sketch.center(),
+    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(210.), sketch.min_len() * 0.45)
+    //     )
+    // );
+    // layer4.add(
+    //     &LineString::line(
+    //         sketch.center(),
+    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(330.), sketch.min_len() * 0.45)
+    //     )
+    // );
+    // layer4.add(
+    //     &LineString::line(
+    //         sketch.center(),
+    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(90.), sketch.min_len() * 0.45)
+    //     )
+    // );
 
     let bbox1 = Polygon::new(vec![
         sketch.center(),
@@ -97,9 +127,22 @@ fn main() -> Result<()> {
     lines_tot.iter().for_each(|l| segments.extend_from_slice(&l.clip(&bbox3, false)));
     layer3.add_many(segments);
 
-    sketch.add_group(&layer1, &Style::new("red", "2.0px"));
-    sketch.add_group(&layer2, &Style::new("green", "2.0px"));
-    sketch.add_group(&layer3, &Style::new("blue", "2.0px"));
+    // TODO: it is clear that scale_dist do not always infer what is the interior
+    // and what is the exterior of a polygon... BUG!
+    layer4.add(bbox1.scale_dist(0.));
+    layer4.add(bbox1.scale_dist(-1.));
+    layer4.add(bbox1.scale_dist(-2.));
+    layer4.add(bbox2.scale_dist(0.));
+    layer4.add(bbox2.scale_dist(1.));
+    layer4.add(bbox2.scale_dist(2.));
+    layer4.add(bbox3.scale_dist(0.));
+    layer4.add(bbox3.scale_dist(1.));
+    layer4.add(bbox3.scale_dist(2.));
+
+    sketch.add_group(&layer1, &Style::new("black", "1.0px"));
+    sketch.add_group(&layer2, &Style::new("black", "1.8px"));
+    sketch.add_group(&layer3, &Style::new("black", "0.5px"));
+    sketch.add_group(&layer4, &Style::new("black", "2.0px"));
 
     sketch.render().save_default()?;
     Ok(())
