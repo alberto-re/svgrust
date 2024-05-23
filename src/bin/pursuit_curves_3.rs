@@ -43,15 +43,13 @@ fn main() -> Result<()> {
     pset.triangulate().iter().for_each(|triangle| {
         group.add(triangle.clone());
         let times = map_range(
-            triangle
-                .centroid()
-                .euclidean_distance(&Vec2::new(100., 1000.)),
+            triangle.centroid().distance(&Vec2::new(100., 1000.)),
             0.,
             300.,
             10.,
             15.,
         );
-        group.add_many(pursuit_polygons_times(&triangle, 0.06, 0.0, times as usize));
+        group.add_many(pursuit_polygons_times(triangle, 0.06, 0.0, times as usize));
     });
 
     sketch.add_group(&group, &Style::new("black", "0.4mm"));

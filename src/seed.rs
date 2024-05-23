@@ -1,5 +1,4 @@
 use rand::Rng;
-use std::convert::Into;
 
 /// A seed value for deterministic pseudorandom number generators
 #[derive(Clone)]
@@ -9,7 +8,7 @@ pub struct Seed {
 
 impl Seed {
     /// Construct a new seed with a random value
-    pub fn new() -> Self {
+    pub fn random() -> Self {
         let mut rng = rand::thread_rng();
         let seed = rng.gen();
         println!("Generated seed value {seed}");
@@ -22,14 +21,14 @@ impl Seed {
     }
 }
 
-impl Into<u32> for Seed {
-    fn into(self) -> u32 {
-        self.seed
+impl From<Seed> for u32 {
+    fn from(val: Seed) -> Self {
+        val.seed
     }
 }
 
-impl Into<u64> for Seed {
-    fn into(self) -> u64 {
-        self.seed as u64
+impl From<Seed> for u64 {
+    fn from(val: Seed) -> Self {
+        val.seed as u64
     }
 }

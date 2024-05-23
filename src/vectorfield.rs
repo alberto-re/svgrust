@@ -11,6 +11,10 @@ pub trait ValueAt {
     fn value_at(&self, pos: Vec2) -> f64;
 }
 
+pub trait AngleAt {
+    fn angle_at(&self, pos: Vec2, increments: f64) -> Angle;
+}
+
 pub trait VectorAt {
     fn vector_at(&self, pos: Vec2) -> Vec2;
 }
@@ -36,6 +40,17 @@ impl ValueAt for PerlinNoise2dVectorField {
     fn value_at(&self, pos: Vec2) -> f64 {
         self.noise_fn
             .get([pos.x * self.x_factor, pos.y * self.y_factor])
+    }
+}
+
+impl AngleAt for PerlinNoise2dVectorField {
+    fn angle_at(&self, pos: Vec2, increment: f64) -> Angle {
+        let noise_val = self.value_at(pos);
+        if increment == 0. {
+            return Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+        }
+        let angle = PI * noise_val;
+        Angle::radians((angle / increment).round() * increment)
     }
 }
 

@@ -6,10 +6,13 @@ use crate::uom::Uom;
 use crate::vec2::Vec2;
 use crate::Shape;
 use geo::coord;
+use std::time::Instant;
 use svg::node::element::path::Data;
 use svg::Document;
 
 pub fn render_svg(sketch: &Sketch) -> Document {
+    let start = Instant::now();
+
     let mut doc = Document::new()
         .set(
             "xmlns:inkscape",
@@ -126,5 +129,9 @@ pub fn render_svg(sketch: &Sketch) -> Document {
         }
         doc = doc.add(group);
     }
+    println!(
+        "Time elapsed inside render(): {} milliseconds",
+        start.elapsed().as_millis()
+    );
     doc
 }

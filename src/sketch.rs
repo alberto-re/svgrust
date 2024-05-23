@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use crate::render::render_svg;
 use crate::shapes::Rect;
 use crate::traits::Centroid;
@@ -19,6 +21,7 @@ pub struct Sketch {
     pub uom: Uom,
     doc: Document,
     debug: bool,
+    created: Instant,
 }
 
 impl Sketch {
@@ -30,6 +33,7 @@ impl Sketch {
             doc: Document::new(),
             uom,
             debug,
+            created: Instant::now(),
         }
     }
 
@@ -102,6 +106,11 @@ impl Sketch {
     }
 
     pub fn render(&mut self) -> &Self {
+        let new_to_render = self.created.elapsed();
+        println!(
+            "Time elapsed from new(): {} milliseconds",
+            new_to_render.as_millis()
+        );
         if self.debug {
             let mut debug = Group::new();
             debug.add(self.as_rect());

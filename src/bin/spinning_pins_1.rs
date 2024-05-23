@@ -10,7 +10,7 @@ fn main() -> Result<()> {
     let mend = 10.;
     let stepn = 0.4;
     let stepm = 0.05;
-    
+
     while n <= nend {
         n += stepn;
         let mut points: Vec<Vec2> = vec![];
@@ -19,10 +19,10 @@ fn main() -> Result<()> {
             m += stepm;
             let mut x = n;
             let mut y = m;
-            x = x + PI * f64::sin(y) * f64::cos(y);
-            y = y + PI * f64::sin(x);
-            x = x * 8.;
-            y = y * 8.;
+            x += PI * f64::sin(y) * f64::cos(y);
+            y += PI * f64::sin(x);
+            x *= 8.;
+            y *= 8.;
             points.push(Vec2::new(x, y) + Vec2::new(105., 150.));
         }
         group.add(LineString::new(points).chaikin(2, false));

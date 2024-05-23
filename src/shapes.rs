@@ -85,10 +85,9 @@ impl Polygon {
     pub fn hexagon(center: Vec2, radius: f64) -> Self {
         let step = TAU / 6.;
         let points = (0..6)
-            .into_iter()
             .map(|i| {
                 let theta = Angle::radians(i as f64 * step);
-                center  + Vec2::from_angle_length(theta, radius)
+                center + Vec2::from_angle_length(theta, radius)
             })
             .collect::<Vec<Vec2>>();
         Polygon::new(points)
@@ -153,7 +152,7 @@ impl Polygon {
 }
 
 /// A rectangle represented by an upper-left corner plus width and height dimesions
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Rect {
     pub xy: Vec2,
     pub width: f64,
@@ -265,13 +264,13 @@ impl Circle {
     }
 
     pub fn overlaps(&self, other: &Circle) -> bool {
-        self.center.euclidean_distance(&other.center) <= self.radius + other.radius
+        self.center.distance(&other.center) <= self.radius + other.radius
     }
 
     pub fn dist(&self, other: &Circle) -> f64 {
         f64::max(
             0.,
-            self.center.euclidean_distance(&other.center) - self.radius - other.radius,
+            self.center.distance(&other.center) - self.radius - other.radius,
         )
     }
 

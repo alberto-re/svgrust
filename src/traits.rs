@@ -54,6 +54,11 @@ pub trait Translate {
     fn translate(&self, displacement: Vec2) -> Self;
 }
 
+pub trait BoundingBox {
+    fn bbox(&self) -> Rect;
+    fn bbox_margin(&self, margin: f64) -> Rect;
+}
+
 pub trait ToGeoLineString {
     fn to_geo_linestring(&self) -> geo::LineString;
     fn to_geo_multilinestring(&self) -> geo::MultiLineString;
@@ -192,6 +197,40 @@ impl ToShape for LineString {
 impl ToShape for &LineString {
     fn to_shape(&self) -> Shape {
         Shape::LineString(LineString::new(self.points.clone()))
+    }
+}
+
+impl BoundingBox for LineString {
+    fn bbox(&self) -> Rect {
+        let mut xmin = f64::MAX;
+        let mut xmax = 0.;
+        let mut ymin = f64::MAX;
+        let mut ymax = 0.;
+        self.points.iter().for_each(|p| {
+            if p.x < xmin {
+                xmin = p.x
+            }
+            if p.x > xmax {
+                xmax = p.x
+            }
+            if p.y < ymin {
+                ymin = p.y
+            }
+            if p.y > ymax {
+                ymax = p.y
+            }
+        });
+        Rect::new(Vec2::new(xmin, ymin), xmax - xmin, ymax - ymin)
+    }
+
+    fn bbox_margin(&self, margin: f64) -> Rect {
+        let bbox = &self.bbox();
+        let half_margin = margin / 2.0;
+        Rect::new(
+            bbox.xy + Vec2::new(-half_margin, -half_margin),
+            bbox.width + half_margin,
+            bbox.height + half_margin,
+        )
     }
 }
 
@@ -353,8 +392,7 @@ impl ScaleDist for Polygon {
         }
 
         let mut offset_edges: Vec<(Vec2, Vec2)> = vec![];
-        for i in 0..edges.len() {
-            let edge = edges[i];
+        for edge in &edges {
             let normal = inward_normal(edge.0, edge.1);
             let dx = normal.x * distance;
             let dy = normal.y * distance;
@@ -473,7 +511,7 @@ impl Centroid for Circle {
 
 impl Contains for Circle {
     fn contains<T: Centroid>(&self, shape: &T) -> bool {
-        self.center.euclidean_distance(&shape.centroid()) < self.radius
+        self.center.distance(&shape.centroid()) < self.radius
     }
 }
 

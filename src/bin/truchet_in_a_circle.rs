@@ -62,13 +62,13 @@ fn main() -> Result<()> {
         }
     });
 
-    inner1.add(&circle.scale_perc(0.990));
-    inner1.add(&circle.scale_perc(0.985));
-    inner1.add(&circle.scale_perc(0.980));
-    inner1.add(&circle.scale_perc(0.975));
-    inner1.add(&circle.scale_perc(0.970));
-    inner1.add(&circle.scale_perc(0.965));
-    inner1.add(&circle.scale_perc(0.960));
+    inner1.add(circle.scale_perc(0.990));
+    inner1.add(circle.scale_perc(0.985));
+    inner1.add(circle.scale_perc(0.980));
+    inner1.add(circle.scale_perc(0.975));
+    inner1.add(circle.scale_perc(0.970));
+    inner1.add(circle.scale_perc(0.965));
+    inner1.add(circle.scale_perc(0.960));
 
     sketch.add_group(&inner1, &Style::new("black", "2.0px"));
 

@@ -58,7 +58,7 @@ fn main() -> Result<()> {
                     .linestrings()
                     .iter()
                     .flat_map(|l| l.clone().points)
-                    .any(|p| p.euclidean_distance(&pos) < 5.)
+                    .any(|p| p.distance(&pos) < 5.)
                 {
                     break;
                 }
@@ -94,9 +94,9 @@ fn main() -> Result<()> {
 
     circles.iter().for_each(|circle| {
         glyphs.add(circle);
-        glyphs.add(&circle.scale_perc(0.6));
+        glyphs.add(circle.scale_perc(0.6));
         if circle.radius > 2. {
-            glyphs.add(&circle.scale_perc(0.3));
+            glyphs.add(circle.scale_perc(0.3));
         }
     });
 

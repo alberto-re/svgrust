@@ -27,8 +27,13 @@ impl Vec2 {
     }
 
     /// Calculate the euclidean distance between this and another vector
-    pub fn euclidean_distance(&self, other: &Vec2) -> f64 {
+    pub fn distance(&self, other: &Vec2) -> f64 {
         ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
+    }
+
+    /// Calculate the squared euclidean distance between this and another vector
+    pub fn distance_squared(&self, other: &Vec2) -> f64 {
+        (self.x - other.x).powi(2) + (self.y - other.y).powi(2)
     }
 
     /// TODO: maybe rotate around origin and chain with translate?

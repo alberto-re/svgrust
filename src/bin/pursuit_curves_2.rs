@@ -42,7 +42,7 @@ fn main() -> Result<()> {
 
     pset.triangulate().iter().for_each(|triangle| {
         group.add(triangle.clone());
-        group.add_many(pursuit_polygons_times(&triangle, 0.08, 0.0, 20));
+        group.add_many(pursuit_polygons_times(triangle, 0.08, 0.0, 20));
     });
 
     sketch.add_group(&group, &Style::new("black", "0.3mm"));

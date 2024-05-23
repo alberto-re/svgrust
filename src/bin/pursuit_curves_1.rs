@@ -57,7 +57,7 @@ fn main() -> Result<()> {
         let polygon = rect.to_polygon();
         shapes.push(polygon.clone());
         shapes2.push(polygon.clone());
-        let clockwise = if rng.gen::<f64>() < 0.5 { true } else { false };
+        let clockwise = rng.gen::<f64>() < 0.5;
         let t = map_range(
             perlin.get([row as f64 * 0.05, col as f64 * 0.05]),
             -1.,

@@ -46,7 +46,7 @@ fn main() -> Result<()> {
 
     let mut plane = Group::new();
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {
-        plane.add(&Circle::new(rect.centroid(), 0.1));
+        plane.add(Circle::new(rect.centroid(), 0.1));
     });
 
     sketch.add_group(&plane, &Style::new("black", "0.2mm"));

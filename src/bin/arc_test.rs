@@ -35,7 +35,7 @@ fn main() -> Result<()> {
     arcs.add(Arc::new(center, radius, deg_270, deg_360));
 
     let center = Vec2 { x: 280., y: 40. };
-    circles.add(&Circle::new(center, radius));
+    circles.add(Circle::new(center, radius));
     arcs.add(&Arc::new(center, radius, deg_0, deg_180));
 
     let center = Vec2 { x: 340., y: 40. };
