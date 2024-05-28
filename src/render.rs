@@ -28,8 +28,10 @@ pub fn render_svg(sketch: &Sketch) -> Document {
 
     for (id, (l, s)) in sketch.groups.iter().enumerate() {
         let mut group = svg::node::element::Group::new();
+        group = group.set("inkscape:groupmode", "layer");
+        group = group.set("inkscape:label", format!("{}", id + 1));
         group = group.set("fill", "none");
-        group = group.set("id", (id + 1).to_string());
+        group = group.set("id", format!("layer{}", id + 1));
         group = group.set("stroke", s.stroke.clone());
         group = group.set("stroke-width", s.stroke_width.clone());
         for e in l.elements.iter() {
@@ -55,6 +57,7 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                     group = group.add(e);
                 }
                 Shape::LineString(s) => {
+                    // TODO: maybe use polyline instead of path?
                     let points_uom = s
                         .points
                         .iter()
@@ -68,6 +71,7 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                     group = group.add(e);
                 }
                 Shape::Polygon(s) => {
+                    // TODO: maybe use polygon instead of path?
                     let points_uom = s
                         .points
                         .iter()

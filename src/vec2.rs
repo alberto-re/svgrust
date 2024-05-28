@@ -1,7 +1,7 @@
 use crate::angle::Angle;
 use crate::traits::Translate;
 use std::f64::consts::PI;
-use std::ops;
+use std::ops::{Add, Mul, Sub};
 
 /// A 2 dimensional vector
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -63,6 +63,7 @@ impl Vec2 {
         Vec2::new(self.x / scalar, self.y / scalar)
     }
 
+    /// Interpolate between self and another Vec2
     pub fn lerp(&self, other: &Vec2, t: f64) -> Vec2 {
         let x = self.x + t * (other.x - self.x);
         let y = self.y + t * (other.y - self.y);
@@ -70,7 +71,7 @@ impl Vec2 {
     }
 }
 
-impl ops::Add<Vec2> for Vec2 {
+impl Add<Vec2> for Vec2 {
     type Output = Vec2;
 
     /// Add another vector.
@@ -82,7 +83,7 @@ impl ops::Add<Vec2> for Vec2 {
     }
 }
 
-impl ops::Sub<Vec2> for Vec2 {
+impl Sub<Vec2> for Vec2 {
     type Output = Vec2;
 
     /// Subtract another vector.
@@ -94,7 +95,7 @@ impl ops::Sub<Vec2> for Vec2 {
     }
 }
 
-impl ops::Mul<Vec2> for Vec2 {
+impl Mul<Vec2> for Vec2 {
     type Output = Vec2;
 
     /// Multiply another vector.
@@ -102,6 +103,17 @@ impl ops::Mul<Vec2> for Vec2 {
         Vec2 {
             x: self.x * _rhs.x,
             y: self.y * _rhs.y,
+        }
+    }
+}
+
+impl Mul<f64> for Vec2 {
+    type Output = Vec2;
+
+    fn mul(self, rhs: f64) -> Vec2 {
+        Vec2 {
+            x: self.x * rhs,
+            y: self.y * rhs,
         }
     }
 }
