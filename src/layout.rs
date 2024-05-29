@@ -57,4 +57,8 @@ impl PageLayout {
         self.style = Some(style.to_string());
         self
     }
+
+    pub fn aspect_ratio(&self) -> f64 {
+        self.width / self.height
+    }
 }

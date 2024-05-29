@@ -11,7 +11,7 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
-    /// Construct a new vector using provided x, y and z values
+    /// Construct a new vector using provided x and y values
     pub fn new(x: f64, y: f64) -> Self {
         Self { x, y }
     }

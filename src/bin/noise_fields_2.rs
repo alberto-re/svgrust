@@ -1,27 +1,60 @@
 use anyhow::Result;
+use plt::field::PerlinField;
+use plt::field::Scalar2;
 use plt::prelude::*;
-use plt::vectorfield::{CurlNoise2dVectorField, VectorAt};
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
-    let mut group = Group::new();
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, false);
+
+    let mut trails = Group::new();
 
     let seed = Seed::from_number(37);
+    let mut rng = StdRng::seed_from_u64(seed.clone().into());
 
-    let bbox = sketch.as_rect().scale_perc(0.98);
+    let bbox = Circle::new(sketch.center(), sketch.min_len() * 0.48);
 
-    let grid = bbox.into_square_grid(5.);
+    let noise_scale = 0.009;
+    let vector_field = PerlinField::new(seed.into());
 
-    let vector_field = CurlNoise2dVectorField::new(0.001, 0.005, 0.005, seed.into());
+    bbox.sample_uniform(&mut rng, 4000)
+        .iter()
+        .for_each(|center| {
+            let mut pos = *center;
+            let mut trail_points: Vec<Vec2> = vec![pos];
+            for _ in 0..1000 {
+                let angle = vector_field.angle2(pos * noise_scale, PI / 4.);
+                pos = pos + Vec2::from_angle_length(angle, 5.);
+                if !bbox.contains(&pos) {
+                    break;
+                }
+                let mut collision = false;
+                for trail in trails.linestrings() {
+                    let mut i = 0;
+                    while i < trail.points.len() {
+                        let point = trail.points[i];
+                        let dist_sqrt = point.distance_squared(&pos);
+                        if dist_sqrt < 9. {
+                            collision = true;
+                            break;
+                        }
+                        i += 1;
+                    }
+                    if collision {
+                        break;
+                    }
+                }
+                if collision {
+                    break;
+                }
+                trail_points.push(pos);
+            }
+            let trail = LineString::new(trail_points);
+            trails.add(&trail);
+        });
 
-    grid.iter_centers().for_each(|xy| {
-        let force = vector_field.vector_at(*xy);
-        let move_to = *xy + force.mul(10.);
-        let arrow = LineString::new(vec![*xy, move_to]);
-        group.add(&arrow);
-    });
-
-    sketch.add_group(&group, &Style::new("black", "0.5px"));
+    sketch.add_group(&trails, &Style::new("black", "1.0px"));
 
     sketch.render().save_default()?;
     Ok(())

@@ -9,7 +9,8 @@ pub mod sketch;
 pub mod traits;
 pub mod uom;
 pub mod vec2;
-pub mod vectorfield;
+pub mod vec3;
+pub mod field;
 
 use shapes::{Circle, LineString};
 use traits::{Contains, ToShape};

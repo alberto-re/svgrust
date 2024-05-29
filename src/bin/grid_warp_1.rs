@@ -1,8 +1,8 @@
 use anyhow::Result;
 use plt::prelude::*;
-use plt::vectorfield::Spiral2dVectorField;
-use plt::vectorfield::PerlinNoise2dVectorField;
-use plt::vectorfield::VectorAt;
+use plt::field::SpiralField;
+use plt::field::PerlinField;
+use plt::field::Vector2to2;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 use rand::Rng;
@@ -15,11 +15,12 @@ fn main() -> Result<()> {
 
     let seed = Seed::from_number(2476206517);
     let mut rng = StdRng::seed_from_u64(seed.clone().into());
-    let perlin_field = PerlinNoise2dVectorField::new(0.0015, 0.0025, seed.into());
-    let vector_field = Spiral2dVectorField::new(sketch.center());
+    let perlin_field = PerlinField::new(seed.into());
+    let spiral_field = SpiralField::new(sketch.center());
 
-    let rows: usize = 120;
-    let cols: usize = 90;
+    let noise_scale = 0.002;
+    let rows: usize = 140;
+    let cols: usize = (rows as f64 * sketch.layout.aspect_ratio()) as usize;
     let balls: usize = 5;
 
     let mut cells = sketch.as_rect().scale_perc(0.95).grid(rows as u64, cols as u64);
@@ -28,17 +29,17 @@ fn main() -> Result<()> {
 
     for cell in cells.iter_mut() {
         for _ in 0..6 {
-            cell.xy = cell.xy + perlin_field.vector_at(cell.xy) * Vec2::new(2., 2.);
+            cell.xy = cell.xy + perlin_field.vec2(cell.xy * noise_scale) * Vec2::new(2., 2.);
         }
     }
     for cell in cells2.iter_mut() {
         for _ in 0..6 {
-            cell.xy = cell.xy + perlin_field.vector_at(cell.xy) * Vec2::new(3., 3.);
+            cell.xy = cell.xy + perlin_field.vec2(cell.xy * noise_scale) * Vec2::new(3., 3.);
         }
     }
     for cell in cells3.iter_mut() {
         for _ in 0..6 {
-            cell.xy = cell.xy + perlin_field.vector_at(cell.xy) * Vec2::new(4., 4.);
+            cell.xy = cell.xy + perlin_field.vec2(cell.xy * noise_scale) * Vec2::new(4., 4.);
         }
     }
 
@@ -54,7 +55,7 @@ fn main() -> Result<()> {
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
-                cell.xy = cell.xy + vector_field.vector_at(cell.xy) * force;
+                cell.xy = cell.xy + spiral_field.vec2(cell.xy) * force;
             }
         }
         for cell in cells2.iter_mut() {
@@ -63,7 +64,7 @@ fn main() -> Result<()> {
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
-                cell.xy = cell.xy + vector_field.vector_at(cell.xy) * force;
+                cell.xy = cell.xy + spiral_field.vec2(cell.xy) * force;
             }
         }
         for cell in cells3.iter_mut() {
@@ -72,7 +73,7 @@ fn main() -> Result<()> {
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
-                cell.xy = cell.xy + vector_field.vector_at(cell.xy) * force;
+                cell.xy = cell.xy + spiral_field.vec2(cell.xy) * force;
             }
         }
     }
