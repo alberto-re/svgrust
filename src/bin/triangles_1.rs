@@ -52,7 +52,7 @@ fn penrose_triangle(center: Vec2, side: f64, width: f64) -> Vec<Polygon> {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, true);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
     let mut group = Group::new();
 

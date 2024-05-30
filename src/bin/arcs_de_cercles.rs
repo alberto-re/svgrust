@@ -5,7 +5,7 @@ fn main() -> Result<()> {
     let inner_radius: f64 = 110.;
     let other_radius = 75.;
 
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
     let mut group = Group::new();
 
     let angles: Vec<f64> = vec![

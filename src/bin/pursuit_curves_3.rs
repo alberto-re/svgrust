@@ -24,7 +24,7 @@ fn pursuit_polygons_times(polygon: &Polygon, t: f64, t_step: f64, times: usize) 
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
     let mut group = Group::new();
 

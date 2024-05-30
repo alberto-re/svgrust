@@ -25,7 +25,7 @@ fn add_square_spiral_with_center(
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
     let mut group1 = Group::new();
     let mut group2 = Group::new();
     let mut group3 = Group::new();

@@ -14,19 +14,24 @@ use crate::layout::PageLayout;
 use crate::Group;
 use crate::Style;
 
+pub enum Debug {
+    Off,
+    On,
+}
+
 /// A high-level representation of a plotter drawing
 pub struct Sketch {
     pub layout: PageLayout,
     pub groups: Vec<(Group, Style)>,
     pub uom: Uom,
     doc: Document,
-    debug: bool,
+    debug: Debug,
     created: Instant,
 }
 
 impl Sketch {
     /// Construct a new sketch
-    pub fn new(layout: &PageLayout, uom: Uom, debug: bool) -> Self {
+    pub fn new(layout: &PageLayout, uom: Uom, debug: Debug) -> Self {
         Self {
             layout: layout.clone(),
             groups: vec![],
@@ -111,7 +116,7 @@ impl Sketch {
             "Time elapsed from new(): {} milliseconds",
             new_to_render.as_millis()
         );
-        if self.debug {
+        if matches!(self.debug, Debug::On) {
             let mut debug = Group::new();
             debug.add(self.as_rect());
             self.add_group(&debug, &Style::new("black", "0.2mm"))

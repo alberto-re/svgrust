@@ -4,7 +4,7 @@ use noise::Perlin;
 use plt::prelude::*;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Landscape), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Landscape), Uom::Px, Debug::Off);
     let seed = Seed::from_number(378);
     // 38
     let perlin = Perlin::new(seed.into());

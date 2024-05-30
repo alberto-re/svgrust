@@ -1,4 +1,5 @@
 pub mod angle;
+pub mod field;
 pub mod grid;
 pub mod layout;
 pub mod prelude;
@@ -10,7 +11,6 @@ pub mod traits;
 pub mod uom;
 pub mod vec2;
 pub mod vec3;
-pub mod field;
 
 use shapes::{Circle, LineString};
 use traits::{Contains, ToShape};

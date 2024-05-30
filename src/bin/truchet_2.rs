@@ -33,7 +33,7 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
     let mut layer1 = Group::new();
     let mut layer2 = Group::new();

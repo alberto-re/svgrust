@@ -13,7 +13,7 @@ use rand::SeedableRng;
 // - repetition is good, but a bit of unexpected makes the plot more interesting to the eye
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
     let mut layer = Group::new();
 
     let seed = Seed::from_number(90);

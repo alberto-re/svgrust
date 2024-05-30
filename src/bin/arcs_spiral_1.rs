@@ -3,7 +3,7 @@ use plt::prelude::*;
 use rand::Rng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Landscape), Uom::Px, Debug::Off);
     let center = sketch.as_rect().centroid();
     let mut rng = rand::thread_rng();
 

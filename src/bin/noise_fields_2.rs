@@ -6,7 +6,7 @@ use rand::rngs::StdRng;
 use rand::SeedableRng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
     let mut trails = Group::new();
 

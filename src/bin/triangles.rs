@@ -85,7 +85,7 @@ fn hatch_fill(polygon: &Polygon) -> Vec<LineString> {
 }
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, true);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
 
     let mut group = Group::new();
     let mut hatch = Group::new();

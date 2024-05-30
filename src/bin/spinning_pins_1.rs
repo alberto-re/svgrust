@@ -2,7 +2,7 @@ use anyhow::Result;
 use plt::prelude::*;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Mm, false);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Mm, Debug::Off);
     let mut group = Group::new();
 
     let mut n: f64 = -10.0;
