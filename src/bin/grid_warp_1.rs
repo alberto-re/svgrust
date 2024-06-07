@@ -9,7 +9,7 @@ use rand::Rng;
 use rand::SeedableRng;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::On);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
     let mut group = Group::new();
     let mut group2 = Group::new();
     let mut group3 = Group::new();
@@ -27,19 +27,19 @@ fn main() -> Result<()> {
 
     let mut cells = sketch
         .as_rect()
-        .scale_perc(0.90)
+        .scale_perc(0.85)
         .grid(rows as u64, cols as u64);
     let mut cells2 = sketch
         .as_rect()
-        .scale_perc(0.90)
+        .scale_perc(0.85)
         .grid(rows as u64, cols as u64);
     let mut cells3 = sketch
         .as_rect()
-        .scale_perc(0.90)
+        .scale_perc(0.85)
         .grid(rows as u64, cols as u64);
     let mut cells4 = sketch
         .as_rect()
-        .scale_perc(0.90)
+        .scale_perc(0.85)
         .grid(rows as u64, cols as u64);
 
     for _ in 0..balls {
