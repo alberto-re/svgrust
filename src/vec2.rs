@@ -1,5 +1,5 @@
 use crate::angle::Angle;
-use crate::traits::Translate;
+use crate::traits::{Lerp, Translate};
 use std::f64::consts::PI;
 use std::ops::{Add, Mul, Sub};
 
@@ -37,7 +37,7 @@ impl Vec2 {
     }
 
     /// TODO: maybe rotate around origin and chain with translate?
-    pub fn rotate(&self, center: Vec2, theta: f64) -> Self {
+    pub fn rotate(&self, center: Vec2, theta: Angle) -> Self {
         let x = theta.cos() * (self.x - center.x) - theta.sin() * (self.y - center.y) + center.x;
         let y = theta.sin() * (self.x - center.x) + theta.cos() * (self.y - center.y) + center.y;
         Vec2::new(x, y)
@@ -61,13 +61,6 @@ impl Vec2 {
     /// Divide this vector with a scalar value
     pub fn div(&self, scalar: f64) -> Vec2 {
         Vec2::new(self.x / scalar, self.y / scalar)
-    }
-
-    /// Interpolate between self and another Vec2
-    pub fn lerp(&self, other: &Vec2, t: f64) -> Vec2 {
-        let x = self.x + t * (other.x - self.x);
-        let y = self.y + t * (other.y - self.y);
-        Vec2::new(x, y)
     }
 }
 
@@ -115,6 +108,12 @@ impl Mul<f64> for Vec2 {
             x: self.x * rhs,
             y: self.y * rhs,
         }
+    }
+}
+
+impl Lerp for Vec2 {
+    fn lerp(&self, other: Self, t: f64) -> Self {
+        Vec2::new(self.x.lerp(other.x, t), self.y.lerp(other.y, t))
     }
 }
 

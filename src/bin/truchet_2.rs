@@ -10,8 +10,8 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
         let p1 = hexagon.points[i];
         let p2 = hexagon.points[(i + 1) % 6];
         let p3 = hexagon.points[(i + 2) % 6];
-        let p12 = p1.lerp(&p2, 0.5);
-        let p23 = p2.lerp(&p3, 0.5);
+        let p12 = p1.lerp(p2, 0.5);
+        let p23 = p2.lerp(p3, 0.5);
         let angle_start = p2.angle(p12);
         let mut angle_end = p2.angle(p23);
         if f64::abs(angle_start.to_degrees() - angle_end.to_degrees()) > 180. {

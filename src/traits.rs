@@ -72,6 +72,10 @@ pub trait Triangulate {
     fn triangulate(&self) -> Vec<Polygon>;
 }
 
+pub trait Lerp {
+    fn lerp(&self, other: Self, t: f64) -> Self;
+}
+
 impl Centroid for LineString {
     fn centroid(&self) -> Vec2 {
         // TODO: we must prevent division by zero
@@ -582,7 +586,7 @@ impl Rotate for Vec<LineString> {
                 linestring
                     .points
                     .iter()
-                    .map(|point| point.rotate(centroid, angle.to_radians()))
+                    .map(|point| point.rotate(centroid, angle))
                     .collect::<Vec<Vec2>>(),
             );
             newvec.push(newlinestring);

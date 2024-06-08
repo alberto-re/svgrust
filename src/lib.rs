@@ -13,7 +13,7 @@ pub mod vec2;
 pub mod vec3;
 
 use shapes::{Circle, LineString};
-use traits::{Contains, ToShape};
+use traits::{Contains, Lerp, ToShape};
 
 #[derive(Clone)]
 pub enum Shape {
@@ -149,4 +149,10 @@ pub fn map_range(n: f64, start1: f64, stop1: f64, start2: f64, stop2: f64) -> f6
 
 pub fn clamp(n: f64, min: f64, max: f64) -> f64 {
     f64::max(min, f64::min(max, n))
+}
+
+impl Lerp for f64 {
+    fn lerp(&self, other: Self, t: f64) -> Self {
+        self + t * (other - self)
+    }
 }
