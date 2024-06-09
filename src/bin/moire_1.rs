@@ -77,7 +77,7 @@ fn main() -> Result<()> {
     let start_radius = 5.0;
     let end_radius = 333.0;
 
-    for i in 0..(n-1) {
+    for i in 0..(n - 1) {
         let t = i as f64 / n as f64;
         let center = start_center.lerp(end_center, t);
         let radius = start_radius.lerp(end_radius, t);
