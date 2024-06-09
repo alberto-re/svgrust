@@ -11,7 +11,7 @@ fn main() -> Result<()> {
     let mut group5 = Group::new();
     let mut group6 = Group::new();
 
-    let n = 40;
+    let n = 45;
     let start_center = sketch.center() + Vec2::new(100., 100.);
     let end_center = sketch.center();
     let start_radius = 10.0;
@@ -60,7 +60,7 @@ fn main() -> Result<()> {
         group4.add(Circle::new(center, radius));
     }
 
-    let start_center = sketch.center() + Vec2::new(103., 97.);
+    let start_center = sketch.center() + Vec2::new(103., 95.);
     let end_center = sketch.center();
     let start_radius = 11.0;
     let end_radius = 332.0;
@@ -72,23 +72,23 @@ fn main() -> Result<()> {
         group5.add(Circle::new(center, radius));
     }
 
-    let start_center = sketch.center() + Vec2::new(106., 91.);
+    let start_center = sketch.center() + Vec2::new(104., 98.);
     let end_center = sketch.center();
     let start_radius = 5.0;
     let end_radius = 333.0;
 
-    for i in 0..n {
+    for i in 0..(n-1) {
         let t = i as f64 / n as f64;
         let center = start_center.lerp(end_center, t);
         let radius = start_radius.lerp(end_radius, t);
         group6.add(Circle::new(center, radius));
     }
 
-    sketch.add_group(&group1, &Style::new("yellow", "1.0px"));
-    sketch.add_group(&group2, &Style::new("blue", "1.0px"));
+    sketch.add_group(&group1, &Style::new("orange", "1.0px"));
+    sketch.add_group(&group2, &Style::new("pink", "1.0px"));
     sketch.add_group(&group3, &Style::new("red", "1.0px"));
-    sketch.add_group(&group4, &Style::new("black", "1.0px"));
-    sketch.add_group(&group5, &Style::new("brown", "1.0px"));
+    sketch.add_group(&group4, &Style::new("green", "1.0px"));
+    sketch.add_group(&group5, &Style::new("blue", "1.0px"));
     sketch.add_group(&group6, &Style::new("black", "1.0px"));
     sketch.render().save_default()?;
     Ok(())
