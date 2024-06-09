@@ -110,7 +110,7 @@ impl Upsample for LineString {
                 x: (points[0].x + points[points.len() - 1].x) * 0.5,
                 y: (points[0].y + points[points.len() - 1].y) * 0.5,
             });
-            points = upsampled.clone();
+            points.clone_from(&upsampled);
         });
         LineString::new(points)
     }
@@ -141,7 +141,7 @@ impl Chaikin for LineString {
                     y: points[points.len() - 1].y * 0.25 + points[1].y * 0.75,
                 });
             }
-            points = smoothed.clone();
+            points.clone_from(&smoothed);
         });
         LineString::new(points)
     }
@@ -298,7 +298,7 @@ impl Upsample for Polygon {
                 x: (points[0].x + points[points.len() - 1].x) * 0.5,
                 y: (points[0].y + points[points.len() - 1].y) * 0.5,
             });
-            points = upsampled.clone();
+            points.clone_from(&upsampled);
         });
         Polygon::new(points)
     }
@@ -325,7 +325,7 @@ impl Chaikin for Polygon {
                     y: points[points.len() - 1].y * 0.75 + points[1].y * 0.25,
                 });
             }
-            points = smoothed.clone();
+            points.clone_from(&smoothed);
         });
         Polygon::new(points)
     }

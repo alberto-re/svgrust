@@ -65,7 +65,7 @@ fn main() -> Result<()> {
                     newsegments.push(subseg.clone());
                 });
             });
-            segments = newsegments.clone();
+            segments.clone_from(&newsegments);
         }
         segments.iter().for_each(|s| lstrs2.push(s.clone()));
     }
