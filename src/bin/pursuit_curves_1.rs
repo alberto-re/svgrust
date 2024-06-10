@@ -75,12 +75,10 @@ fn main() -> Result<()> {
             .for_each(|p| shapes2.push(p.clone()));
     });
 
-    let mut group = Group::new();
-    group.add_many(shapes);
-    let mut group2 = Group::new();
-    group2.add_many(shapes2);
-    sketch.add_group(&group, &Style::new("blue", "0.4mm"));
-    sketch.add_group(&group2, &Style::new("green", "0.4mm"));
+    sketch.group(0).add_many(shapes);
+    sketch.group(1).add_many(shapes2);
+    sketch.group(0).set_style(Style::new("blue", "0.4mm"));
+    sketch.group(1).set_style(Style::new("green", "0.4mm"));
     sketch.render().save_default()?;
     Ok(())
 }

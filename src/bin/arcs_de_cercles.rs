@@ -6,7 +6,6 @@ fn main() -> Result<()> {
     let other_radius = 75.;
 
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
-    let mut group = Group::new();
 
     let angles: Vec<f64> = vec![
         TAU * 0.05,
@@ -80,9 +79,12 @@ fn main() -> Result<()> {
         circles_lstr2.push(newlist);
     }
 
-    circles_lstr2.iter().flatten().for_each(|c| group.add(c));
+    circles_lstr2
+        .iter()
+        .flatten()
+        .for_each(|c| sketch.group(0).add(c));
 
-    sketch.add_group(&group, &Style::new("black", "1.5px"));
+    sketch.group(0).set_style(Style::new("black", "2.0px"));
 
     sketch.render().save_default()?;
     Ok(())

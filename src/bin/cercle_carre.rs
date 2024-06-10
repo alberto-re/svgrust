@@ -26,51 +26,46 @@ fn add_square_spiral_with_center(
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
-    let mut group1 = Group::new();
-    let mut group2 = Group::new();
-    let mut group3 = Group::new();
-    let mut group4 = Group::new();
-    let mut group5 = Group::new();
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
         sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25,
-        &mut group1,
+        sketch.group(0),
     );
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
         sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25 + 0.05,
-        &mut group2,
+        sketch.group(1),
     );
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
         sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25 + 0.1,
-        &mut group3,
+        sketch.group(2),
     );
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
         sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25 + 0.15,
-        &mut group4,
+        sketch.group(3),
     );
     add_square_spiral_with_center(
         sketch.as_rect().centroid(),
         sketch.as_rect().scale_perc(0.80).min_len(),
         60,
         TAU * 0.25 + 0.2,
-        &mut group5,
+        sketch.group(4),
     );
-    sketch.add_group(&group1, &Style::new("orange", "1.0px"));
-    sketch.add_group(&group2, &Style::new("azure", "1.0px"));
-    sketch.add_group(&group3, &Style::new("blue", "1.0px"));
-    sketch.add_group(&group4, &Style::new("violet", "1.0px"));
-    sketch.add_group(&group5, &Style::new("black", "1.0px"));
+    sketch.group(0).set_style(Style::new("orange", "1.0px"));
+    sketch.group(1).set_style(Style::new("azure", "1.0px"));
+    sketch.group(2).set_style(Style::new("blue", "1.0px"));
+    sketch.group(3).set_style(Style::new("violet", "1.0px"));
+    sketch.group(4).set_style(Style::new("black", "1.0px"));
     sketch.render().save_default()?;
     Ok(())
 }

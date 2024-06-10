@@ -30,9 +30,8 @@ fn main() -> Result<()> {
 
     let triangles = points.triangulate();
 
-    let mut group = Group::new();
-    group.add_many(triangles.clip(&bbox));
-    sketch.add_group(&group, &Style::new("black", "0.5mm"));
+    sketch.group(0).add_many(triangles.clip(&bbox));
+    sketch.group(0).set_style(Style::new("black", "0.5mm"));
     sketch.render().save_default()?;
     Ok(())
 }

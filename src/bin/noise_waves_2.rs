@@ -16,7 +16,6 @@ fn main() -> Result<()> {
     let maxrad: usize = 5;
     let noiseratio: f64 = 0.008;
 
-    let mut group = Group::new();
     let mut lstrs: Vec<LineString> = vec![];
     let center = sketch.as_rect().centroid();
     (-dy..dy).for_each(|j| {
@@ -77,9 +76,8 @@ fn main() -> Result<()> {
         s.iter().for_each(|s1| lstrs3.push(s1.clone()));
     });
 
-    group.add_many(lstrs3);
-
-    sketch.add_group(&group, &Style::new("black", "2.5px"));
+    sketch.group(0).add_many(lstrs3);
+    sketch.group(0).set_style(Style::new("blue", "2.5px"));
 
     sketch.render().save_default()?;
     Ok(())

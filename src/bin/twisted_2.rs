@@ -9,7 +9,6 @@ fn main() -> Result<()> {
     let perlin = Perlin::new(seed.into());
 
     let noise_ratio: f64 = 0.01;
-    let mut group = Group::new();
     let mut angle;
     let mut polygons: Vec<Polygon> = vec![];
     let side = 35.;
@@ -44,9 +43,9 @@ fn main() -> Result<()> {
         segments.iter().for_each(|s| clipped.push(s.clone()));
     }
 
-    clipped.iter().for_each(|p| group.add(p));
+    clipped.iter().for_each(|p| sketch.group(0).add(p));
 
-    sketch.add_group(&group, &Style::new("black", "0.2mm"));
+    sketch.group(0).set_style(Style::new("black", "0.2mm"));
     sketch.render().save_default()?;
     Ok(())
 }

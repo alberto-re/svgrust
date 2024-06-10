@@ -1,5 +1,5 @@
 <svg height="384px" viewBox="0 0 576 384" width="576px" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-<g fill="none" id="1" stroke="black" stroke-width="8.0px">
+<g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="black" stroke-width="8.0px">
 <circle cx="40" cy="40" r="20"/>
 <circle cx="100" cy="40" r="20"/>
 <circle cx="160" cy="40" r="20"/>
@@ -20,7 +20,7 @@
 <circle cx="100" cy="160" r="20"/>
 <circle cx="160" cy="160" r="20"/>
 </g>
-<g fill="none" id="2" stroke="red" stroke-width="8.0px">
+<g fill="none" id="layer2" inkscape:groupmode="layer" inkscape:label="2" stroke="orange" stroke-width="8.0px">
 <path d="M60,40 A20,20,0,0,1,40,60"/>
 <path d="M100,60 A20,20,0,0,1,80,40"/>
 <path d="M140,40 A20,20,0,0,1,160,20"/>
@@ -41,4 +41,12 @@
 <path d="M80,160 A20,20,0,1,1,100,180"/>
 <path d="M140,160 A20,20,0,1,1,174.14214,174.14214"/>
 </g>
+<g fill="none" id="layer3" inkscape:groupmode="layer" inkscape:label="3" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer4" inkscape:groupmode="layer" inkscape:label="4" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer5" inkscape:groupmode="layer" inkscape:label="5" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer6" inkscape:groupmode="layer" inkscape:label="6" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer7" inkscape:groupmode="layer" inkscape:label="7" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer8" inkscape:groupmode="layer" inkscape:label="8" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer9" inkscape:groupmode="layer" inkscape:label="9" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer10" inkscape:groupmode="layer" inkscape:label="10" stroke="black" stroke-width="0.5mm"/>
 </svg>

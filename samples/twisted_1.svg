@@ -1,5 +1,5 @@
 <svg height="576px" viewBox="0 0 384 576" width="384px" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-<g fill="none" id="1" stroke="black" stroke-width="0.2mm">
+<g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="black" stroke-width="0.2mm">
 <path d="M30.150225,15.372734 L29.61152,14.360042 L1.3600419,29.38848 L16.38848,57.639957 L18.973888,56.264645"/>
 <path d="M32.797993,15.325868 L32.190815,14.235951 L4.235952,29.809183 L19.809183,57.76405 L22.296665,56.37831"/>
 <path d="M35.51551,15.296661 L34.847862,14.141306 L7.141306,30.152138 L23.152138,57.858696 L25.554996,56.47015"/>
@@ -1452,4 +1452,13 @@
 <path d="M359.19476,515.3786 L358.36874,514.01874 L331.01874,530.6312 L347.63126,557.98126 L349.7917,556.669"/>
 <path d="M350.57608,557.9677 L334.0323,530.57605 L361.42392,514.0323 L377.9677,541.42395 L350.57608,557.9677"/>
 </g>
+<g fill="none" id="layer2" inkscape:groupmode="layer" inkscape:label="2" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer3" inkscape:groupmode="layer" inkscape:label="3" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer4" inkscape:groupmode="layer" inkscape:label="4" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer5" inkscape:groupmode="layer" inkscape:label="5" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer6" inkscape:groupmode="layer" inkscape:label="6" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer7" inkscape:groupmode="layer" inkscape:label="7" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer8" inkscape:groupmode="layer" inkscape:label="8" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer9" inkscape:groupmode="layer" inkscape:label="9" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer10" inkscape:groupmode="layer" inkscape:label="10" stroke="black" stroke-width="0.5mm"/>
 </svg>

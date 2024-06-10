@@ -28,6 +28,7 @@ fn penrose_triangle(center: Vec2, side: f64, width: f64) -> Vec<Polygon> {
         e,
         k,
         d + Vec2::from_angle_length(Angle::degrees(120.), width),
+        c,
     ]);
     let lshape2 = Polygon::new(vec![
         k,
@@ -36,70 +37,28 @@ fn penrose_triangle(center: Vec2, side: f64, width: f64) -> Vec<Polygon> {
         a,
         g,
         k + Vec2::from_angle_length(Angle::degrees(300.), width),
+        k,
     ]);
-    let mut lshape3 = Polygon::new(vec![
+    let lshape3 = Polygon::new(vec![
         i,
         j,
         a,
         g,
         g + Vec2::from_angle_length(Angle::degrees(180.), width),
         c,
+        i,
     ]);
-    lshape3.points.reverse();
     vec![lshape1, lshape2, lshape3]
 }
 
-fn hatch_fill(polygon: &Polygon) -> Vec<LineString> {
-    let mut lines = vec![];
-    let bbox = polygon.scale_dist(-2.0);
-    lines.push(bbox.to_linestring());
-    lines.push(polygon.scale_dist(-1.0).to_linestring());
-    let mut miny = 1000000.;
-    let mut maxy = 0.;
-    let mut minx = 1000000.;
-    let mut maxx = 0.;
-    polygon.points.iter().for_each(|p| {
-        if p.x > maxx {
-            maxx = p.x;
-        }
-        if p.y > maxy {
-            maxy = p.y;
-        }
-        if p.x < minx {
-            minx = p.x;
-        }
-        if p.y < miny {
-            miny = p.y;
-        }
-    });
-    let mut cury = miny;
-    while cury < maxy {
-        let p1 = Vec2::new(minx, cury);
-        let p2 = Vec2::new(maxx, cury);
-        for segment in LineString::line(p1, p2).clip(&bbox, false) {
-            lines.push(segment);
-        }
-        cury += 1.;
-    }
-    lines
-}
-
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
+    let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
-    let mut group = Group::new();
-    let mut hatch = Group::new();
+    let triangle = penrose_triangle(sketch.center(), 300., 80.);
 
-    let triangle = penrose_triangle(sketch.center(), 140., 50.);
-    group.add(triangle[0].clone());
-    group.add(triangle[1].clone());
-    group.add(triangle[2].clone());
-    for line in &hatch_fill(&triangle[0]) {
-        hatch.add(line);
-    }
+    triangle.iter().for_each(|p| sketch.group(0).add(p.clone()));
 
-    sketch.add_group(&group, &Style::new("black", "0.5mm"));
-    sketch.add_group(&hatch, &Style::new("black", "0.5mm"));
+    sketch.group(0).set_style(Style::new("black", "1.0mm"));
     sketch.render().save_default()?;
     Ok(())
 }

@@ -1,5 +1,6 @@
 use std::time::Instant;
 
+use crate::group::Group;
 use crate::render::render_svg;
 use crate::shapes::Rect;
 use crate::traits::Centroid;
@@ -11,8 +12,6 @@ use anyhow::Result;
 use svg::Document;
 
 use crate::layout::PageLayout;
-use crate::Group;
-use crate::Style;
 
 pub enum Debug {
     Off,
@@ -22,7 +21,7 @@ pub enum Debug {
 /// A high-level representation of a plotter drawing
 pub struct Sketch {
     pub layout: PageLayout,
-    pub groups: Vec<(Group, Style)>,
+    pub groups: Vec<Group>,
     pub uom: Uom,
     doc: Document,
     debug: Debug,
@@ -34,7 +33,18 @@ impl Sketch {
     pub fn new(layout: &PageLayout, uom: Uom, debug: Debug) -> Self {
         Self {
             layout: layout.clone(),
-            groups: vec![],
+            groups: vec![
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+                Group::new(),
+            ],
             doc: Document::new(),
             uom,
             debug,
@@ -42,9 +52,8 @@ impl Sketch {
         }
     }
 
-    /// Add a group to the sketch
-    pub fn add_group(&mut self, layer: &Group, style: &Style) {
-        self.groups.push((layer.clone(), style.clone()));
+    pub fn group(&mut self, index: usize) -> &mut Group {
+        &mut self.groups[index]
     }
 
     /// Return a Rect representing the sketch area
@@ -119,7 +128,7 @@ impl Sketch {
         if matches!(self.debug, Debug::On) {
             let mut debug = Group::new();
             debug.add(self.as_rect());
-            self.add_group(&debug, &Style::new("black", "0.2mm"))
+            self.groups.push(debug);
         }
         self.doc = render_svg(self);
         self

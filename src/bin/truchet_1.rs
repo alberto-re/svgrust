@@ -35,11 +35,6 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
-    let mut layer1 = Group::new();
-    let mut layer2 = Group::new();
-    let mut layer3 = Group::new();
-    let mut layer4 = Group::new();
-
     let mut rng = rand::thread_rng();
 
     let hex_side = 50.;
@@ -71,33 +66,12 @@ fn main() -> Result<()> {
         count += 1;
     }
 
-    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 4.).rotate(Angle::degrees(60.)));
-    layer4.add(
-        Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 1.).rotate(Angle::degrees(60.)),
-    );
-    layer4.add(
-        Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 + 2.).rotate(Angle::degrees(60.)),
-    );
-    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45).rotate(Angle::degrees(60.)));
-    // layer4.add(Polygon::hexagon(sketch.center(), sketch.min_len() * 0.45 - 2.).rotate(Angle::degrees(60.)));
-    // layer4.add(
-    //     &LineString::line(
-    //         sketch.center(),
-    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(210.), sketch.min_len() * 0.45)
-    //     )
-    // );
-    // layer4.add(
-    //     &LineString::line(
-    //         sketch.center(),
-    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(330.), sketch.min_len() * 0.45)
-    //     )
-    // );
-    // layer4.add(
-    //     &LineString::line(
-    //         sketch.center(),
-    //         sketch.center() + Vec2::from_angle_length(Angle::degrees(90.), sketch.min_len() * 0.45)
-    //     )
-    // );
+    let center = sketch.center();
+    let min_len = sketch.min_len();
+    sketch.group(3).add_many(vec![
+        Polygon::hexagon(center, min_len * 0.45 + 1.).rotate(Angle::degrees(60.)),
+        Polygon::hexagon(center, min_len * 0.45 + 2.).rotate(Angle::degrees(60.)),
+    ]);
 
     let bbox1 = Polygon::new(vec![
         sketch.center(),
@@ -124,36 +98,36 @@ fn main() -> Result<()> {
     lines_tot
         .iter()
         .for_each(|l| segments.extend_from_slice(&l.clip(&bbox1, false)));
-    layer1.add_many(segments);
+    sketch.group(0).add_many(segments);
 
     let mut segments: Vec<LineString> = vec![];
     lines_tot
         .iter()
         .for_each(|l| segments.extend_from_slice(&l.clip(&bbox2, false)));
-    layer2.add_many(segments);
+    sketch.group(1).add_many(segments);
 
     let mut segments: Vec<LineString> = vec![];
     lines_tot
         .iter()
         .for_each(|l| segments.extend_from_slice(&l.clip(&bbox3, false)));
-    layer3.add_many(segments);
+    sketch.group(2).add_many(segments);
 
     // TODO: it is clear that scale_dist do not always infer what is the interior
     // and what is the exterior of a polygon... BUG!
-    layer4.add(bbox1.scale_dist(0.));
-    layer4.add(bbox1.scale_dist(-1.));
-    layer4.add(bbox1.scale_dist(-2.));
-    layer4.add(bbox2.scale_dist(0.));
-    layer4.add(bbox2.scale_dist(1.));
-    layer4.add(bbox2.scale_dist(2.));
-    layer4.add(bbox3.scale_dist(0.));
-    layer4.add(bbox3.scale_dist(1.));
-    layer4.add(bbox3.scale_dist(2.));
+    sketch.group(3).add(bbox1.scale_dist(0.));
+    sketch.group(3).add(bbox1.scale_dist(-1.));
+    sketch.group(3).add(bbox1.scale_dist(-2.));
+    sketch.group(3).add(bbox2.scale_dist(0.));
+    sketch.group(3).add(bbox2.scale_dist(1.));
+    sketch.group(3).add(bbox2.scale_dist(2.));
+    sketch.group(3).add(bbox3.scale_dist(0.));
+    sketch.group(3).add(bbox3.scale_dist(1.));
+    sketch.group(3).add(bbox3.scale_dist(2.));
 
-    sketch.add_group(&layer1, &Style::new("black", "1.0px"));
-    sketch.add_group(&layer2, &Style::new("black", "1.8px"));
-    sketch.add_group(&layer3, &Style::new("black", "0.5px"));
-    sketch.add_group(&layer4, &Style::new("black", "2.0px"));
+    sketch.group(0).set_style(Style::new("black", "1.0px"));
+    sketch.group(1).set_style(Style::new("black", "1.8px"));
+    sketch.group(2).set_style(Style::new("black", "0.5px"));
+    sketch.group(3).set_style(Style::new("black", "2.0px"));
 
     sketch.render().save_default()?;
     Ok(())

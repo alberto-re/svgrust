@@ -41,16 +41,14 @@ fn main() -> Result<()> {
         .map(|p| p.translate(sketch.as_rect().centroid()))
         .collect::<Vec<Vec2>>();
 
-    let mut curve = Group::new();
-    curve.add(&LineString::new(points));
+    sketch.group(0).add(&LineString::new(points));
 
-    let mut plane = Group::new();
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {
-        plane.add(Circle::new(rect.centroid(), 0.1));
+        sketch.group(1).add(Circle::new(rect.centroid(), 0.1));
     });
 
-    sketch.add_group(&plane, &Style::new("black", "0.2mm"));
-    sketch.add_group(&curve, &Style::new("#093c80", "0.2mm"));
+    sketch.group(0).set_style(Style::new("blue", "0.2mm"));
+    sketch.group(1).set_style(Style::new("#093c80", "0.2mm"));
 
     sketch.render().save_default()?;
     Ok(())

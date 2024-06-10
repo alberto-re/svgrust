@@ -29,12 +29,14 @@ fn main() -> Result<()> {
         .flat_map(|l| l.clip(&frame.to_linestr(true), false))
         .collect::<Vec<_>>();
 
-    let mut group = Group::new();
+    sketch.group(0).add_many(lines);
+
     (0..3).for_each(|i| {
-        group.add(frame.scale_perc((100. + i as f64) / 100.));
+        sketch
+            .group(1)
+            .add(frame.scale_perc((100. + i as f64) / 100.));
     });
-    group.add_many(lines);
-    sketch.add_group(&group, &Style::new("black", "1px"));
+
     sketch.render().save_default()?;
     Ok(())
 }

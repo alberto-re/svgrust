@@ -1,5 +1,5 @@
 <svg height="1123.1999999999998px" viewBox="0 0 796.8000000000001 1123.1999999999998" width="796.8000000000001px" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-<g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="orange" stroke-width="1.0px">
+<g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="yellow" stroke-width="0.5mm">
 <circle cx="498.40000000000003" cy="661.5999999999999" r="10"/>
 <circle cx="496.1777777777778" cy="659.3777777777777" r="17.11111111111111"/>
 <circle cx="493.9555555555556" cy="657.1555555555555" r="24.22222222222222"/>
@@ -46,7 +46,7 @@
 <circle cx="402.8444444444445" cy="566.0444444444444" r="315.77777777777777"/>
 <circle cx="400.62222222222226" cy="563.8222222222221" r="322.88888888888886"/>
 </g>
-<g fill="none" id="layer2" inkscape:groupmode="layer" inkscape:label="2" stroke="pink" stroke-width="1.0px">
+<g fill="none" id="layer2" inkscape:groupmode="layer" inkscape:label="2" stroke="orange" stroke-width="0.5mm">
 <circle cx="498.40000000000003" cy="666.5999999999999" r="11"/>
 <circle cx="496.1777777777778" cy="664.2666666666665" r="18.022222222222222"/>
 <circle cx="493.9555555555556" cy="661.9333333333333" r="25.044444444444444"/>
@@ -93,7 +93,7 @@
 <circle cx="402.8444444444445" cy="566.2666666666665" r="312.9555555555556"/>
 <circle cx="400.62222222222226" cy="563.9333333333333" r="319.97777777777776"/>
 </g>
-<g fill="none" id="layer3" inkscape:groupmode="layer" inkscape:label="3" stroke="red" stroke-width="1.0px">
+<g fill="none" id="layer3" inkscape:groupmode="layer" inkscape:label="3" stroke="red" stroke-width="0.5mm">
 <circle cx="503.40000000000003" cy="661.5999999999999" r="9"/>
 <circle cx="501.0666666666667" cy="659.3777777777777" r="16.2"/>
 <circle cx="498.73333333333335" cy="657.1555555555555" r="23.4"/>
@@ -140,7 +140,7 @@
 <circle cx="403.0666666666667" cy="566.0444444444444" r="318.6"/>
 <circle cx="400.73333333333335" cy="563.8222222222221" r="325.8"/>
 </g>
-<g fill="none" id="layer4" inkscape:groupmode="layer" inkscape:label="4" stroke="green" stroke-width="1.0px">
+<g fill="none" id="layer4" inkscape:groupmode="layer" inkscape:label="4" stroke="green" stroke-width="0.5mm">
 <circle cx="492.40000000000003" cy="663.5999999999999" r="8"/>
 <circle cx="490.31111111111113" cy="661.3333333333333" r="15.244444444444444"/>
 <circle cx="488.22222222222223" cy="659.0666666666666" r="22.488888888888887"/>
@@ -187,7 +187,7 @@
 <circle cx="402.5777777777778" cy="566.1333333333332" r="319.5111111111111"/>
 <circle cx="400.48888888888894" cy="563.8666666666666" r="326.75555555555553"/>
 </g>
-<g fill="none" id="layer5" inkscape:groupmode="layer" inkscape:label="5" stroke="blue" stroke-width="1.0px">
+<g fill="none" id="layer5" inkscape:groupmode="layer" inkscape:label="5" stroke="blue" stroke-width="0.5mm">
 <circle cx="501.40000000000003" cy="656.5999999999999" r="11"/>
 <circle cx="499.11111111111114" cy="654.4888888888888" r="18.133333333333333"/>
 <circle cx="496.82222222222225" cy="652.3777777777777" r="25.266666666666666"/>
@@ -234,7 +234,7 @@
 <circle cx="402.9777777777778" cy="565.8222222222221" r="317.73333333333335"/>
 <circle cx="400.6888888888889" cy="563.711111111111" r="324.8666666666667"/>
 </g>
-<g fill="none" id="layer6" inkscape:groupmode="layer" inkscape:label="6" stroke="black" stroke-width="1.0px">
+<g fill="none" id="layer6" inkscape:groupmode="layer" inkscape:label="6" stroke="black" stroke-width="0.5mm">
 <circle cx="502.40000000000003" cy="659.5999999999999" r="5"/>
 <circle cx="500.0888888888889" cy="657.4222222222221" r="12.288888888888888"/>
 <circle cx="497.7777777777778" cy="655.2444444444443" r="19.577777777777776"/>
@@ -280,7 +280,11 @@
 <circle cx="405.33333333333337" cy="568.1333333333332" r="311.1333333333333"/>
 <circle cx="403.02222222222224" cy="565.9555555555555" r="318.4222222222222"/>
 </g>
-<g fill="none" id="layer7" inkscape:groupmode="layer" inkscape:label="7" stroke="black" stroke-width="0.2mm">
+<g fill="none" id="layer7" inkscape:groupmode="layer" inkscape:label="7" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer8" inkscape:groupmode="layer" inkscape:label="8" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer9" inkscape:groupmode="layer" inkscape:label="9" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer10" inkscape:groupmode="layer" inkscape:label="10" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer11" inkscape:groupmode="layer" inkscape:label="11" stroke="black" stroke-width="0.5mm">
 <rect height="1123.1999999999998" width="796.8000000000001" x="0" y="0"/>
 </g>
 </svg>

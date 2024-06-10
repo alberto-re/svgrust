@@ -3,7 +3,6 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Mm, Debug::Off);
-    let mut group = Group::new();
 
     let mut n: f64 = -10.0;
     let nend = 9.5;
@@ -25,10 +24,14 @@ fn main() -> Result<()> {
             y *= 8.;
             points.push(Vec2::new(x, y) + Vec2::new(105., 150.));
         }
-        group.add(LineString::new(points).chaikin(2, false));
+        sketch
+            .group(0)
+            .add(LineString::new(points).chaikin(2, false));
     }
 
-    sketch.add_group(&group, &Style::new("rgba(16, 56, 125, 0.7)", "0.6mm"));
+    sketch
+        .group(0)
+        .set_style(Style::new("rgba(16, 56, 1, 0.7)", "0.6mm"));
     sketch.render().save_default()?;
     Ok(())
 }

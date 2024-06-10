@@ -26,14 +26,14 @@ pub fn render_svg(sketch: &Sketch) -> Document {
         doc = doc.set("style", style.to_owned());
     }
 
-    for (id, (l, s)) in sketch.groups.iter().enumerate() {
+    for (id, l) in sketch.groups.iter().enumerate() {
         let mut group = svg::node::element::Group::new();
         group = group.set("inkscape:groupmode", "layer");
         group = group.set("inkscape:label", format!("{}", id + 1));
         group = group.set("fill", "none");
         group = group.set("id", format!("layer{}", id + 1));
-        group = group.set("stroke", s.stroke.clone());
-        group = group.set("stroke-width", s.stroke_width.clone());
+        group = group.set("stroke", l.style.stroke.clone());
+        group = group.set("stroke-width", l.style.stroke_width.clone());
         for e in l.elements.iter() {
             match e {
                 Shape::Circle(s) => {

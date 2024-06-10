@@ -8,8 +8,6 @@ use rand::SeedableRng;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
-    let mut trails = Group::new();
-
     let seed = Seed::from_number(37);
     let mut rng = StdRng::seed_from_u64(seed.clone().into());
 
@@ -30,7 +28,7 @@ fn main() -> Result<()> {
                     break;
                 }
                 let mut collision = false;
-                for trail in trails.linestrings() {
+                for trail in sketch.group(0).linestrings() {
                     let mut i = 0;
                     while i < trail.points.len() {
                         let point = trail.points[i];
@@ -51,11 +49,10 @@ fn main() -> Result<()> {
                 trail_points.push(pos);
             }
             let trail = LineString::new(trail_points);
-            trails.add(&trail);
+            sketch.group(0).add(trail);
         });
 
-    sketch.add_group(&trails, &Style::new("black", "1.0px"));
-
+    sketch.group(0).set_style(Style::new("blue", "0.5mm"));
     sketch.render().save_default()?;
     Ok(())
 }

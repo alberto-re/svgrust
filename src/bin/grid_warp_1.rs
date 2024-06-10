@@ -10,10 +10,6 @@ use rand::SeedableRng;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
-    let mut group = Group::new();
-    let mut group2 = Group::new();
-    let mut group3 = Group::new();
-    let mut group4 = Group::new();
 
     let seed = Seed::from_number(3650491894);
     let mut rng = StdRng::seed_from_u64(seed.clone().into());
@@ -130,10 +126,10 @@ fn main() -> Result<()> {
                 vals4.insert(0, cells4[i].xy);
             }
         }
-        group.add(LineString::new(vals));
-        group2.add(LineString::new(vals2));
-        group3.add(LineString::new(vals3));
-        group4.add(LineString::new(vals4));
+        sketch.group(0).add(LineString::new(vals));
+        sketch.group(1).add(LineString::new(vals2));
+        sketch.group(2).add(LineString::new(vals3));
+        sketch.group(3).add(LineString::new(vals4));
     }
 
     for c in 0..cols {
@@ -155,16 +151,16 @@ fn main() -> Result<()> {
                 vals4.insert(0, cells4[i].xy);
             }
         }
-        group.add(LineString::new(vals));
-        group2.add(LineString::new(vals2));
-        group3.add(LineString::new(vals3));
-        group4.add(LineString::new(vals4));
+        sketch.group(0).add(LineString::new(vals));
+        sketch.group(1).add(LineString::new(vals2));
+        sketch.group(2).add(LineString::new(vals3));
+        sketch.group(3).add(LineString::new(vals4));
     }
 
-    sketch.add_group(&group4, &Style::new("lime", "1.0px"));
-    sketch.add_group(&group3, &Style::new("azure", "1.0px"));
-    sketch.add_group(&group2, &Style::new("blue", "1.0px"));
-    sketch.add_group(&group, &Style::new("black", "1.0px"));
+    sketch.group(3).set_style(Style::new("blue", "1.0px"));
+    sketch.group(2).set_style(Style::new("azure", "1.0px"));
+    sketch.group(1).set_style(Style::new("blue", "1.0px"));
+    sketch.group(0).set_style(Style::new("blue", "1.0px"));
     sketch.render().save_default()?;
     Ok(())
 }

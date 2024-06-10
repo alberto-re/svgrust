@@ -1,10 +1,10 @@
 <svg height="576px" viewBox="0 0 384 576" width="384px" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-<g fill="none" id="1" stroke="black" stroke-width="0.5mm">
+<g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="black" stroke-width="0.5mm">
 <path d="M167,191.30127 L45.756443,401.30127 L338.24356,401.30127 L363.24356,358 L120.75645,358 L192,234.60254 z"/>
 <path d="M120.75645,358 L363.24356,358 L217,104.69873 L167,104.69873 L288.24356,314.69873 L145.75644,314.69873 z"/>
 <path d="M167,191.30127 L238.24356,314.69873 L288.24356,314.69873 L167,104.69873 L20.756443,358 L45.756443,401.30127 z"/>
 </g>
-<g fill="none" id="2" stroke="black" stroke-width="0.5mm">
+<g fill="none" id="layer2" inkscape:groupmode="layer" inkscape:label="2" stroke="black" stroke-width="0.5mm">
 <path d="M167,195.30127 L49.220547,399.30127 L337.08887,399.30127 L359.77945,360 L117.29234,360 L189.6906,234.60254 L167,195.30127"/>
 <path d="M167,193.30127 L47.488495,400.30127 L337.6662,400.30127 L361.5115,359 L119.02439,359 L190.8453,234.60254 L167,193.30127"/>
 <path d="M166.42265,196.30127 L167.57735,196.30127"/>
@@ -211,7 +211,12 @@
 <path d="M50.375244,397.30127 L338.24356,397.30127"/>
 <path d="M49.797894,398.30127 L337.6662,398.30127"/>
 </g>
-<g fill="none" id="3" stroke="black" stroke-width="0.2mm">
-<rect height="576" width="384" x="0" y="0"/>
-</g>
+<g fill="none" id="layer3" inkscape:groupmode="layer" inkscape:label="3" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer4" inkscape:groupmode="layer" inkscape:label="4" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer5" inkscape:groupmode="layer" inkscape:label="5" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer6" inkscape:groupmode="layer" inkscape:label="6" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer7" inkscape:groupmode="layer" inkscape:label="7" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer8" inkscape:groupmode="layer" inkscape:label="8" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer9" inkscape:groupmode="layer" inkscape:label="9" stroke="black" stroke-width="0.5mm"/>
+<g fill="none" id="layer10" inkscape:groupmode="layer" inkscape:label="10" stroke="black" stroke-width="0.5mm"/>
 </svg>
