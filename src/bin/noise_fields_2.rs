@@ -8,7 +8,7 @@ use rand::SeedableRng;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
-    let seed = Seed::from_number(37);
+    let seed = Seed::number(37);
     let mut rng = StdRng::seed_from_u64(seed.clone().into());
 
     let bbox = Circle::new(sketch.center(), sketch.min_len() * 0.48);

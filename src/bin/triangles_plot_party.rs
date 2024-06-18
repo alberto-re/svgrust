@@ -11,7 +11,7 @@ fn focal_dist_angle(focal: Vec2, max_dist: f64, pos: Vec2) -> Angle {
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
-    let seed = Seed::from_number(4292437263);
+    let seed = Seed::number(4292437263);
     let displacement = 20.;
     let radius = 10.;
     let focal_max_dist = 180.;

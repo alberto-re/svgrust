@@ -5,7 +5,7 @@ use plt::prelude::*;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
-    let seed = Seed::from_number(1944909223);
+    let seed = Seed::number(1944909223);
     let perlin = Perlin::new(seed.into());
 
     let noise_ratio: f64 = 0.01;

@@ -11,7 +11,7 @@ use rand::SeedableRng;
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
 
-    let seed = Seed::from_number(3650491894);
+    let seed = Seed::number(3650491894);
     let mut rng = StdRng::seed_from_u64(seed.clone().into());
     let perlin_field = PerlinField::new(seed.into());
     let spiral_field = SpiralField::new(sketch.center());

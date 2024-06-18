@@ -16,7 +16,7 @@ impl Seed {
     }
 
     /// Construct a new seed from a number
-    pub fn from_number(seed: u32) -> Self {
+    pub fn number(seed: u32) -> Self {
         Self { seed }
     }
 }

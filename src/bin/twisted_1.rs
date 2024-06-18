@@ -2,47 +2,49 @@ use anyhow::Result;
 use noise::NoiseFn;
 use noise::Perlin;
 use plt::prelude::*;
+use rayon::prelude::*;
+
+const SEED: u32 = 200;
+const NOISE_FACTOR: f64 = 0.008;
+const SIDE: f64 = 32.;
+const Y_STEP: f64 = 50.;
+const X_STEP: f64 = 3.;
+const MIN_X: f64 = 7.;
+const MIN_Y: f64 = 20.;
+const T_INC: f64 = 0.001;
+const MAX_ROTATE_PER_SHIFT: f64 = TAU * 0.05;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
-    let seed = Seed::from_number(200);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::On);
+    let seed = Seed::number(SEED);
     let perlin = Perlin::new(seed.into());
-    let noise_ratio: f64 = 0.008;
-    let mut angle;
+
+    let mut rotation;
     let mut polygons: Vec<Polygon> = vec![];
-    let side = 32.;
-
-    let y_step = 50.;
-    let x_step = 3.;
-
-    let mut y = 20.;
-    let mut x = 7.;
+    let mut y = MIN_Y;
+    let mut x = MIN_X;
     let mut t = 0.;
-    while y < sketch.height() - side / 2. {
-        angle = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU;
-        while x < sketch.width() - side - x_step * 3. {
-            let xy = Vec2::new(x, y);
-            let polygon = &Rect::new(xy, side, side).to_polygon();
-            let noise_value = perlin.get([x * noise_ratio, y * noise_ratio, t]) * TAU / 20.;
-            angle += noise_value;
-            let polygon = polygon.rotate(Angle::radians(angle));
+
+    while y < sketch.height() - SIDE / 2. {
+        rotation = Angle::radians(perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]) * TAU);
+        while x < sketch.width() - SIDE - X_STEP * 3. {
+            let polygon = Rect::new(Vec2::new(x, y), SIDE, SIDE).to_polygon();
+            let noise_value = perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]);
+            rotation = rotation + Angle::radians(noise_value * MAX_ROTATE_PER_SHIFT);
+            let polygon = polygon.rotate(rotation);
             polygons.push(polygon);
-            x += x_step;
+            x += X_STEP;
         }
-        y += y_step;
-        x = 10.;
-        t += 0.001;
+        y += Y_STEP;
+        x = MIN_X;
+        t += T_INC;
     }
 
-    let mut clipped: Vec<LineString> = vec![];
+    let clipped: Vec<LineString> = polygons.par_iter().enumerate().flat_map(|(i, p)| {
+        p.clip_many(&polygons[i+1..], true)
+    }).collect();
 
-    for (i, polygon) in polygons.iter().enumerate() {
-        let segments = polygon.clip_many(&polygons[i + 1..], true);
-        segments.iter().for_each(|s| clipped.push(s.clone()));
-    }
-
-    clipped.iter().for_each(|p| sketch.group(0).add(p));
-
+    sketch.group(0).add_many(clipped);
     sketch.group(0).set_style(Style::new("black", "0.2mm"));
     sketch.render().save_default()?;
     Ok(())
