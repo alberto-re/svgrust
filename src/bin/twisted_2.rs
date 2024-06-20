@@ -9,23 +9,22 @@ const NOISE_FACTOR: f64 = 0.002;
 const SIDE: f64 = 55.;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::On);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::Off);
     let seed = Seed::number(SEED);
     let perlin = Perlin::new(seed.into());
 
     let mut polygons: Vec<Polygon> = vec![];
     let mut rotation;
 
-    let radius = 150.;
+    let radius = 140.;
     let mut theta = Angle::radians(0.);
-    // TODO: Angle - implement +=
-    // TODO: Angle - implement < or > comparaisons
-    while theta.radians < TAU {
+
+    while theta < Angle::tau() {
         let xy = Vec2::from_angle_length(theta, radius) + sketch.center() - Vec2::new(23., 0.);
         rotation = Angle::radians(perlin.get([xy.x * NOISE_FACTOR, xy.y * NOISE_FACTOR]) * TAU);
         let polygon = Rect::new(xy, SIDE, SIDE).to_polygon();
         let polygon = polygon.rotate(rotation);
-        theta = theta + Angle::radians(TAU / 300.);
+        theta += Angle::radians(TAU / 300.);
         polygons.push(polygon);
     }
 

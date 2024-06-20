@@ -1,8 +1,8 @@
-use std::f64::consts::PI;
+use std::f64::consts::{PI, TAU};
 use std::ops;
 
 /// An abstract represenation of an angle.
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Angle {
     pub radians: f64,
 }
@@ -18,6 +18,13 @@ impl Angle {
     /// Create an angle from a value in radians.
     pub fn radians(radians: f64) -> Self {
         Angle { radians }
+    }
+
+    /// Create an angle of 2PI radians - 360 degrees.
+    pub fn tau() -> Self {
+        Angle {
+            radians: TAU
+        }
     }
 
     /// Return this angle expressed in degrees.
@@ -58,6 +65,12 @@ impl ops::Add<Angle> for Angle {
         Angle {
             radians: self.radians + _rhs.radians,
         }
+    }
+}
+
+impl ops::AddAssign<Angle> for Angle {
+    fn add_assign(&mut self, rhs: Angle) {
+        self.radians += rhs.radians
     }
 }
 
