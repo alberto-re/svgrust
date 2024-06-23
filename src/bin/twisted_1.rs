@@ -34,7 +34,7 @@ fn main() -> Result<()> {
         while x < sketch.width() - MARGIN_X_MIN - SIDE * 0.9 {
             let polygon = Rect::new(Vec2::new(x, y), SIDE, SIDE).to_polygon();
             let noise_value = perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]);
-            rotation = rotation + Angle::radians(noise_value * MAX_ROTATE_PER_SHIFT);
+            rotation += Angle::radians(noise_value * MAX_ROTATE_PER_SHIFT);
             let polygon = polygon.rotate(rotation);
             polygons.push(polygon);
             x += X_STEP;

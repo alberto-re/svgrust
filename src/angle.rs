@@ -1,5 +1,5 @@
 use std::f64::consts::{PI, TAU};
-use std::ops;
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 /// An abstract represenation of an angle.
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
@@ -22,9 +22,7 @@ impl Angle {
 
     /// Create an angle of 2PI radians - 360 degrees.
     pub fn tau() -> Self {
-        Angle {
-            radians: TAU
-        }
+        Angle { radians: TAU }
     }
 
     /// Return this angle expressed in degrees.
@@ -47,17 +45,13 @@ impl Angle {
         self.radians.cos()
     }
 
-    pub fn div(&self, scalar: f64) -> Self {
-        Angle::radians(self.radians / scalar)
-    }
-
-    pub fn lerp(&self, other: &Angle, t: f64) -> Self {
-        let radians = self.radians + t * (other.radians - self.radians);
-        Angle::radians(radians)
+    /// Interpolate linearly between two Angles.
+    pub fn lerp(&self, other: Angle, t: f64) -> Self {
+        *self + (other - *self) * t
     }
 }
 
-impl ops::Add<Angle> for Angle {
+impl Add<Angle> for Angle {
     type Output = Angle;
 
     /// Add another Angle.
@@ -68,19 +62,29 @@ impl ops::Add<Angle> for Angle {
     }
 }
 
-impl ops::AddAssign<Angle> for Angle {
+impl AddAssign<Angle> for Angle {
     fn add_assign(&mut self, rhs: Angle) {
         self.radians += rhs.radians
     }
 }
 
-impl ops::Sub<Angle> for Angle {
+impl Sub<Angle> for Angle {
     type Output = Angle;
 
     /// Subtract another Angle.
     fn sub(self, _rhs: Angle) -> Angle {
         Angle {
             radians: self.radians - _rhs.radians,
+        }
+    }
+}
+
+impl Mul<f64> for Angle {
+    type Output = Angle;
+
+    fn mul(self, rhs: f64) -> Angle {
+        Angle {
+            radians: self.radians * rhs,
         }
     }
 }
@@ -118,5 +122,12 @@ mod tests {
         let a = Angle::degrees(90.);
         let b = Angle::degrees(90.);
         assert_eq!(a - b, Angle::degrees(0.));
+    }
+
+    #[test]
+    fn lerp() {
+        let a = Angle::degrees(90.);
+        let b = Angle::degrees(270.);
+        assert_eq!(a.lerp(b, 0.5), Angle::degrees(180.));
     }
 }
