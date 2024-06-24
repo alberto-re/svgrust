@@ -63,6 +63,7 @@ impl Add<Angle> for Angle {
 }
 
 impl AddAssign<Angle> for Angle {
+    /// Add another Angle and assign the result to Self.
     fn add_assign(&mut self, rhs: Angle) {
         self.radians += rhs.radians
     }

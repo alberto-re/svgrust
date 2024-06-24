@@ -1,3 +1,5 @@
+use crate::pen::Pen;
+
 #[derive(Clone)]
 pub struct Style {
     pub stroke: String,
@@ -16,5 +18,11 @@ impl Style {
 impl Default for Style {
     fn default() -> Self {
         Self::new("black", "0.5mm")
+    }
+}
+
+impl From<Pen<'_>> for Style {
+    fn from(val: Pen) -> Self {
+        Self::new(val.color, &format!("{}mm", val.thickness))
     }
 }

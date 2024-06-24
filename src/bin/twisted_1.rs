@@ -5,17 +5,17 @@ use plt::prelude::*;
 use rayon::prelude::*;
 
 const SEED: u32 = 200;
-const MARGIN_Y_MIN: f64 = 20.;
-const MARGIN_X_MIN: f64 = 20.;
+const MARGIN_Y_MIN: f64 = 5.;
+const MARGIN_X_MIN: f64 = 5.;
 const NOISE_FACTOR: f64 = 0.008;
-const SIDE: f64 = 32.;
-const ROW_SPACING: f64 = 25.;
-const X_STEP: f64 = 3.;
+const SIDE: f64 = 10.;
+const ROW_SPACING: f64 = 7.;
+const X_STEP: f64 = 1.1;
 const T_INC: f64 = 0.001;
 const MAX_ROTATE_PER_SHIFT: f64 = TAU * 0.05;
 
 fn main() -> Result<()> {
-    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Px, Debug::On);
+    let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Mm, Debug::On);
     let seed = Seed::number(SEED);
     let perlin = Perlin::new(seed.into());
 
@@ -49,7 +49,7 @@ fn main() -> Result<()> {
         .collect();
 
     sketch.group(0).add_many(clipped);
-    sketch.group(0).set_style(Style::new("black", "0.2mm"));
+    sketch.group(0).set_pen(Pen::pigma_micron_005_black());
     sketch.render().save_default()?;
     Ok(())
 }

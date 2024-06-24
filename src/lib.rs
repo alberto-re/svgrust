@@ -3,6 +3,7 @@ pub mod field;
 pub mod grid;
 pub mod group;
 pub mod layout;
+pub mod pen;
 pub mod prelude;
 pub mod render;
 pub mod seed;

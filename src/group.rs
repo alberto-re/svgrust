@@ -1,3 +1,4 @@
+use crate::prelude::Pen;
 use crate::shapes::{Circle, LineString};
 use crate::style::Style;
 use crate::traits::{Contains, ToShape};
@@ -19,6 +20,10 @@ impl Group {
 
     pub fn set_style(&mut self, style: Style) {
         self.style.clone_from(&style);
+    }
+
+    pub fn set_pen(&mut self, pen: Pen) {
+        self.style.clone_from(&pen.into());
     }
 
     pub fn add<T: ToShape>(&mut self, element: T) {

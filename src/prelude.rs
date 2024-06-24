@@ -6,6 +6,7 @@ pub use crate::group::Group;
 pub use crate::layout::Orientation::{Landscape, Portrait};
 pub use crate::layout::PageLayout;
 pub use crate::map_range;
+pub use crate::pen::Pen;
 pub use crate::seed::Seed;
 pub use crate::shapes::Arc;
 pub use crate::shapes::Circle;
