@@ -33,6 +33,16 @@ impl<'a> Pen<'a> {
         Self::new("black", 0.45)
     }
 
+    /// Sakura Pigma Micron 05 - Red
+    pub fn pigma_micron_05_red() -> Self {
+        Self::new("red", 0.45)
+    }
+
+    /// Sakura Pigma Micron 05 - Blue
+    pub fn pigma_micron_05_blue() -> Self {
+        Self::new("blue", 0.45)
+    }
+
     /// Sakura Pigma Micron 08 - Black
     pub fn pigma_micron_08_black() -> Self {
         Self::new("black", 0.5)
