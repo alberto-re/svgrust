@@ -52,14 +52,13 @@ fn main() -> Result<()> {
                 curx = x + hex_side * 0.75;
             }
             let center = Vec2::new(curx, y);
-            let hx = Polygon::hexagon(center, hex_side / 2.);
+            let hx = Hexagon::new(center, hex_side / 2., Angle::zero()).to_polygon();
             let lines = truchet(&hx);
             let mut rotate = Angle::degrees((count % 3) as f64 * 60.);
             if rng.gen::<f64>() < 0.4 {
                 rotate = Angle::degrees(((count + 1) % 3) as f64 * 60.);
             }
             lines_tot.extend_from_slice(&lines.rotate(rotate));
-            // layer.add(hx);
             x += hex_side * 1.50;
         }
         y += hex_side / 2.3;
@@ -69,8 +68,8 @@ fn main() -> Result<()> {
     let center = sketch.center();
     let min_len = sketch.min_len();
     sketch.group(3).add_many(vec![
-        Polygon::hexagon(center, min_len * 0.45 + 1.).rotate(Angle::degrees(60.)),
-        Polygon::hexagon(center, min_len * 0.45 + 2.).rotate(Angle::degrees(60.)),
+        Hexagon::new(center, min_len * 0.45 + 1., Angle::degrees(30.)).to_polygon(),
+        Hexagon::new(center, min_len * 0.45 + 2., Angle::degrees(30.)).to_polygon(),
     ]);
 
     let bbox1 = Polygon::new(vec![

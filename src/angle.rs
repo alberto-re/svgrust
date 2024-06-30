@@ -20,6 +20,11 @@ impl Angle {
         Angle { radians }
     }
 
+    /// Create an angle of 0 radians - 0 degrees.
+    pub fn zero() -> Self {
+        Angle { radians: 0. }
+    }
+
     /// Create an angle of 2PI radians - 360 degrees.
     pub fn tau() -> Self {
         Angle { radians: TAU }

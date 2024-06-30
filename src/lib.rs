@@ -22,6 +22,7 @@ pub enum Shape {
     Arc(shapes::Arc),
     Circle(shapes::Circle),
     Rectangle(shapes::Rect),
+    Hexagon(shapes::Hexagon),
     LineString(shapes::LineString),
     Polygon(shapes::Polygon),
     MultiPolygon(shapes::MultiPolygon),

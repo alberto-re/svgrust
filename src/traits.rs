@@ -3,7 +3,7 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
-use crate::shapes::{Arc, Circle, LineString, MultiPolygon, Polygon, Rect, Text};
+use crate::shapes::{Arc, Circle, Hexagon, LineString, MultiPolygon, Polygon, Rect, Text};
 use crate::vec2::Vec2;
 use crate::Shape;
 use geo::algorithm::Rotate as GeoRotate;
@@ -622,5 +622,11 @@ impl ToShape for &MultiPolygon {
 impl ToShape for Text {
     fn to_shape(&self) -> Shape {
         Shape::Text(self.clone())
+    }
+}
+
+impl ToShape for Hexagon {
+    fn to_shape(&self) -> Shape {
+        Shape::Hexagon(*self)
     }
 }

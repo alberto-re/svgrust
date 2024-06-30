@@ -32,6 +32,7 @@ impl Group {
             Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
             Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
             Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
+            Shape::Hexagon(s) => self.elements.push(Shape::Hexagon(s)),
             Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
             Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
             Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
@@ -46,6 +47,7 @@ impl Group {
                 Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
                 Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
                 Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
+                Shape::Hexagon(s) => self.elements.push(Shape::Hexagon(s)),
                 Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
                 Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
                 Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
@@ -99,6 +101,9 @@ impl Group {
                 }
             }
             Shape::Polygon(_) => {
+                unreachable!();
+            }
+            Shape::Hexagon(_) => {
                 unreachable!();
             }
             Shape::MultiPolygon(_) => {

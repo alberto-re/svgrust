@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Mm, Debug::On);
     let pen1 = Pen::pigma_micron_05_black();
     let pen2 = Pen::pigma_micron_05_blue();
-    let seed = Seed::number(SEED.into());
+    let seed = Seed::number(SEED);
     let perlin = Perlin::new(seed.into());
     let noise_factor = 0.01;
 
@@ -57,19 +57,49 @@ fn main() -> Result<()> {
 
     let lines_clipped: Vec<LineString> = lines
         .par_iter()
-        .flat_map(|p| p.clip(&Rect::new(Vec2::new(15., 15.), sketch.width() * 0.7, sketch.height() - 30.).to_polygon(), false))
+        .flat_map(|p| {
+            p.clip(
+                &Rect::new(
+                    Vec2::new(15., 15.),
+                    sketch.width() * 0.7,
+                    sketch.height() - 30.,
+                )
+                .to_polygon(),
+                false,
+            )
+        })
         .collect();
     sketch.group(0).add_many(lines_clipped);
 
     let lines_clipped: Vec<LineString> = lines
         .par_iter()
-        .flat_map(|p| p.clip(&Rect::new(Vec2::new(sketch.width() * 0.7 + 16., 13.), sketch.width() * 0.05, sketch.height() - 26.).to_polygon(), false))
+        .flat_map(|p| {
+            p.clip(
+                &Rect::new(
+                    Vec2::new(sketch.width() * 0.7 + 16., 13.),
+                    sketch.width() * 0.05,
+                    sketch.height() - 26.,
+                )
+                .to_polygon(),
+                false,
+            )
+        })
         .collect();
     sketch.group(1).add_many(lines_clipped);
 
     let lines_clipped: Vec<LineString> = lines
         .par_iter()
-        .flat_map(|p| p.clip(&Rect::new(Vec2::new(sketch.width() * 0.75 + 17., 15.), sketch.width() * 0.10, sketch.height() - 30.).to_polygon(), false))
+        .flat_map(|p| {
+            p.clip(
+                &Rect::new(
+                    Vec2::new(sketch.width() * 0.75 + 17., 15.),
+                    sketch.width() * 0.10,
+                    sketch.height() - 30.,
+                )
+                .to_polygon(),
+                false,
+            )
+        })
         .collect();
     sketch.group(0).add_many(lines_clipped);
 

@@ -10,6 +10,7 @@ pub use crate::pen::Pen;
 pub use crate::seed::Seed;
 pub use crate::shapes::Arc;
 pub use crate::shapes::Circle;
+pub use crate::shapes::Hexagon;
 pub use crate::shapes::LineString;
 pub use crate::shapes::MultiPolygon;
 pub use crate::shapes::Polygon;
