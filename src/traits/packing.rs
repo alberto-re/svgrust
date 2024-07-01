@@ -10,7 +10,7 @@ impl CirclePacking for LineString {
         if self.points.len() < 3 {
             return candidates;
         }
-        if self.points[0].distance(self.points.last().unwrap()) < r + min_dist {
+        if self.points[0].distance(*self.points.last().unwrap()) < r + min_dist {
             return candidates;
         }
         for point in self.points.clone() {

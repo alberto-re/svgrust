@@ -22,7 +22,7 @@ fn main() -> Result<()> {
         ));
     }
 
-    sketch.group(0).set_pen(Pen::pigma_micron_005_black());
+    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
     sketch.render().save_default()?;
     Ok(())
 }

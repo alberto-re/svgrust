@@ -103,8 +103,8 @@ fn main() -> Result<()> {
         .collect();
     sketch.group(0).add_many(lines_clipped);
 
-    sketch.group(0).set_pen(pen1);
-    sketch.group(1).set_pen(pen2);
+    sketch.group(0).set_pen(&pen1);
+    sketch.group(1).set_pen(&pen2);
     sketch.render().save_default()?;
     Ok(())
 }

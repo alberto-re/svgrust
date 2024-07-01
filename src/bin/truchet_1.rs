@@ -22,7 +22,7 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
             for step in 0..=20 {
                 let angle_step = angle_start.lerp(angle_end, step as f64 / 20.);
                 points.push(
-                    p2 + Vec2::from_angle_length(angle_step, p23.distance(&p2) + offset as f64),
+                    p2 + Vec2::from_angle_length(angle_step, p23.distance(p2) + offset as f64),
                 );
             }
             let line = LineString::new(points);

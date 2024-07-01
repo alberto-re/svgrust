@@ -26,3 +26,9 @@ impl From<Pen<'_>> for Style {
         Self::new(val.color, &format!("{}mm", val.thickness))
     }
 }
+
+impl From<&Pen<'_>> for Style {
+    fn from(val: &Pen) -> Self {
+        Self::new(val.color, &format!("{}mm", val.thickness))
+    }
+}

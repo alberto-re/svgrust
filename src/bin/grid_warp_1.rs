@@ -46,7 +46,7 @@ fn main() -> Result<()> {
         let iters = 100;
         for cell in cells.iter_mut() {
             for _ in 0..iters {
-                let dist = cell.xy.distance(&point);
+                let dist = cell.xy.distance(point);
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
@@ -55,7 +55,7 @@ fn main() -> Result<()> {
         }
         for cell in cells2.iter_mut() {
             for _ in 0..iters {
-                let dist = cell.xy.distance(&point);
+                let dist = cell.xy.distance(point);
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
@@ -64,7 +64,7 @@ fn main() -> Result<()> {
         }
         for cell in cells3.iter_mut() {
             for _ in 0..iters {
-                let dist = cell.xy.distance(&point);
+                let dist = cell.xy.distance(point);
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);
@@ -73,7 +73,7 @@ fn main() -> Result<()> {
         }
         for cell in cells4.iter_mut() {
             for _ in 0..iters {
-                let dist = cell.xy.distance(&point);
+                let dist = cell.xy.distance(point);
                 let dist = f64::abs(dist - radius);
                 let force = map_range(dist, 0., 600., 1., 0.);
                 let force = force.powi(18);

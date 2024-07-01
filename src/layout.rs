@@ -37,18 +37,34 @@ impl PageLayout {
         )
     }
 
+    pub fn a6(orientation: Orientation) -> Self {
+        Self::new(
+            Uom::convert_scalar(5.83, Uom::In, Uom::Px),
+            Uom::convert_scalar(4.13, Uom::In, Uom::Px),
+            orientation,
+        )
+    }
+
+    pub fn a5(orientation: Orientation) -> Self {
+        Self::new(
+            Uom::convert_scalar(8.27, Uom::In, Uom::Px),
+            Uom::convert_scalar(5.83, Uom::In, Uom::Px),
+            orientation,
+        )
+    }
+
     pub fn a4(orientation: Orientation) -> Self {
         Self::new(
-            Uom::convert_scalar(11.7, Uom::In, Uom::Px),
-            Uom::convert_scalar(8.3, Uom::In, Uom::Px),
+            Uom::convert_scalar(11.69, Uom::In, Uom::Px),
+            Uom::convert_scalar(8.27, Uom::In, Uom::Px),
             orientation,
         )
     }
 
     pub fn a3(orientation: Orientation) -> Self {
         Self::new(
-            Uom::convert_scalar(16.5, Uom::In, Uom::Px),
-            Uom::convert_scalar(11.7, Uom::In, Uom::Px),
+            Uom::convert_scalar(16.54, Uom::In, Uom::Px),
+            Uom::convert_scalar(11.69, Uom::In, Uom::Px),
             orientation,
         )
     }

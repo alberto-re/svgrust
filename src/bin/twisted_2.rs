@@ -51,7 +51,7 @@ fn main() -> Result<()> {
         .collect();
 
     sketch.group(0).add_many(clipped);
-    sketch.group(0).set_pen(Pen::pigma_micron_005_black());
+    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
     sketch.render().save_default()?;
     Ok(())
 }

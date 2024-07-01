@@ -43,7 +43,7 @@ fn main() -> Result<()> {
     pset.triangulate().iter().for_each(|triangle| {
         group.add(triangle.clone());
         let times = map_range(
-            triangle.centroid().distance(&Vec2::new(100., 1000.)),
+            triangle.centroid().distance(Vec2::new(100., 1000.)),
             0.,
             300.,
             10.,

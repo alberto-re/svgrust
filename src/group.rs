@@ -22,7 +22,7 @@ impl Group {
         self.style.clone_from(&style);
     }
 
-    pub fn set_pen(&mut self, pen: Pen) {
+    pub fn set_pen(&mut self, pen: &Pen) {
         self.style.clone_from(&pen.into());
     }
 

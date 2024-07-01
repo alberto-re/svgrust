@@ -46,7 +46,7 @@ fn main() -> Result<()> {
             .add(LineString::new(pcols).chaikin(3, false));
     }
 
-    sketch.group(0).set_pen(Pen::pigma_micron_08_black());
+    sketch.group(0).set_pen(&Pen::pigma_micron_08_black());
     sketch.render().save_default()?;
     Ok(())
 }

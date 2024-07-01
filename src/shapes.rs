@@ -253,13 +253,13 @@ impl Circle {
     }
 
     pub fn overlaps(&self, other: &Circle) -> bool {
-        self.center.distance(&other.center) <= self.radius + other.radius
+        self.center.distance(other.center) <= self.radius + other.radius
     }
 
     pub fn dist(&self, other: &Circle) -> f64 {
         f64::max(
             0.,
-            self.center.distance(&other.center) - self.radius - other.radius,
+            self.center.distance(other.center) - self.radius - other.radius,
         )
     }
 
@@ -395,7 +395,7 @@ impl Hexagon {
             let n_adj_hex: usize = hexagons
                 .iter()
                 .map(|x| {
-                    if x.center.distance(&adj_center) <= x.apothem * 2.05 {
+                    if x.center.distance(adj_center) <= x.apothem * 2.05 {
                         1
                     } else {
                         0
@@ -413,14 +413,26 @@ impl Hexagon {
         hexagons
     }
 
-    pub fn to_polygon(&self) -> Polygon {
+    pub fn vertexes(&self) -> Vec<Vec2> {
         let step = TAU / 6.;
-        let points = (0..6)
+        (0..6)
             .map(|i| {
                 let theta = Angle::radians(i as f64 * step) + self.theta;
                 self.center + Vec2::from_angle_length(theta, self.side)
             })
-            .collect::<Vec<Vec2>>();
-        Polygon::new(points)
+            .collect::<Vec<Vec2>>()
+    }
+
+    pub fn sides(&self) -> Vec<(Vec2, Vec2)> {
+        let mut sides = vec![];
+        let vertexes = self.vertexes();
+        for i in 0..6 {
+            sides.push((vertexes[i], vertexes[(i + 1) % 6]))
+        }
+        sides
+    }
+
+    pub fn to_polygon(&self) -> Polygon {
+        Polygon::new(self.vertexes())
     }
 }

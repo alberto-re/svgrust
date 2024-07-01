@@ -24,6 +24,7 @@ pub use crate::traits::Centroid;
 pub use crate::traits::Chaikin;
 pub use crate::traits::Clip;
 pub use crate::traits::Contains;
+pub use crate::traits::HatchFill;
 pub use crate::traits::Lerp;
 pub use crate::traits::Rotate;
 pub use crate::traits::Sample;

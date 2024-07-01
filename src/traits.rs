@@ -3,6 +3,7 @@ pub mod packing;
 use std::f64::consts::TAU;
 
 use crate::angle::Angle;
+use crate::prelude::Pen;
 use crate::shapes::{Arc, Circle, Hexagon, LineString, MultiPolygon, Polygon, Rect, Text};
 use crate::vec2::Vec2;
 use crate::Shape;
@@ -74,6 +75,15 @@ pub trait Triangulate {
 
 pub trait Lerp {
     fn lerp(&self, other: Self, t: f64) -> Self;
+}
+
+#[derive(Clone)]
+pub enum HatchFillStrategy {
+    HorizontalLines,
+}
+
+pub trait HatchFill {
+    fn hatch_fill(&self, pen: &Pen, strategy: HatchFillStrategy) -> Vec<LineString>;
 }
 
 impl Centroid for LineString {
@@ -515,7 +525,7 @@ impl Centroid for Circle {
 
 impl Contains for Circle {
     fn contains<T: Centroid>(&self, shape: &T) -> bool {
-        self.center.distance(&shape.centroid()) < self.radius
+        self.center.distance(shape.centroid()) < self.radius
     }
 }
 
@@ -628,5 +638,42 @@ impl ToShape for Text {
 impl ToShape for Hexagon {
     fn to_shape(&self) -> Shape {
         Shape::Hexagon(*self)
+    }
+}
+
+impl ScalePerc for Hexagon {
+    fn scale_perc(&self, percentage: f64) -> Hexagon {
+        Hexagon::new(self.center, self.side * percentage, self.theta)
+    }
+}
+
+impl ScaleDist for Hexagon {
+    fn scale_dist(&self, distance: f64) -> Self {
+        Hexagon::new(self.center, self.side + distance, self.theta)
+    }
+}
+
+impl HatchFill for Hexagon {
+    fn hatch_fill(&self, pen: &Pen, strategy: HatchFillStrategy) -> Vec<LineString> {
+        let mut lines = vec![];
+        match strategy {
+            HatchFillStrategy::HorizontalLines => {
+                let square = Rect::square_with_center(self.center, self.side * 2.);
+                let mut y = self.center.y - self.side;
+                let x = square.centroid().x - self.side + pen.thickness / 2.;
+                while y < self.center.y + self.side - pen.thickness / 2. {
+                    lines.push(LineString::line(
+                        Vec2::new(x, y),
+                        Vec2::new(x + self.side * 2. + pen.thickness / 2., y),
+                    ));
+                    y += pen.thickness;
+                }
+                lines = lines
+                    .iter()
+                    .flat_map(|l| l.clip(&self.to_polygon(), false))
+                    .collect::<Vec<LineString>>();
+            }
+        }
+        lines
     }
 }

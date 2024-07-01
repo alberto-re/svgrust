@@ -32,7 +32,7 @@ fn main() -> Result<()> {
                     let mut i = 0;
                     while i < trail.points.len() {
                         let point = trail.points[i];
-                        let dist_sqrt = point.distance_squared(&pos);
+                        let dist_sqrt = point.distance_squared(pos);
                         if dist_sqrt < 9. {
                             collision = true;
                             break;
