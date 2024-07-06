@@ -79,8 +79,6 @@ impl<'a> Pen<'a> {
         Self::new("white", 0.5, 8.)
     }
 
-
-
     /// Uni Posca Metallic PC-1M - Gold
     /// The nominal thickness is 0.7mm but without applying any pressure
     /// it is half if not slightly less.

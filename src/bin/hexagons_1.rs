@@ -40,10 +40,7 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     let end_b = hex.center.lerp(vertexes[2], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }
@@ -53,10 +50,7 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     let end_b = hex.center.lerp(vertexes[4], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }
@@ -66,10 +60,7 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     let end_b = hex.center.lerp(vertexes[0], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }
@@ -102,10 +93,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     let end_a = hex.center.lerp(vertexes[2], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }
@@ -115,10 +103,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     let end_a = hex.center.lerp(vertexes[4], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }
@@ -128,10 +113,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     let end_a = hex.center.lerp(vertexes[0], 0.8);
     let mut t = 0.1;
     while t < 1. {
-        let line = LineString::line(
-            start_a.lerp(end_a, t),
-            start_b.lerp(end_b, t),
-        );
+        let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
         t = t + 0.15;
     }

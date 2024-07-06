@@ -4,16 +4,6 @@ use noise::Perlin;
 use plt::prelude::*;
 use rayon::prelude::*;
 
-// const SEED: u32 = 113;
-// const NOISE_FACTOR: f64 = 0.0007;
-// const RADIUS: f64 = 240.;
-// const SIDE: f64 = 140.;
-
-// const SEED: u32 = 169;
-// const NOISE_FACTOR: f64 = 0.0003;
-// const RADIUS: f64 = 240.;
-// const SIDE: f64 = 140.;
-
 const SEED: u32 = 120;
 const NOISE_FACTOR: f64 = 0.0005;
 const RADIUS: f64 = 240.;
@@ -21,21 +11,19 @@ const SIDE: f64 = 140.;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Px, Debug::Off);
-    let seed = Seed::number(SEED);
-    let perlin = Perlin::new(seed.into());
+    let perlin = Perlin::new(SEED);
+
+    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
 
     let mut polygons: Vec<Polygon> = vec![];
-    let mut rotation;
 
     let mut theta = Angle::radians(0.);
-
     while theta < Angle::radians(TAU * 0.999) {
         let xy = Vec2::from_angle_length(theta, RADIUS) + sketch.center() - Vec2::new(65., 70.);
-        rotation = Angle::radians(perlin.get([xy.x * NOISE_FACTOR, xy.y * NOISE_FACTOR]) * TAU);
-        let polygon = Rect::new(xy, SIDE, SIDE).to_polygon();
-        let polygon = polygon.rotate(rotation);
-        theta += Angle::radians(TAU / 400.);
+        let rotation = Angle::radians(perlin.get([xy.x * NOISE_FACTOR, xy.y * NOISE_FACTOR]) * TAU);
+        let polygon = Rect::new(xy, SIDE, SIDE).to_polygon().rotate(rotation);
         polygons.push(polygon);
+        theta += Angle::radians(TAU / 400.);
     }
 
     let clipped: Vec<LineString> = polygons
@@ -51,7 +39,6 @@ fn main() -> Result<()> {
         .collect();
 
     sketch.group(0).add_many(clipped);
-    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
     sketch.render().save_default()?;
     Ok(())
 }

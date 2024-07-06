@@ -88,6 +88,7 @@ impl Sub<Angle> for Angle {
 impl Mul<f64> for Angle {
     type Output = Angle;
 
+    /// Multiply with another Angle.
     fn mul(self, rhs: f64) -> Angle {
         Angle {
             radians: self.radians * rhs,
@@ -98,10 +99,11 @@ impl Mul<f64> for Angle {
 #[cfg(test)]
 mod tests {
     use crate::angle::Angle;
+    use rstest::rstest;
     use std::f64::consts::PI;
 
     #[test]
-    fn as_degrees() {
+    fn to_degrees() {
         let a = Angle::degrees(90.);
         let b = Angle::radians(PI / 2.);
         assert_eq!(a.to_degrees(), 90.);
@@ -109,7 +111,7 @@ mod tests {
     }
 
     #[test]
-    fn as_radians() {
+    fn to_radians() {
         let a = Angle::degrees(90.);
         let b = Angle::radians(PI / 2.);
         assert_eq!(a.to_radians(), PI / 2.);
@@ -130,10 +132,14 @@ mod tests {
         assert_eq!(a - b, Angle::degrees(0.));
     }
 
-    #[test]
-    fn lerp() {
-        let a = Angle::degrees(90.);
-        let b = Angle::degrees(270.);
-        assert_eq!(a.lerp(b, 0.5), Angle::degrees(180.));
+    #[rstest]
+    #[case(90., 270., 0.5, 180.)]
+    #[case(0., 360., 0.5, 180.)]
+    #[case(0., 360., 0.1, 36.)]
+    fn lerp(#[case] a: f64, #[case] b: f64, #[case] t: f64, #[case] expected: f64) {
+        assert_eq!(
+            Angle::degrees(a).lerp(Angle::degrees(b), t),
+            Angle::degrees(expected)
+        );
     }
 }

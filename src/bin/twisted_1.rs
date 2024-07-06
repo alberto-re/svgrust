@@ -16,8 +16,9 @@ const MAX_ROTATE_PER_SHIFT: f64 = TAU * 0.05;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::axidraw_minikit(Portrait), Uom::Mm, Debug::On);
-    let seed = Seed::number(SEED);
-    let perlin = Perlin::new(seed.into());
+    let perlin = Perlin::new(SEED);
+
+    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
 
     let mut rotation;
     let mut polygons: Vec<Polygon> = vec![];
@@ -49,7 +50,6 @@ fn main() -> Result<()> {
         .collect();
 
     sketch.group(0).add_many(clipped);
-    sketch.group(0).set_pen(&Pen::pigma_micron_005_black());
     sketch.render().save_default()?;
     Ok(())
 }
