@@ -553,6 +553,16 @@ impl Centroid for Vec2 {
     }
 }
 
+impl Centroid for Vec<Vec2> {
+    fn centroid(&self) -> Vec2 {
+        let mut somma = Vec2::new(0., 0.);
+        for point in self {
+            somma += *point;
+        }
+        somma / self.len() as f64
+    }
+}
+
 impl Triangulate for Vec<Vec2> {
     fn triangulate(&self) -> Vec<Polygon> {
         let points: Vec<delaunator::Point> = self

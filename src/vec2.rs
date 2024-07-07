@@ -1,7 +1,7 @@
 use crate::angle::Angle;
 use crate::traits::{Lerp, Translate};
 use std::f64::consts::PI;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, Mul, Sub};
 
 /// A 2 dimensional vector
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -52,16 +52,6 @@ impl Vec2 {
             Angle::radians(signed)
         }
     }
-
-    /// Multiply this vector with a scalar value
-    pub fn mul(&self, scalar: f64) -> Vec2 {
-        Vec2::new(self.x * scalar, self.y * scalar)
-    }
-
-    /// Divide this vector with a scalar value
-    pub fn div(&self, scalar: f64) -> Vec2 {
-        Vec2::new(self.x / scalar, self.y / scalar)
-    }
 }
 
 impl Add<Vec2> for Vec2 {
@@ -76,10 +66,18 @@ impl Add<Vec2> for Vec2 {
     }
 }
 
+impl AddAssign<Vec2> for Vec2 {
+    /// Add another Vec2 and assign the result to Self.
+    fn add_assign(&mut self, rhs: Vec2) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
 impl Sub<Vec2> for Vec2 {
     type Output = Vec2;
 
-    /// Subtract another vector.
+    /// Subtract another Vec2.
     fn sub(self, _rhs: Vec2) -> Vec2 {
         Vec2 {
             x: self.x - _rhs.x,
@@ -91,7 +89,7 @@ impl Sub<Vec2> for Vec2 {
 impl Mul<Vec2> for Vec2 {
     type Output = Vec2;
 
-    /// Multiply another vector.
+    /// Multiply with another Vec2.
     fn mul(self, _rhs: Vec2) -> Vec2 {
         Vec2 {
             x: self.x * _rhs.x,
@@ -103,10 +101,23 @@ impl Mul<Vec2> for Vec2 {
 impl Mul<f64> for Vec2 {
     type Output = Vec2;
 
+    /// Multiply with a f64 scalar
     fn mul(self, rhs: f64) -> Vec2 {
         Vec2 {
             x: self.x * rhs,
             y: self.y * rhs,
+        }
+    }
+}
+
+impl Div<f64> for Vec2 {
+    type Output = Vec2;
+
+    /// Divide with a f64 scalar
+    fn div(self, rhs: f64) -> Vec2 {
+        Vec2 {
+            x: self.x / rhs,
+            y: self.y / rhs,
         }
     }
 }
