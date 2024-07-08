@@ -3,7 +3,7 @@ use crate::traits::{Lerp, Translate};
 use std::f64::consts::PI;
 use std::ops::{Add, AddAssign, Div, Mul, Sub};
 
-/// A 2 dimensional vector
+/// A two-dimensional vector.
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Vec2 {
     pub x: f64,
@@ -11,28 +11,28 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
-    /// Construct a new vector using provided x and y values
+    /// Create a new `Vec2` with the provided `x` and `y` values.
     pub fn new(x: f64, y: f64) -> Self {
         Self { x, y }
     }
 
-    /// Construct a new vector using provided angle and length
-    pub fn from_angle_length(angle: Angle, length: f64) -> Self {
+    /// Create a new `Vec2` with the provided `angle` and `length`.
+    pub fn from_polar(angle: Angle, length: f64) -> Self {
         Vec2::new(angle.cos() * length, angle.sin() * length)
     }
 
-    /// Construct a new vector from a slice
+    /// Create a new `Vec2` from the first two values in `slice`.
     pub fn from_slice(slice: &[f64]) -> Self {
         Vec2::new(slice[0], slice[1])
     }
 
-    /// Calculate the euclidean distance between this and another vector
-    pub fn distance(&self, other: Vec2) -> f64 {
+    /// Compute the Euclidean distance between `self` and another `Vec2`.
+    pub fn distance(&self, other: Self) -> f64 {
         ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
     }
 
-    /// Calculate the squared euclidean distance between this and another vector
-    pub fn distance_squared(&self, other: Vec2) -> f64 {
+    /// Compute the squared Euclidean distance between `self` and another `Vec2`.
+    pub fn distance_squared(&self, other: Self) -> f64 {
         (self.x - other.x).powi(2) + (self.y - other.y).powi(2)
     }
 
@@ -43,9 +43,9 @@ impl Vec2 {
         Vec2::new(x, y)
     }
 
-    /// Calculate the angle respect another point on the plane
-    pub fn angle(&self, target: Vec2) -> Angle {
-        let signed = f64::atan2(target.y - self.y, target.x - self.x);
+    /// Compute the angle between `self` and `rhs`.
+    pub fn angle_between(&self, rhs: Vec2) -> Angle {
+        let signed = f64::atan2(rhs.y - self.y, rhs.x - self.x);
         if signed.is_sign_negative() {
             Angle::radians(PI + PI - (-1. * signed))
         } else {
@@ -138,40 +138,78 @@ impl Translate for Vec2 {
 mod tests {
     use crate::angle::Angle;
     use crate::vec2::Vec2;
+    use approx::assert_relative_eq;
+    use rstest::rstest;
 
-    #[test]
-    fn angle() {
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: 100., y: 0. };
-        assert_eq!(a.angle(b), Angle::degrees(0.));
+    const EPSILON: f64 = 0.00001;
 
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: 100., y: 100. };
-        assert_eq!(a.angle(b), Angle::degrees(45.));
+    #[rstest]
+    #[case(0., 0., 0., 0.)]
+    #[case(45., 2.82843, 2., 2.)]
+    #[case(-123.69, 3.60555, -2., -3.)]
+    #[case(56.3099, 3.60555, 2., 3.)]
+    fn from_polar(
+        #[case] angle: f64,
+        #[case] length: f64,
+        #[case] expected_x: f64,
+        #[case] expected_y: f64,
+    ) {
+        let v = Vec2::from_polar(Angle::degrees(angle), length);
+        assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
+        assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
+    }
 
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: 0., y: 100. };
-        assert_eq!(a.angle(b), Angle::degrees(90.));
+    #[rstest]
+    #[case(0., 0., 100., 0., 0.)]
+    #[case(0., 0., 100., 100., 45.)]
+    #[case(0., 0., 0., 100., 90.)]
+    #[case(0., 0., -100., 100., 135.)]
+    #[case(0., 0., -100., 0., 180.)]
+    #[case(0., 0., -100., -100., 225.)]
+    #[case(0., 0., 0., -100., 270.)]
+    #[case(0., 0., 100., -100., 315.)]
+    fn angle_between(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] expected: f64,
+    ) {
+        let a = Vec2 { x: x1, y: y1 };
+        let b = Vec2 { x: x2, y: y2 };
+        assert_eq!(a.angle_between(b), Angle::degrees(expected));
+    }
 
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: -100., y: 100. };
-        assert_eq!(a.angle(b), Angle::degrees(135.));
+    #[rstest]
+    #[case(2., 2., 2., 3., 1.)]
+    #[case(3., 2., 4., 1., 1.4142135)]
+    #[case(2., -1., -2., 2., 5.)]
+    fn distance(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] expected: f64,
+    ) {
+        let a = Vec2 { x: x1, y: y1 };
+        let b = Vec2 { x: x2, y: y2 };
+        assert_relative_eq!(a.distance(b), expected, epsilon = EPSILON);
+    }
 
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: -100., y: 0. };
-        assert_eq!(a.angle(b), Angle::degrees(180.));
-
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: -100., y: -100. };
-        assert_eq!(a.angle(b), Angle::degrees(225.));
-
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: 0., y: -100. };
-        assert_eq!(a.angle(b), Angle::degrees(270.));
-
-        let a = Vec2 { x: 0., y: 0. };
-        let b = Vec2 { x: 100., y: -100. };
-        assert_eq!(a.angle(b), Angle::degrees(315.));
+    #[rstest]
+    #[case(2., 2., 2., 3., 1.)]
+    #[case(3., 2., 4., 1., 2.)]
+    #[case(2., -1., -2., 2., 25.)]
+    fn distance_squared(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] expected: f64,
+    ) {
+        let a = Vec2 { x: x1, y: y1 };
+        let b = Vec2 { x: x2, y: y2 };
+        assert_relative_eq!(a.distance_squared(b), expected, epsilon = EPSILON);
     }
 
     #[test]

@@ -85,25 +85,25 @@ fn main() -> Result<()> {
     for cell in cells.iter_mut() {
         for _ in 0..6 {
             let xyz = Vec3::new(cell.xy.x, cell.xy.y, 0.) * noise_scale;
-            cell.xy = cell.xy + perlin_field.vec3(xyz);
+            cell.xy += perlin_field.vec3(xyz);
         }
     }
     for cell in cells2.iter_mut() {
         for _ in 0..6 {
             let xyz = Vec3::new(cell.xy.x, cell.xy.y, 0.) * noise_scale;
-            cell.xy = cell.xy + perlin_field.vec3(xyz + Vec3::new(0., 0., 0.3));
+            cell.xy += perlin_field.vec3(xyz + Vec3::new(0., 0., 0.3));
         }
     }
     for cell in cells3.iter_mut() {
         for _ in 0..6 {
             let xyz = Vec3::new(cell.xy.x, cell.xy.y, 0.) * noise_scale;
-            cell.xy = cell.xy + perlin_field.vec3(xyz + Vec3::new(0., 0., 0.6));
+            cell.xy += perlin_field.vec3(xyz + Vec3::new(0., 0., 0.6));
         }
     }
     for cell in cells4.iter_mut() {
         for _ in 0..6 {
             let xyz = Vec3::new(cell.xy.x, cell.xy.y, 0.) * noise_scale;
-            cell.xy = cell.xy + perlin_field.vec3(xyz + Vec3::new(0., 0., 1.0));
+            cell.xy += perlin_field.vec3(xyz + Vec3::new(0., 0., 1.0));
         }
     }
 

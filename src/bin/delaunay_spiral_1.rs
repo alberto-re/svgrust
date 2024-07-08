@@ -17,7 +17,7 @@ fn main() -> Result<()> {
         .iter()
         .map(|p| {
             let angle = focal_dist_angle(sketch.center(), FOCAL_MAX_DIST, *p);
-            *p + Vec2::from_angle_length(angle, DISPLACEMENT)
+            *p + Vec2::from_polar(angle, DISPLACEMENT)
         })
         .collect::<Vec<_>>();
 

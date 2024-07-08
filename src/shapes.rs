@@ -372,8 +372,7 @@ impl Hexagon {
         }
         // Pick an arbitrary adjacent hexagon. TODO: parametrize
         let mut dir_angle = Angle::degrees(30.);
-        let adj_center =
-            last.center + Vec2::from_angle_length(last.theta + dir_angle, last.apothem * 2.);
+        let adj_center = last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
         let last = Hexagon::new(adj_center, side, theta);
         hexagons.push(last);
         if n == 2 {
@@ -382,7 +381,7 @@ impl Hexagon {
 
         dir_angle += Angle::degrees(120.);
         let mut adj_center =
-            last.center + Vec2::from_angle_length(last.theta + dir_angle, last.apothem * 2.);
+            last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
         let mut last = Hexagon::new(adj_center, side, theta);
         hexagons.push(last);
         if n == 3 {
@@ -390,8 +389,7 @@ impl Hexagon {
         }
 
         for _ in 3..n {
-            adj_center =
-                last.center + Vec2::from_angle_length(last.theta + dir_angle, last.apothem * 2.);
+            adj_center = last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
             let n_adj_hex: usize = hexagons
                 .iter()
                 .map(|x| {
@@ -404,8 +402,8 @@ impl Hexagon {
                 .sum();
             if n_adj_hex < 2 {
                 dir_angle += Angle::degrees(60.);
-                adj_center = last.center
-                    + Vec2::from_angle_length(last.theta + dir_angle, last.apothem * 2.);
+                adj_center =
+                    last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
             }
             last = Hexagon::new(adj_center, side, theta);
             hexagons.push(last);
@@ -418,7 +416,7 @@ impl Hexagon {
         (0..6)
             .map(|i| {
                 let theta = Angle::radians(i as f64 * step) + self.theta;
-                self.center + Vec2::from_angle_length(theta, self.side)
+                self.center + Vec2::from_polar(theta, self.side)
             })
             .collect::<Vec<Vec2>>()
     }

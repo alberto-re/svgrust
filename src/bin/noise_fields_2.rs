@@ -23,7 +23,7 @@ fn main() -> Result<()> {
             let mut trail_points: Vec<Vec2> = vec![pos];
             for _ in 0..1000 {
                 let angle = vector_field.angle2(pos * noise_scale, PI / 4.);
-                pos = pos + Vec2::from_angle_length(angle, 5.);
+                pos += Vec2::from_polar(angle, 5.);
                 if !bbox.contains(&pos) {
                     break;
                 }

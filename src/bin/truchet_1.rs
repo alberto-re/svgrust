@@ -12,8 +12,8 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
         let p3 = hexagon.points[(i + 2) % 6];
         let p12 = p1.lerp(p2, 0.5);
         let p23 = p2.lerp(p3, 0.5);
-        let angle_start = p2.angle(p12);
-        let mut angle_end = p2.angle(p23);
+        let angle_start = p2.angle_between(p12);
+        let mut angle_end = p2.angle_between(p23);
         if f64::abs(angle_start.to_degrees() - angle_end.to_degrees()) > 180. {
             angle_end = Angle::degrees(angle_end.to_degrees() - 360.);
         }
@@ -21,9 +21,7 @@ fn truchet(hexagon: &Polygon) -> Vec<LineString> {
             let mut points: Vec<Vec2> = vec![];
             for step in 0..=20 {
                 let angle_step = angle_start.lerp(angle_end, step as f64 / 20.);
-                points.push(
-                    p2 + Vec2::from_angle_length(angle_step, p23.distance(p2) + offset as f64),
-                );
+                points.push(p2 + Vec2::from_polar(angle_step, p23.distance(p2) + offset as f64));
             }
             let line = LineString::new(points);
             linestrings.push(line);
@@ -74,23 +72,23 @@ fn main() -> Result<()> {
 
     let bbox1 = Polygon::new(vec![
         sketch.center(),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(330.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(270.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(210.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(330.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(270.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(210.), sketch.min_len() * 0.45),
     ]);
 
     let bbox2 = Polygon::new(vec![
         sketch.center(),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(330.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(30.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(90.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(330.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(30.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(90.), sketch.min_len() * 0.45),
     ]);
 
     let bbox3 = Polygon::new(vec![
         sketch.center(),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(90.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(150.), sketch.min_len() * 0.45),
-        sketch.center() + Vec2::from_angle_length(Angle::degrees(210.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(90.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(150.), sketch.min_len() * 0.45),
+        sketch.center() + Vec2::from_polar(Angle::degrees(210.), sketch.min_len() * 0.45),
     ]);
 
     let mut segments: Vec<LineString> = vec![];

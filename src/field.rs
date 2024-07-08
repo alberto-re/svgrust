@@ -72,7 +72,7 @@ impl Vector2to2 for PerlinField {
     fn vec2(&self, pos: Vec2) -> Vec2 {
         let noise_val = self.number2(pos);
         let angle = Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
-        Vec2::from_angle_length(angle, 1.)
+        Vec2::from_polar(angle, 1.)
     }
 }
 
@@ -80,7 +80,7 @@ impl Vector3to2 for PerlinField {
     fn vec3(&self, pos: Vec3) -> Vec2 {
         let noise_val = self.number3(pos);
         let angle = Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
-        Vec2::from_angle_length(angle, 1.)
+        Vec2::from_polar(angle, 1.)
     }
 }
 
@@ -116,6 +116,6 @@ impl Vector2to2 for SpiralField {
         let val = self.number2(pos);
         let angle = map_range(val, -PI, PI, 0., TAU);
         let angle = angle + PI / 2.5;
-        Vec2::from_angle_length(Angle::radians(angle), 0.5)
+        Vec2::from_polar(Angle::radians(angle), 0.5)
     }
 }

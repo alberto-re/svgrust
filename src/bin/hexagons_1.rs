@@ -42,7 +42,7 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     let start_a = hex.center.lerp(vertexes[2], 0.8);
     let start_b = hex.center.lerp(vertexes[3], 0.8);
@@ -52,7 +52,7 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     let start_a = hex.center.lerp(vertexes[4], 0.8);
     let start_b = hex.center.lerp(vertexes[5], 0.8);
@@ -62,26 +62,26 @@ fn decoration_1(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     decoration
 }
 
-fn decoration_2(hex: &Hexagon, rng: &mut StdRng) -> Vec<LineString> {
-    let mut decoration: Vec<LineString> = vec![];
-    decoration.push(LineString::line(
-        hex.center,
-        hex.center + Vec2::from_angle_length(Angle::degrees(120.), hex.apothem * 0.9),
-    ));
-    decoration.push(LineString::line(
-        hex.center,
-        hex.center + Vec2::from_angle_length(Angle::degrees(240.), hex.apothem * 0.9),
-    ));
-    decoration.push(LineString::line(
-        hex.center,
-        hex.center + Vec2::from_angle_length(Angle::degrees(360.), hex.apothem * 0.9),
-    ));
-    decoration
+fn decoration_2(hex: &Hexagon) -> Vec<LineString> {
+    vec![
+        LineString::line(
+            hex.center,
+            hex.center + Vec2::from_polar(Angle::degrees(120.), hex.apothem * 0.9),
+        ),
+        LineString::line(
+            hex.center,
+            hex.center + Vec2::from_polar(Angle::degrees(240.), hex.apothem * 0.9),
+        ),
+        LineString::line(
+            hex.center,
+            hex.center + Vec2::from_polar(Angle::degrees(360.), hex.apothem * 0.9),
+        ),
+    ]
 }
 
 fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
@@ -95,7 +95,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     let start_a = hex.center.lerp(vertexes[2], 0.8);
     let start_b = hex.center.lerp(vertexes[3], 0.8);
@@ -105,7 +105,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     let start_a = hex.center.lerp(vertexes[4], 0.8);
     let start_b = hex.center.lerp(vertexes[5], 0.8);
@@ -115,7 +115,7 @@ fn decoration_3(hex: &Hexagon) -> Vec<LineString> {
     while t < 1. {
         let line = LineString::line(start_a.lerp(end_a, t), start_b.lerp(end_b, t));
         decoration.push(line.clone());
-        t = t + 0.15;
+        t += 0.15;
     }
     decoration
 }
@@ -184,17 +184,15 @@ fn main() -> Result<()> {
 
     hexagons.iter().for_each(|h| {
         if rng.gen::<f64>() < 0.05 {
-            decorations.append(&mut decoration_1(&h));
+            decorations.append(&mut decoration_1(h));
+        } else if rng.gen::<f64>() < 0.05 {
+            decorations.append(&mut decoration_3(h));
         } else {
-            if rng.gen::<f64>() < 0.05 {
-                decorations.append(&mut decoration_3(&h));
-            } else {
-                if rng.gen::<f64>() < 0.1 {
-                    decorations.append(&mut decoration_2(&h, &mut rng));
-                }
-                if rng.gen::<f64>() < 0.5 {
-                    decorations.append(&mut decoration_4(&h, &mut rng));
-                }
+            if rng.gen::<f64>() < 0.1 {
+                decorations.append(&mut decoration_2(h));
+            }
+            if rng.gen::<f64>() < 0.5 {
+                decorations.append(&mut decoration_4(h, &mut rng));
             }
         }
     });

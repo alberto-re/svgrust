@@ -9,8 +9,8 @@ path = "src/lib.rs"
 
 [dependencies]
 anyhow = "1.0.79"
+approx = "0.5.1"
 cargo-watch = "8.5.2"
-clap = { version = "4.4.17", features = ["derive"] }
 delaunator = "1.0.2"
 fast_poisson = "1.0.0"
 geo = "0.27.0"

@@ -18,7 +18,7 @@ fn main() -> Result<()> {
         .sample_poisson2d(POISSON_RADIUS, SEED)
         .iter()
         .filter(|p| p.distance(circle.center) < circle.radius)
-        .map(|p| *p)
+        .copied()
         .collect::<Vec<Vec2>>();
 
     points.append(&mut circle.to_polygon(CIRCUMFERENCE_N_SAMPLE).points);
@@ -42,18 +42,18 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn merge_adjacent(left: &Polygon, right: &Polygon) -> Polygon {
-    let mut points: Vec<Vec2> = vec![];
-    points.append(&mut left.points.clone());
-    points.append(&mut right.points.clone());
-    
-    let center_point = points.centroid();
+// fn merge_adjacent(left: &Polygon, right: &Polygon) -> Polygon {
+//     let mut points: Vec<Vec2> = vec![];
+//     points.append(&mut left.points.clone());
+//     points.append(&mut right.points.clone());
+//
+//     let center_point = points.centroid();
+//
+//     // points = points.iter().map(|p|).collect();
+//     Polygon::new(vec![])
+// }
 
-    points = points.iter().map(|p|).collect();
-    Polygon::new(vec![])
-}
-
-fn find_adjacent(index: usize, triangles: &Vec<Polygon>) -> Option<usize> {
+fn find_adjacent(index: usize, triangles: &[Polygon]) -> Option<usize> {
     let left_edges = triangles[index].edges();
     for (otherindex, other) in triangles.iter().enumerate() {
         if otherindex == index {
