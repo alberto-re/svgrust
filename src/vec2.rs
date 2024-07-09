@@ -36,11 +36,17 @@ impl Vec2 {
         (self.x - other.x).powi(2) + (self.y - other.y).powi(2)
     }
 
-    /// TODO: maybe rotate around origin and chain with translate?
-    pub fn rotate(&self, center: Vec2, theta: Angle) -> Self {
-        let x = theta.cos() * (self.x - center.x) - theta.sin() * (self.y - center.y) + center.x;
-        let y = theta.sin() * (self.x - center.x) + theta.cos() * (self.y - center.y) + center.y;
-        Vec2::new(x, y)
+    /// Rotate `self` around the origin by `angle`.
+    pub fn rotate(&self, angle: Angle) -> Self {
+        Vec2::new(
+            angle.cos() * self.x - angle.sin() * self.y,
+            angle.sin() * self.x + angle.cos() * self.y,
+        )
+    }
+
+    /// Rotate `self` around `center` by `angle`.
+    pub fn rotate_around(&self, center: Vec2, angle: Angle) -> Self {
+        (*self - center).rotate(angle) + center
     }
 
     /// Compute the angle between `self` and `rhs`.
@@ -160,27 +166,6 @@ mod tests {
     }
 
     #[rstest]
-    #[case(0., 0., 100., 0., 0.)]
-    #[case(0., 0., 100., 100., 45.)]
-    #[case(0., 0., 0., 100., 90.)]
-    #[case(0., 0., -100., 100., 135.)]
-    #[case(0., 0., -100., 0., 180.)]
-    #[case(0., 0., -100., -100., 225.)]
-    #[case(0., 0., 0., -100., 270.)]
-    #[case(0., 0., 100., -100., 315.)]
-    fn angle_between(
-        #[case] x1: f64,
-        #[case] y1: f64,
-        #[case] x2: f64,
-        #[case] y2: f64,
-        #[case] expected: f64,
-    ) {
-        let a = Vec2 { x: x1, y: y1 };
-        let b = Vec2 { x: x2, y: y2 };
-        assert_eq!(a.angle_between(b), Angle::degrees(expected));
-    }
-
-    #[rstest]
     #[case(2., 2., 2., 3., 1.)]
     #[case(3., 2., 4., 1., 1.4142135)]
     #[case(2., -1., -2., 2., 5.)]
@@ -210,6 +195,64 @@ mod tests {
         let a = Vec2 { x: x1, y: y1 };
         let b = Vec2 { x: x2, y: y2 };
         assert_relative_eq!(a.distance_squared(b), expected, epsilon = EPSILON);
+    }
+
+    #[rstest]
+    #[case(0., 2., 90., -2., 0.)]
+    #[case(0., 2., 180., 0., -2.)]
+    #[case(0., 2., 270., 2., 0.)]
+    #[case(0., 2., 360., 0., 2.)]
+    fn rotate(
+        #[case] x: f64,
+        #[case] y: f64,
+        #[case] angle: f64,
+        #[case] expected_x: f64,
+        #[case] expected_y: f64,
+    ) {
+        let v = Vec2::new(x, y).rotate(Angle::degrees(angle));
+        assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
+        assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
+    }
+
+    #[rstest]
+    #[case(0., 2., 0., 4., 90., 2., 4.)]
+    #[case(0., 2., 0., 4., 180., 0., 6.)]
+    #[case(0., 2., 0., 4., 270., -2., 4.)]
+    #[case(0., 2., 0., 4., 360., 0., 2.)]
+    fn rotate_around(
+        #[case] x: f64,
+        #[case] y: f64,
+        #[case] center_x: f64,
+        #[case] center_y: f64,
+        #[case] angle: f64,
+        #[case] expected_x: f64,
+        #[case] expected_y: f64,
+    ) {
+        let center = Vec2::new(center_x, center_y);
+        let v = Vec2::new(x, y).rotate_around(center, Angle::degrees(angle));
+        assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
+        assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
+    }
+
+    #[rstest]
+    #[case(0., 0., 100., 0., 0.)]
+    #[case(0., 0., 100., 100., 45.)]
+    #[case(0., 0., 0., 100., 90.)]
+    #[case(0., 0., -100., 100., 135.)]
+    #[case(0., 0., -100., 0., 180.)]
+    #[case(0., 0., -100., -100., 225.)]
+    #[case(0., 0., 0., -100., 270.)]
+    #[case(0., 0., 100., -100., 315.)]
+    fn angle_between(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] expected: f64,
+    ) {
+        let a = Vec2 { x: x1, y: y1 };
+        let b = Vec2 { x: x2, y: y2 };
+        assert_eq!(a.angle_between(b), Angle::degrees(expected));
     }
 
     #[test]

@@ -606,7 +606,7 @@ impl Rotate for Vec<LineString> {
                 linestring
                     .points
                     .iter()
-                    .map(|point| point.rotate(centroid, angle))
+                    .map(|point| point.rotate_around(centroid, angle))
                     .collect::<Vec<Vec2>>(),
             );
             newvec.push(newlinestring);
