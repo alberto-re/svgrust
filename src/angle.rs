@@ -1,5 +1,6 @@
+use crate::traits::Lerp;
 use std::f64::consts::{PI, TAU};
-use std::ops::{Add, AddAssign, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// An abstract representation of an angle.
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
@@ -20,46 +21,46 @@ impl Angle {
         Angle { radians }
     }
 
-    /// Create an angle of 0 radians - 0 degrees.
+    /// Create a new `Angle` that measures 0 degrees.
     pub fn zero() -> Self {
         Angle { radians: 0. }
     }
 
-    /// Create an angle of 2PI radians - 360 degrees.
+    /// Create a new `Angle` that measures 360 degrees.
     pub fn tau() -> Self {
         Angle { radians: TAU }
     }
 
-    /// Return this angle expressed in degrees.
+    /// Return the measure of the `Angle` expressed in degrees.
     pub fn to_degrees(&self) -> f64 {
         self.radians * 180. / PI
     }
 
-    /// Return this angle expressed in radians.
+    /// Return the measure of the `Angle` expressed in radians.
     pub fn to_radians(&self) -> f64 {
         self.radians
     }
 
-    /// Calculate the sine of this angle.
+    /// Calculate the sine of this `Angle`.
     pub fn sin(&self) -> f64 {
         self.radians.sin()
     }
 
-    /// Calculate the cosine of this angle.
+    /// Calculate the cosine of this `Angle`.
     pub fn cos(&self) -> f64 {
         self.radians.cos()
     }
+}
 
-    /// Interpolate linearly between two Angles.
-    pub fn lerp(&self, other: Angle, t: f64) -> Self {
-        *self + (other - *self) * t
+impl Lerp for Angle {
+    fn lerp(&self, rhs: Self, t: f64) -> Self {
+        *self + (rhs - *self) * t
     }
 }
 
 impl Add<Angle> for Angle {
     type Output = Angle;
 
-    /// Add another Angle.
     fn add(self, _rhs: Angle) -> Angle {
         Angle {
             radians: self.radians + _rhs.radians,
@@ -68,7 +69,6 @@ impl Add<Angle> for Angle {
 }
 
 impl AddAssign<Angle> for Angle {
-    /// Add another Angle and assign the result to Self.
     fn add_assign(&mut self, rhs: Angle) {
         self.radians += rhs.radians
     }
@@ -77,7 +77,6 @@ impl AddAssign<Angle> for Angle {
 impl Sub<Angle> for Angle {
     type Output = Angle;
 
-    /// Subtract another Angle.
     fn sub(self, _rhs: Angle) -> Angle {
         Angle {
             radians: self.radians - _rhs.radians,
@@ -85,22 +84,52 @@ impl Sub<Angle> for Angle {
     }
 }
 
+impl SubAssign<Angle> for Angle {
+    fn sub_assign(&mut self, rhs: Angle) {
+        self.radians -= rhs.radians
+    }
+}
+
+impl Div<f64> for Angle {
+    type Output = Angle;
+
+    fn div(self, rhs: f64) -> Angle {
+        Angle::from_radians(self.radians / rhs)
+    }
+}
+
+impl DivAssign<f64> for Angle {
+    fn div_assign(&mut self, rhs: f64) {
+        self.radians /= rhs;
+    }
+}
+
 impl Mul<f64> for Angle {
     type Output = Angle;
 
-    /// Multiply with another Angle.
     fn mul(self, rhs: f64) -> Angle {
-        Angle {
-            radians: self.radians * rhs,
-        }
+        Angle::from_radians(self.radians * rhs)
+    }
+}
+
+impl MulAssign<f64> for Angle {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.radians *= rhs;
     }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::angle::Angle;
+    use crate::traits::Lerp;
     use rstest::rstest;
     use std::f64::consts::PI;
+
+    #[test]
+    fn from_degrees() {
+        let a = Angle::from_degrees(90.);
+        assert_eq!(a.radians, PI / 2.);
+    }
 
     #[test]
     fn to_degrees() {
@@ -118,20 +147,6 @@ mod tests {
         assert_eq!(b.to_radians(), PI / 2.);
     }
 
-    #[test]
-    fn add() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_degrees(90.);
-        assert_eq!(a + b, Angle::from_degrees(180.));
-    }
-
-    #[test]
-    fn sub() {
-        let a = Angle::from_degrees(90.);
-        let b = Angle::from_degrees(90.);
-        assert_eq!(a - b, Angle::from_degrees(0.));
-    }
-
     #[rstest]
     #[case(90., 270., 0.5, 180.)]
     #[case(0., 360., 0.5, 180.)]
@@ -141,5 +156,83 @@ mod tests {
             Angle::from_degrees(a).lerp(Angle::from_degrees(b), t),
             Angle::from_degrees(expected)
         );
+    }
+
+    #[rstest]
+    #[case(90., 90., 180.)]
+    #[case(90., 270., 360.)]
+    #[case(90., -180., -90.)]
+    #[case(270., 270., 540.)]
+    fn add_angle(#[case] a: f64, #[case] b: f64, #[case] expected: f64) {
+        assert_eq!(
+            Angle::from_degrees(a) + Angle::from_degrees(b),
+            Angle::from_degrees(expected)
+        );
+    }
+
+    #[rstest]
+    #[case(90., 90., 180.)]
+    #[case(90., 270., 360.)]
+    #[case(90., -180., -90.)]
+    #[case(270., 270., 540.)]
+    fn add_assign_angle(#[case] a: f64, #[case] b: f64, #[case] expected: f64) {
+        let mut theta = Angle::from_degrees(a);
+        theta += Angle::from_degrees(b);
+        assert_eq!(theta, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(90., 90., 0.)]
+    #[case(90., 270., -180.)]
+    #[case(90., -180., 270.)]
+    #[case(270., 270., 0.)]
+    fn sub_angle(#[case] a: f64, #[case] b: f64, #[case] expected: f64) {
+        assert_eq!(
+            Angle::from_degrees(a) - Angle::from_degrees(b),
+            Angle::from_degrees(expected)
+        );
+    }
+
+    #[rstest]
+    #[case(90., 90., 0.)]
+    #[case(90., 270., -180.)]
+    #[case(90., -180., 270.)]
+    #[case(270., 270., 0.)]
+    fn sub_assign_angle(#[case] a: f64, #[case] b: f64, #[case] expected: f64) {
+        let mut theta = Angle::from_degrees(a);
+        theta -= Angle::from_degrees(b);
+        assert_eq!(theta, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(90., 2., 45.)]
+    #[case(360., 2., 180.)]
+    fn div_f64(#[case] a: f64, #[case] rhs: f64, #[case] expected: f64) {
+        assert_eq!(Angle::from_degrees(a) / rhs, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(90., 2., 45.)]
+    #[case(360., 2., 180.)]
+    fn div_assign_f64(#[case] a: f64, #[case] rhs: f64, #[case] expected: f64) {
+        let mut theta = Angle::from_degrees(a);
+        theta /= rhs;
+        assert_eq!(theta, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(90., 2., 180.)]
+    #[case(360., 2., 720.)]
+    fn mul_f64(#[case] a: f64, #[case] rhs: f64, #[case] expected: f64) {
+        assert_eq!(Angle::from_degrees(a) * rhs, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(90., 2., 180.)]
+    #[case(360., 2., 720.)]
+    fn mul_assign_f64(#[case] a: f64, #[case] rhs: f64, #[case] expected: f64) {
+        let mut theta = Angle::from_degrees(a);
+        theta *= rhs;
+        assert_eq!(theta, Angle::from_degrees(expected));
     }
 }

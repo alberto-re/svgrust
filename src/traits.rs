@@ -73,8 +73,10 @@ pub trait Triangulate {
     fn triangulate(&self) -> Vec<Polygon>;
 }
 
+/// A trait providing a method to interpolate linearly with another `Self`.
 pub trait Lerp {
-    fn lerp(&self, other: Self, t: f64) -> Self;
+    /// Compute the linear interpolation between `self` and `rhs`.
+    fn lerp(&self, rhs: Self, t: f64) -> Self;
 }
 
 #[derive(Clone)]
