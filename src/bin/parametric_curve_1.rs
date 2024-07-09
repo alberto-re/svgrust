@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     let points = curve
         .points(711, 1.)
         .iter()
-        .map(|p| p.translate(sketch.as_rect().centroid()))
+        .map(|p| *p + sketch.as_rect().centroid())
         .collect::<Vec<Vec2>>();
 
     sketch.group(0).add(&LineString::new(points));

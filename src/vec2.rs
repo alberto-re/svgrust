@@ -1,7 +1,7 @@
 use crate::angle::Angle;
-use crate::traits::{Lerp, Translate};
+use crate::traits::Lerp;
 use std::f64::consts::PI;
-use std::ops::{Add, AddAssign, Div, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// A two-dimensional vector.
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -63,7 +63,6 @@ impl Vec2 {
 impl Add<Vec2> for Vec2 {
     type Output = Vec2;
 
-    /// Add another vector.
     fn add(self, _rhs: Vec2) -> Vec2 {
         Vec2 {
             x: self.x + _rhs.x,
@@ -73,17 +72,32 @@ impl Add<Vec2> for Vec2 {
 }
 
 impl AddAssign<Vec2> for Vec2 {
-    /// Add another Vec2 and assign the result to Self.
     fn add_assign(&mut self, rhs: Vec2) {
         self.x += rhs.x;
         self.y += rhs.y;
     }
 }
 
+impl Div<Vec2> for Vec2 {
+    type Output = Vec2;
+
+    fn div(self, _rhs: Vec2) -> Vec2 {
+        Vec2 {
+            x: self.x / _rhs.x,
+            y: self.y / _rhs.y,
+        }
+    }
+}
+
+impl DivAssign<Vec2> for Vec2 {
+    fn div_assign(&mut self, rhs: Vec2) {
+        self.x /= rhs.x;
+        self.y /= rhs.y;
+    }
+}
 impl Sub<Vec2> for Vec2 {
     type Output = Vec2;
 
-    /// Subtract another Vec2.
     fn sub(self, _rhs: Vec2) -> Vec2 {
         Vec2 {
             x: self.x - _rhs.x,
@@ -92,10 +106,16 @@ impl Sub<Vec2> for Vec2 {
     }
 }
 
+impl SubAssign<Vec2> for Vec2 {
+    fn sub_assign(&mut self, rhs: Vec2) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+    }
+}
+
 impl Mul<Vec2> for Vec2 {
     type Output = Vec2;
 
-    /// Multiply with another Vec2.
     fn mul(self, _rhs: Vec2) -> Vec2 {
         Vec2 {
             x: self.x * _rhs.x,
@@ -104,22 +124,34 @@ impl Mul<Vec2> for Vec2 {
     }
 }
 
-impl Mul<f64> for Vec2 {
+impl MulAssign<Vec2> for Vec2 {
+    fn mul_assign(&mut self, rhs: Vec2) {
+        self.x *= rhs.x;
+        self.y *= rhs.y;
+    }
+}
+
+impl Add<f64> for Vec2 {
     type Output = Vec2;
 
-    /// Multiply with a f64 scalar
-    fn mul(self, rhs: f64) -> Vec2 {
+    fn add(self, rhs: f64) -> Vec2 {
         Vec2 {
-            x: self.x * rhs,
-            y: self.y * rhs,
+            x: self.x + rhs,
+            y: self.y + rhs,
         }
+    }
+}
+
+impl AddAssign<f64> for Vec2 {
+    fn add_assign(&mut self, rhs: f64) {
+        self.x += rhs;
+        self.y += rhs;
     }
 }
 
 impl Div<f64> for Vec2 {
     type Output = Vec2;
 
-    /// Divide with a f64 scalar
     fn div(self, rhs: f64) -> Vec2 {
         Vec2 {
             x: self.x / rhs,
@@ -128,15 +160,52 @@ impl Div<f64> for Vec2 {
     }
 }
 
-impl Lerp for Vec2 {
-    fn lerp(&self, other: Self, t: f64) -> Self {
-        Vec2::new(self.x.lerp(other.x, t), self.y.lerp(other.y, t))
+impl DivAssign<f64> for Vec2 {
+    fn div_assign(&mut self, rhs: f64) {
+        self.x /= rhs;
+        self.y /= rhs;
     }
 }
 
-impl Translate for Vec2 {
-    fn translate(&self, displacement: Vec2) -> Self {
-        *self + displacement
+impl Mul<f64> for Vec2 {
+    type Output = Vec2;
+
+    fn mul(self, rhs: f64) -> Vec2 {
+        Vec2 {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
+
+impl MulAssign<f64> for Vec2 {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.x *= rhs;
+        self.y *= rhs;
+    }
+}
+
+impl Sub<f64> for Vec2 {
+    type Output = Vec2;
+
+    fn sub(self, rhs: f64) -> Vec2 {
+        Vec2 {
+            x: self.x - rhs,
+            y: self.y - rhs,
+        }
+    }
+}
+
+impl SubAssign<f64> for Vec2 {
+    fn sub_assign(&mut self, rhs: f64) {
+        self.x -= rhs;
+        self.y -= rhs;
+    }
+}
+
+impl Lerp for Vec2 {
+    fn lerp(&self, other: Self, t: f64) -> Self {
+        Vec2::new(self.x.lerp(other.x, t), self.y.lerp(other.y, t))
     }
 }
 
@@ -192,9 +261,9 @@ mod tests {
         #[case] y2: f64,
         #[case] expected: f64,
     ) {
-        let a = Vec2 { x: x1, y: y1 };
-        let b = Vec2 { x: x2, y: y2 };
-        assert_relative_eq!(a.distance_squared(b), expected, epsilon = EPSILON);
+        let v1 = Vec2::new(x1, y1);
+        let v2 = Vec2::new(x2, y2);
+        assert_relative_eq!(v1.distance_squared(v2), expected, epsilon = EPSILON);
     }
 
     #[rstest]
@@ -250,22 +319,124 @@ mod tests {
         #[case] y2: f64,
         #[case] expected: f64,
     ) {
-        let a = Vec2 { x: x1, y: y1 };
-        let b = Vec2 { x: x2, y: y2 };
-        assert_eq!(a.angle_between(b), Angle::degrees(expected));
+        let v1 = Vec2::new(x1, y1);
+        let v2 = Vec2::new(x2, y2);
+        assert_eq!(v1.angle_between(v2), Angle::degrees(expected));
     }
 
     #[test]
-    fn add() {
-        let a = Vec2 { x: 2., y: 3. };
-        let b = Vec2 { x: 4., y: 7. };
-        assert_eq!(a + b, Vec2 { x: 6., y: 10. });
+    fn add_vec() {
+        let v1 = Vec2::new(2., 3.);
+        let v2 = Vec2::new(4., 7.);
+        assert_eq!(v1 + v2, Vec2::new(6., 10.));
     }
 
     #[test]
-    fn sub() {
-        let a = Vec2 { x: 2., y: 3. };
-        let b = Vec2 { x: 4., y: 7. };
-        assert_eq!(a - b, Vec2 { x: -2., y: -4. });
+    fn add_assign_vec() {
+        let mut v = Vec2::new(2., 3.);
+        v += Vec2::new(4., 7.);
+        assert_eq!(v, Vec2::new(6., 10.));
+    }
+
+    #[test]
+    fn div_vec() {
+        let v1 = Vec2::new(2., 10.);
+        let v2 = Vec2::new(2., 2.5);
+        assert_eq!(v1 / v2, Vec2::new(1., 4.));
+    }
+
+    #[test]
+    fn div_assign_vec() {
+        let mut v = Vec2::new(2., 10.);
+        v /= Vec2::new(2., 2.5);
+        assert_eq!(v, Vec2::new(1., 4.));
+    }
+
+    #[test]
+    fn mul_vec() {
+        let v1 = Vec2::new(2., 10.);
+        let v2 = Vec2::new(2., 2.5);
+        assert_eq!(v1 * v2, Vec2::new(4., 25.));
+    }
+
+    #[test]
+    fn mul_assign_vec() {
+        let mut v = Vec2::new(2., 10.);
+        v *= Vec2::new(2., 2.5);
+        assert_eq!(v, Vec2::new(4., 25.));
+    }
+
+    #[test]
+    fn sub_vec() {
+        let v1 = Vec2::new(2., 10.);
+        let v2 = Vec2::new(2., 2.5);
+        assert_eq!(v1 - v2, Vec2::new(0., 7.5));
+    }
+
+    #[test]
+    fn sub_assign_vec() {
+        let mut v = Vec2::new(2., 10.);
+        v -= Vec2::new(2., 2.5);
+        assert_eq!(v, Vec2::new(0., 7.5));
+    }
+
+    #[test]
+    fn add_f64() {
+        let v = Vec2::new(2., 3.) + 1.5;
+        assert_relative_eq!(v.x, 3.5, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 4.5, epsilon = EPSILON);
+    }
+
+    #[test]
+    fn add_assign_f64() {
+        let mut v = Vec2::new(2., 3.);
+        v += 1.5;
+        assert_relative_eq!(v.x, 3.5, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 4.5, epsilon = EPSILON);
+    }
+
+    #[test]
+    fn div_f64() {
+        let v = Vec2::new(2., 3.) / 1.5;
+        assert_relative_eq!(v.x, 1.33333, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 2., epsilon = EPSILON);
+    }
+
+    #[test]
+    fn div_assign_f64() {
+        let mut v = Vec2::new(2., 3.);
+        v /= 1.5;
+        assert_relative_eq!(v.x, 1.33333, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 2., epsilon = EPSILON);
+    }
+
+    #[test]
+    fn mul_f64() {
+        let v = Vec2::new(2., 3.) * 1.5;
+        assert_relative_eq!(v.x, 3.0, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 4.5, epsilon = EPSILON);
+    }
+
+    #[test]
+    fn mul_assign_f64() {
+        let mut v = Vec2::new(2., 3.);
+        v *= 1.5;
+        assert_relative_eq!(v.x, 3.0, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 4.5, epsilon = EPSILON);
+    }
+
+    #[test]
+    fn sub_f64() {
+        let v = Vec2::new(2., 3.) - 1.5;
+        assert_relative_eq!(v.x, 0.5, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 1.5, epsilon = EPSILON);
+    }
+
+    #[test]
+    fn sub_assign_f64() {
+        let mut v = Vec2::new(2., 3.);
+        v -= 1.5;
+        assert_relative_eq!(v.x, 0.5, epsilon = EPSILON);
+        assert_relative_eq!(v.y, 1.5, epsilon = EPSILON);
     }
 }
