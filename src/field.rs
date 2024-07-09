@@ -46,10 +46,10 @@ impl Scalar2 for PerlinField {
     fn angle2(&self, pos: Vec2, increment: f64) -> Angle {
         let noise_val = self.number2(pos);
         if increment == 0. {
-            return Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+            return Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
         }
         let angle = PI * noise_val;
-        Angle::radians((angle / increment).round() * increment)
+        Angle::from_radians((angle / increment).round() * increment)
     }
 }
 
@@ -61,17 +61,17 @@ impl Scalar3 for PerlinField {
     fn angle3(&self, pos: Vec3, increment: f64) -> Angle {
         let noise_val = self.number3(pos);
         if increment == 0. {
-            return Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+            return Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
         }
         let angle = PI * noise_val;
-        Angle::radians((angle / increment).round() * increment)
+        Angle::from_radians((angle / increment).round() * increment)
     }
 }
 
 impl Vector2to2 for PerlinField {
     fn vec2(&self, pos: Vec2) -> Vec2 {
         let noise_val = self.number2(pos);
-        let angle = Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+        let angle = Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
         Vec2::from_polar(angle, 1.)
     }
 }
@@ -79,7 +79,7 @@ impl Vector2to2 for PerlinField {
 impl Vector3to2 for PerlinField {
     fn vec3(&self, pos: Vec3) -> Vec2 {
         let noise_val = self.number3(pos);
-        let angle = Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+        let angle = Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
         Vec2::from_polar(angle, 1.)
     }
 }
@@ -104,10 +104,10 @@ impl Scalar2 for SpiralField {
     fn angle2(&self, pos: Vec2, increment: f64) -> Angle {
         let noise_val = self.number2(pos);
         if increment == 0. {
-            return Angle::radians(map_range(noise_val, -1., 1., 0., TAU));
+            return Angle::from_radians(map_range(noise_val, -1., 1., 0., TAU));
         }
         let angle = PI * noise_val;
-        Angle::radians((angle / increment).round() * increment)
+        Angle::from_radians((angle / increment).round() * increment)
     }
 }
 
@@ -116,6 +116,6 @@ impl Vector2to2 for SpiralField {
         let val = self.number2(pos);
         let angle = map_range(val, -PI, PI, 0., TAU);
         let angle = angle + PI / 2.5;
-        Vec2::from_polar(Angle::radians(angle), 0.5)
+        Vec2::from_polar(Angle::from_radians(angle), 0.5)
     }
 }

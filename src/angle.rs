@@ -1,22 +1,22 @@
 use std::f64::consts::{PI, TAU};
 use std::ops::{Add, AddAssign, Mul, Sub};
 
-/// An abstract represenation of an angle.
+/// An abstract representation of an angle.
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Angle {
     pub radians: f64,
 }
 
 impl Angle {
-    /// Create an angle from a value in degrees.
-    pub fn degrees(degrees: f64) -> Self {
+    /// Create a new `Angle` with the provided `degrees`.
+    pub fn from_degrees(degrees: f64) -> Self {
         Angle {
             radians: degrees * PI / 180.,
         }
     }
 
-    /// Create an angle from a value in radians.
-    pub fn radians(radians: f64) -> Self {
+    /// Create a new `Angle` with the provided `radians`.
+    pub fn from_radians(radians: f64) -> Self {
         Angle { radians }
     }
 
@@ -104,32 +104,32 @@ mod tests {
 
     #[test]
     fn to_degrees() {
-        let a = Angle::degrees(90.);
-        let b = Angle::radians(PI / 2.);
+        let a = Angle::from_degrees(90.);
+        let b = Angle::from_radians(PI / 2.);
         assert_eq!(a.to_degrees(), 90.);
         assert_eq!(b.to_degrees(), 90.);
     }
 
     #[test]
     fn to_radians() {
-        let a = Angle::degrees(90.);
-        let b = Angle::radians(PI / 2.);
+        let a = Angle::from_degrees(90.);
+        let b = Angle::from_radians(PI / 2.);
         assert_eq!(a.to_radians(), PI / 2.);
         assert_eq!(b.to_radians(), PI / 2.);
     }
 
     #[test]
     fn add() {
-        let a = Angle::degrees(90.);
-        let b = Angle::degrees(90.);
-        assert_eq!(a + b, Angle::degrees(180.));
+        let a = Angle::from_degrees(90.);
+        let b = Angle::from_degrees(90.);
+        assert_eq!(a + b, Angle::from_degrees(180.));
     }
 
     #[test]
     fn sub() {
-        let a = Angle::degrees(90.);
-        let b = Angle::degrees(90.);
-        assert_eq!(a - b, Angle::degrees(0.));
+        let a = Angle::from_degrees(90.);
+        let b = Angle::from_degrees(90.);
+        assert_eq!(a - b, Angle::from_degrees(0.));
     }
 
     #[rstest]
@@ -138,8 +138,8 @@ mod tests {
     #[case(0., 360., 0.1, 36.)]
     fn lerp(#[case] a: f64, #[case] b: f64, #[case] t: f64, #[case] expected: f64) {
         assert_eq!(
-            Angle::degrees(a).lerp(Angle::degrees(b), t),
-            Angle::degrees(expected)
+            Angle::from_degrees(a).lerp(Angle::from_degrees(b), t),
+            Angle::from_degrees(expected)
         );
     }
 }

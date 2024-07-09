@@ -31,11 +31,11 @@ fn main() -> Result<()> {
     for row_index in 0..row_count {
         let y = min_y + row_index as f64 * (SIDE + ROW_SPACING);
         let mut x = MARGIN_X_MIN;
-        rotation = Angle::radians(perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]) * TAU);
+        rotation = Angle::from_radians(perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]) * TAU);
         while x < sketch.width() - MARGIN_X_MIN - SIDE * 0.9 {
             let polygon = Rect::new(Vec2::new(x, y), SIDE, SIDE).to_polygon();
             let noise_value = perlin.get([x * NOISE_FACTOR, y * NOISE_FACTOR, t]);
-            rotation += Angle::radians(noise_value * MAX_ROTATE_PER_SHIFT);
+            rotation += Angle::from_radians(noise_value * MAX_ROTATE_PER_SHIFT);
             let polygon = polygon.rotate(rotation);
             polygons.push(polygon);
             x += X_STEP;

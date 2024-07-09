@@ -371,7 +371,7 @@ impl Hexagon {
             return hexagons;
         }
         // Pick an arbitrary adjacent hexagon. TODO: parametrize
-        let mut dir_angle = Angle::degrees(30.);
+        let mut dir_angle = Angle::from_degrees(30.);
         let adj_center = last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
         let last = Hexagon::new(adj_center, side, theta);
         hexagons.push(last);
@@ -379,7 +379,7 @@ impl Hexagon {
             return hexagons;
         }
 
-        dir_angle += Angle::degrees(120.);
+        dir_angle += Angle::from_degrees(120.);
         let mut adj_center =
             last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
         let mut last = Hexagon::new(adj_center, side, theta);
@@ -401,7 +401,7 @@ impl Hexagon {
                 })
                 .sum();
             if n_adj_hex < 2 {
-                dir_angle += Angle::degrees(60.);
+                dir_angle += Angle::from_degrees(60.);
                 adj_center =
                     last.center + Vec2::from_polar(last.theta + dir_angle, last.apothem * 2.);
             }
@@ -415,7 +415,7 @@ impl Hexagon {
         let step = TAU / 6.;
         (0..6)
             .map(|i| {
-                let theta = Angle::radians(i as f64 * step) + self.theta;
+                let theta = Angle::from_radians(i as f64 * step) + self.theta;
                 self.center + Vec2::from_polar(theta, self.side)
             })
             .collect::<Vec<Vec2>>()

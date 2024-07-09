@@ -17,13 +17,14 @@ fn main() -> Result<()> {
 
     let mut polygons: Vec<Polygon> = vec![];
 
-    let mut theta = Angle::radians(0.);
-    while theta < Angle::radians(TAU * 0.999) {
+    let mut theta = Angle::from_radians(0.);
+    while theta < Angle::from_radians(TAU * 0.999) {
         let xy = Vec2::from_polar(theta, RADIUS) + sketch.center() - Vec2::new(65., 70.);
-        let rotation = Angle::radians(perlin.get([xy.x * NOISE_FACTOR, xy.y * NOISE_FACTOR]) * TAU);
+        let rotation =
+            Angle::from_radians(perlin.get([xy.x * NOISE_FACTOR, xy.y * NOISE_FACTOR]) * TAU);
         let polygon = Rect::new(xy, SIDE, SIDE).to_polygon().rotate(rotation);
         polygons.push(polygon);
-        theta += Angle::radians(TAU / 400.);
+        theta += Angle::from_radians(TAU / 400.);
     }
 
     let clipped: Vec<LineString> = polygons

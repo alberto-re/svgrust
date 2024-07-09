@@ -53,10 +53,16 @@ impl Vec2 {
     pub fn angle_between(&self, rhs: Vec2) -> Angle {
         let signed = f64::atan2(rhs.y - self.y, rhs.x - self.x);
         if signed.is_sign_negative() {
-            Angle::radians(PI + PI - (-1. * signed))
+            Angle::from_radians(PI + PI - (-1. * signed))
         } else {
-            Angle::radians(signed)
+            Angle::from_radians(signed)
         }
+    }
+}
+
+impl Lerp for Vec2 {
+    fn lerp(&self, rhs: Self, t: f64) -> Self {
+        Vec2::new(self.x.lerp(rhs.x, t), self.y.lerp(rhs.y, t))
     }
 }
 
@@ -203,15 +209,10 @@ impl SubAssign<f64> for Vec2 {
     }
 }
 
-impl Lerp for Vec2 {
-    fn lerp(&self, other: Self, t: f64) -> Self {
-        Vec2::new(self.x.lerp(other.x, t), self.y.lerp(other.y, t))
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use crate::angle::Angle;
+    use crate::traits::Lerp;
     use crate::vec2::Vec2;
     use approx::assert_relative_eq;
     use rstest::rstest;
@@ -229,7 +230,7 @@ mod tests {
         #[case] expected_x: f64,
         #[case] expected_y: f64,
     ) {
-        let v = Vec2::from_polar(Angle::degrees(angle), length);
+        let v = Vec2::from_polar(Angle::from_degrees(angle), length);
         assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
         assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
     }
@@ -278,7 +279,7 @@ mod tests {
         #[case] expected_x: f64,
         #[case] expected_y: f64,
     ) {
-        let v = Vec2::new(x, y).rotate(Angle::degrees(angle));
+        let v = Vec2::new(x, y).rotate(Angle::from_degrees(angle));
         assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
         assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
     }
@@ -298,7 +299,7 @@ mod tests {
         #[case] expected_y: f64,
     ) {
         let center = Vec2::new(center_x, center_y);
-        let v = Vec2::new(x, y).rotate_around(center, Angle::degrees(angle));
+        let v = Vec2::new(x, y).rotate_around(center, Angle::from_degrees(angle));
         assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
         assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
     }
@@ -321,7 +322,25 @@ mod tests {
     ) {
         let v1 = Vec2::new(x1, y1);
         let v2 = Vec2::new(x2, y2);
-        assert_eq!(v1.angle_between(v2), Angle::degrees(expected));
+        assert_eq!(v1.angle_between(v2), Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(2., 2., 4., 4., 0.5, 3., 3.)]
+    fn lerp(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] t: f64,
+        #[case] expected_x: f64,
+        #[case] expected_y: f64,
+    ) {
+        let v1 = Vec2::new(x1, y1);
+        let v2 = Vec2::new(x2, y2);
+        let v3 = v1.lerp(v2, t);
+        assert_relative_eq!(v3.x, expected_x, epsilon = EPSILON);
+        assert_relative_eq!(v3.y, expected_y, epsilon = EPSILON);
     }
 
     #[test]

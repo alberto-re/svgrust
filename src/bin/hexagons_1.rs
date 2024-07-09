@@ -71,15 +71,15 @@ fn decoration_2(hex: &Hexagon) -> Vec<LineString> {
     vec![
         LineString::line(
             hex.center,
-            hex.center + Vec2::from_polar(Angle::degrees(120.), hex.apothem * 0.9),
+            hex.center + Vec2::from_polar(Angle::from_degrees(120.), hex.apothem * 0.9),
         ),
         LineString::line(
             hex.center,
-            hex.center + Vec2::from_polar(Angle::degrees(240.), hex.apothem * 0.9),
+            hex.center + Vec2::from_polar(Angle::from_degrees(240.), hex.apothem * 0.9),
         ),
         LineString::line(
             hex.center,
-            hex.center + Vec2::from_polar(Angle::degrees(360.), hex.apothem * 0.9),
+            hex.center + Vec2::from_polar(Angle::from_degrees(360.), hex.apothem * 0.9),
         ),
     ]
 }
@@ -161,7 +161,7 @@ fn main() -> Result<()> {
     // a4 = 91
     // a3 = 130
     let mut hexagons: Vec<Hexagon> =
-        Hexagon::spiral(sketch.center(), HEX_SIDE, Angle::degrees(0.), 91);
+        Hexagon::spiral(sketch.center(), HEX_SIDE, Angle::from_degrees(0.), 91);
 
     let pen_fill_1 = Pen::pigma_micron_05_blue();
     let pen_fill_2 = Pen::pigma_micron_05_purple();
