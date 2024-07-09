@@ -1,12 +1,16 @@
+/// A pen, marker, pencil.. or just anything that a pen-plotter can use to draw.
 #[derive(Clone, PartialEq)]
 pub struct Pen<'a> {
+    /// The color of the stroke. Can be anything CSS understands.
     pub color: &'a str,
-    ///  TODO: add nominal thicknews
+    /// The thickness of the stroke expressed in the `Uom` of the `Sketch`.
     pub thickness: f64,
+    /// The diameter of the physical pen.
     pub diameter: f64,
 }
 
 impl<'a> Pen<'a> {
+    /// Create a new `Pen` with given `color, `thickness` and `diameter`.
     pub fn new(color: &'a str, thickness: f64, diameter: f64) -> Self {
         Self {
             color,
@@ -66,43 +70,31 @@ impl<'a> Pen<'a> {
     }
 
     /// Uni-Ball Signo Broad - Gold
-    /// The nominal thickness is 0.7mm but without applying any pressure
-    /// it is half if not slightly less.
     pub fn uniball_signo_broad_gold() -> Self {
         Self::new("gold", 0.5, 8.)
     }
 
     /// Uni-Ball Signo Broad - White
-    /// The nominal thickness is 0.7mm but without applying any pressure
-    /// it is half if not slightly less.
     pub fn uniball_signo_broad_white() -> Self {
         Self::new("white", 0.5, 8.)
     }
 
     /// Uni Posca Metallic PC-1M - Gold
-    /// The nominal thickness is 0.7mm but without applying any pressure
-    /// it is half if not slightly less.
     pub fn uniposca_metallic_pc1m_gold() -> Self {
         Self::new("gold", 0.5, 1.4)
     }
 
     /// Stabilo Pen 68/46 - Black
-    /// The nominal thickness is 1mm but without applying any pressure
-    /// it is half if not slightly less.
     pub fn stabilo_pen_68_46_black() -> Self {
         Self::new("rgba(0, 0, 0, 0.9)", 0.5, 7.0)
     }
 
     /// Stabilo Pen 68/51 - Turquoise
-    /// The nominal thickness is 1mm but without applying any pressure
-    /// it is half if not slightly less.
     pub fn stabilo_pen_68_51_turquoise() -> Self {
         Self::new("rgba(42, 148, 146, 0.9)", 0.5, 7.0)
     }
 
     /// Molotow ONE4ALL 161 - Shock blue middle
-    /// The nominal thickness is 2mm but without applying any pressure
-    /// it is just about half.
     pub fn molotow_one4all_161_shock_blue_middle() -> Self {
         Self::new("rgba(0, 131, 187, 1.0)", 1.2, 8.0)
     }
