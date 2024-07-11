@@ -1,6 +1,6 @@
 use crate::angle::Angle;
 use crate::traits::Lerp;
-use std::f64::consts::PI;
+use std::f64::consts::TAU;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// A two-dimensional vector.
@@ -11,19 +11,33 @@ pub struct Vec2 {
 }
 
 impl Vec2 {
+    pub const ZERO: Self = Self { x: 0., y: 0. };
+
     /// Create a new `Vec2` with the provided `x` and `y` values.
     pub fn new(x: f64, y: f64) -> Self {
         Self { x, y }
     }
 
-    /// Create a new `Vec2` with the provided `angle` and `length`.
-    pub fn from_polar(angle: Angle, length: f64) -> Self {
-        Vec2::new(angle.cos() * length, angle.sin() * length)
+    /// Create a new `Vec2` with the provided `angle` and `distance`.
+    pub fn from_polar(angle: Angle, distance: f64) -> Self {
+        Vec2::new(angle.cos() * distance, angle.sin() * distance)
     }
 
     /// Create a new `Vec2` from the first two values in `slice`.
     pub fn from_slice(slice: &[f64]) -> Self {
         Vec2::new(slice[0], slice[1])
+    }
+
+    /// Convert `self` to polar coordinates.
+    pub fn to_polar(&self) -> (Angle, f64) {
+        let distance = self.distance(Vec2::ZERO);
+        let signed = f64::atan2(self.y, self.x);
+        let angle = if signed.is_sign_negative() {
+            Angle::from_radians(TAU - (-1. * signed))
+        } else {
+            Angle::from_radians(signed)
+        };
+        (angle, distance)
     }
 
     /// Compute the Euclidean distance between `self` and another `Vec2`.
@@ -53,7 +67,7 @@ impl Vec2 {
     pub fn angle_between(&self, rhs: Vec2) -> Angle {
         let signed = f64::atan2(rhs.y - self.y, rhs.x - self.x);
         if signed.is_sign_negative() {
-            Angle::from_radians(PI + PI - (-1. * signed))
+            Angle::from_radians(TAU - (-1. * signed))
         } else {
             Angle::from_radians(signed)
         }
@@ -233,6 +247,24 @@ mod tests {
         let v = Vec2::from_polar(Angle::from_degrees(angle), length);
         assert_relative_eq!(v.x, expected_x, epsilon = EPSILON);
         assert_relative_eq!(v.y, expected_y, epsilon = EPSILON);
+    }
+
+    #[rstest]
+    #[case(0., 0., 0., 0.)]
+    #[case(2., 2., 45., 2.82842)]
+    #[case(-2., 2., 135., 2.82842)]
+    #[case(-2., -2., 225., 2.82842)]
+    #[case(2., -2., 315., 2.82842)]
+    fn to_polar(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] expected_angle: f64,
+        #[case] expected_distance: f64,
+    ) {
+        let v = Vec2::new(x1, y1);
+        let (angle, distance) = v.to_polar();
+        assert_eq!(angle, Angle::from_degrees(expected_angle));
+        assert_relative_eq!(distance, expected_distance, epsilon = EPSILON);
     }
 
     #[rstest]
