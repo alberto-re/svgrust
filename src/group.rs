@@ -1,5 +1,6 @@
 use crate::prelude::Pen;
-use crate::shapes::{Circle, LineString};
+use crate::shapes::circle::Circle;
+use crate::shapes::linestring::LineString;
 use crate::style::Style;
 use crate::traits::{Contains, ToShape};
 use crate::Shape;
@@ -30,12 +31,10 @@ impl Group {
         let shape = element.to_shape();
         match shape {
             Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
-            Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
             Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
             Shape::Hexagon(s) => self.elements.push(Shape::Hexagon(s)),
             Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
             Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
-            Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
             Shape::Text(s) => self.elements.push(Shape::Text(s)),
         }
     }
@@ -45,12 +44,10 @@ impl Group {
             let shape = element.to_shape();
             match shape {
                 Shape::Circle(s) => self.elements.push(Shape::Circle(s)),
-                Shape::Arc(s) => self.elements.push(Shape::Arc(s)),
                 Shape::Rectangle(s) => self.elements.push(Shape::Rectangle(s)),
                 Shape::Hexagon(s) => self.elements.push(Shape::Hexagon(s)),
                 Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
                 Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
-                Shape::MultiPolygon(s) => self.elements.push(Shape::MultiPolygon(s)),
                 Shape::Text(s) => self.elements.push(Shape::Text(s)),
             }
         }
@@ -83,9 +80,6 @@ impl Group {
             Shape::Circle(_) => {
                 unreachable!();
             }
-            Shape::Arc(_) => {
-                unreachable!();
-            }
             Shape::Rectangle(s) => {
                 if bbox.contains(s) {
                     inside.add(s.clone());
@@ -104,9 +98,6 @@ impl Group {
                 unreachable!();
             }
             Shape::Hexagon(_) => {
-                unreachable!();
-            }
-            Shape::MultiPolygon(_) => {
                 unreachable!();
             }
             Shape::Text(_) => {

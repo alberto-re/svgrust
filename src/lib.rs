@@ -19,13 +19,11 @@ use traits::Lerp;
 
 #[derive(Clone)]
 pub enum Shape {
-    Arc(shapes::Arc),
-    Circle(shapes::Circle),
-    Rectangle(shapes::Rect),
-    Hexagon(shapes::Hexagon),
-    LineString(shapes::LineString),
-    Polygon(shapes::Polygon),
-    MultiPolygon(shapes::MultiPolygon),
+    Circle(shapes::circle::Circle),
+    Rectangle(shapes::rectangle::Rect),
+    Hexagon(shapes::hexagon::Hexagon),
+    LineString(shapes::linestring::LineString),
+    Polygon(shapes::polygon::Polygon),
     Text(shapes::Text),
 }
 

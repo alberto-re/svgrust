@@ -2,7 +2,7 @@ use anyhow::Result;
 use plt::prelude::*;
 
 const SEED: u64 = 123;
-const POISSON_RADIUS: f64 = 5.;
+const POISSON_RADIUS: f64 = 10.;
 const RADIUS_TO_MINLEN_RATIO: f64 = 0.4;
 const CIRCUMFERENCE_N_SAMPLE: usize = 40;
 

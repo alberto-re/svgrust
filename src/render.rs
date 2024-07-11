@@ -1,11 +1,7 @@
-use std::f64::consts::PI;
-use std::f64::consts::TAU;
-
 use crate::sketch::Sketch;
 use crate::uom::Uom;
 use crate::vec2::Vec2;
 use crate::Shape;
-use geo::coord;
 use std::time::Instant;
 use svg::node::element::path::Data;
 use svg::Document;
@@ -99,42 +95,6 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                         data = data.line_to((p.x, p.y));
                     }
                     data = data.close();
-                    let e = svg::node::element::Path::new().set("d", data);
-                    group = group.add(e);
-                }
-                Shape::MultiPolygon(s) => {
-                    for polygon in s.polygons.clone() {
-                        let points_uom = polygon
-                            .points
-                            .iter()
-                            .map(|p| Uom::convert_vec2(*p, sketch.uom, Uom::Px))
-                            .collect::<Vec<Vec2>>();
-                        let mut data = Data::new().move_to((points_uom[0].x, points_uom[0].y));
-                        for p in points_uom[1..].iter() {
-                            data = data.line_to((p.x, p.y));
-                        }
-                        data = data.close();
-                        let e = svg::node::element::Path::new().set("d", data);
-                        group = group.add(e);
-                    }
-                }
-                Shape::Arc(s) => {
-                    let center_uom = Uom::convert_vec2(s.center, sketch.uom, Uom::Px);
-                    let radius_uom = Uom::convert_scalar(s.radius, sketch.uom, Uom::Px);
-                    let p1 = coord! {
-                        x: center_uom.x + s.start.cos() * radius_uom,
-                        y: center_uom.y + s.start.sin() * radius_uom,
-                    };
-                    let p2 = coord! {
-                        x: center_uom.x + s.end.cos() * radius_uom,
-                        y: center_uom.y + s.end.sin() * radius_uom,
-                    };
-                    let arc_size = if s.end > s.start { s.end } else { s.end + TAU } - s.start;
-                    let large_arc = if arc_size > PI { 1 } else { 0 };
-                    let arc_parameters = (radius_uom, radius_uom, 0., large_arc, 1, p2.x, p2.y);
-                    let data = Data::new()
-                        .move_to((p1.x, p1.y))
-                        .elliptical_arc_to(arc_parameters);
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }

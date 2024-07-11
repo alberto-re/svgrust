@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use crate::group::Group;
 use crate::render::render_svg;
-use crate::shapes::Rect;
+use crate::shapes::rectangle::Rect;
 use crate::traits::Centroid;
 use crate::uom::Uom;
 use crate::vec2::Vec2;

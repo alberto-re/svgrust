@@ -4,7 +4,12 @@ use std::f64::consts::TAU;
 
 use crate::angle::Angle;
 use crate::prelude::Pen;
-use crate::shapes::{Arc, Circle, Hexagon, LineString, MultiPolygon, Polygon, Rect, Text};
+use crate::shapes::circle::Circle;
+use crate::shapes::hexagon::Hexagon;
+use crate::shapes::linestring::LineString;
+use crate::shapes::polygon::Polygon;
+use crate::shapes::rectangle::Rect;
+use crate::shapes::Text;
 use crate::vec2::Vec2;
 use crate::Shape;
 use geo::algorithm::Rotate as GeoRotate;
@@ -614,30 +619,6 @@ impl Rotate for Vec<LineString> {
             newvec.push(newlinestring);
         });
         newvec
-    }
-}
-
-impl ToShape for Arc {
-    fn to_shape(&self) -> Shape {
-        Shape::Arc(self.clone())
-    }
-}
-
-impl ToShape for &Arc {
-    fn to_shape(&self) -> Shape {
-        Shape::Arc(Arc::new(self.center, self.radius, self.start, self.end))
-    }
-}
-
-impl ToShape for MultiPolygon {
-    fn to_shape(&self) -> Shape {
-        Shape::MultiPolygon(self.clone())
-    }
-}
-
-impl ToShape for &MultiPolygon {
-    fn to_shape(&self) -> Shape {
-        Shape::MultiPolygon(MultiPolygon::new(self.polygons.clone()))
     }
 }
 
