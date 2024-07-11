@@ -24,7 +24,13 @@ fn main() -> Result<()> {
     let triangles = points.triangulate();
 
     let bbox = sketch.as_rect().scale_perc(0.9).to_polygon();
-    sketch.group(0).add_many(triangles.clip(&bbox));
+    sketch.group(0).add_many(
+        triangles
+            .iter()
+            .map(|t| t.to_polygon())
+            .collect::<Vec<_>>()
+            .clip(&bbox),
+    );
     sketch.render().save_default()?;
     Ok(())
 }

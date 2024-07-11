@@ -9,6 +9,7 @@ use crate::shapes::hexagon::Hexagon;
 use crate::shapes::linestring::LineString;
 use crate::shapes::polygon::Polygon;
 use crate::shapes::rectangle::Rect;
+use crate::shapes::triangle::Triangle;
 use crate::shapes::Text;
 use crate::vec2::Vec2;
 use crate::Shape;
@@ -75,7 +76,7 @@ pub trait ToShape {
 }
 
 pub trait Triangulate {
-    fn triangulate(&self) -> Vec<Polygon>;
+    fn triangulate(&self) -> Vec<Triangle>;
 }
 
 /// A trait providing a method to interpolate linearly with another `Self`.
@@ -571,18 +572,18 @@ impl Centroid for Vec<Vec2> {
 }
 
 impl Triangulate for Vec<Vec2> {
-    fn triangulate(&self) -> Vec<Polygon> {
+    fn triangulate(&self) -> Vec<Triangle> {
         let points: Vec<delaunator::Point> = self
             .iter()
             .map(|v| delaunator::Point { x: v.x, y: v.y })
             .collect();
         let triangulation = delaunator::triangulate(&points);
-        let mut triangles: Vec<Polygon> = vec![];
+        let mut triangles = vec![];
         for i in (0..triangulation.triangles.len()).step_by(3) {
             let p1 = &points[triangulation.triangles[i]];
             let p2 = &points[triangulation.triangles[i + 1]];
             let p3 = &points[triangulation.triangles[i + 2]];
-            triangles.push(Polygon::triangle(
+            triangles.push(Triangle::new(
                 Vec2::new(p1.x, p1.y),
                 Vec2::new(p2.x, p2.y),
                 Vec2::new(p3.x, p3.y),
@@ -619,6 +620,12 @@ impl Rotate for Vec<LineString> {
             newvec.push(newlinestring);
         });
         newvec
+    }
+}
+
+impl ToShape for Triangle {
+    fn to_shape(&self) -> Shape {
+        Shape::Triangle(*self)
     }
 }
 

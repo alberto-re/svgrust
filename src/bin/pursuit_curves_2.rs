@@ -1,5 +1,6 @@
 use anyhow::Result;
-use plt::{prelude::*, traits::Triangulate};
+use plt::prelude::*;
+use plt::traits::Triangulate;
 
 fn pursuit_polygons_times(polygon: &Polygon, t: f64, t_step: f64, times: usize) -> Vec<Polygon> {
     if times == 0 {
@@ -40,19 +41,22 @@ fn main() -> Result<()> {
             .for_each(|p| pset.push(*p));
     }
 
-    pset.triangulate().iter().for_each(|triangle| {
-        group.add(triangle.clone());
-        let times = map_range(
-            triangle.centroid().distance(Vec2::new(100., 1000.)),
-            0.,
-            300.,
-            10.,
-            15.,
-        );
-        sketch
-            .group(0)
-            .add_many(pursuit_polygons_times(triangle, 0.06, 0.0, times as usize));
-    });
+    pset.triangulate()
+        .iter()
+        .map(|t| t.to_polygon())
+        .for_each(|triangle| {
+            group.add(triangle.clone());
+            let times = map_range(
+                triangle.centroid().distance(Vec2::new(100., 1000.)),
+                0.,
+                300.,
+                10.,
+                15.,
+            );
+            sketch
+                .group(0)
+                .add_many(pursuit_polygons_times(&triangle, 0.06, 0.0, times as usize));
+        });
 
     sketch.group(0).set_style(Style::new("black", "0.5mm"));
     sketch.render().save_default()?;

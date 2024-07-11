@@ -69,6 +69,23 @@ pub fn render_svg(sketch: &Sketch) -> Document {
                     let e = svg::node::element::Path::new().set("d", data);
                     group = group.add(e);
                 }
+                Shape::Triangle(s) => {
+                    // TODO: maybe use polygon instead of path?
+                    // TODO: avoid code duplication
+                    let poly = s.to_polygon();
+                    let points_uom = poly
+                        .points
+                        .iter()
+                        .map(|p| Uom::convert_vec2(*p, sketch.uom, Uom::Px))
+                        .collect::<Vec<Vec2>>();
+                    let mut data = Data::new().move_to((points_uom[0].x, points_uom[0].y));
+                    for p in points_uom[1..].iter() {
+                        data = data.line_to((p.x, p.y));
+                    }
+                    data = data.close();
+                    let e = svg::node::element::Path::new().set("d", data);
+                    group = group.add(e);
+                }
                 Shape::LineString(s) => {
                     // TODO: maybe use polyline instead of path?
                     let points_uom = s

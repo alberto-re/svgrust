@@ -25,6 +25,7 @@ pub enum Shape {
     LineString(shapes::linestring::LineString),
     Polygon(shapes::polygon::Polygon),
     Text(shapes::Text),
+    Triangle(shapes::triangle::Triangle),
 }
 
 pub fn map_range(n: f64, start1: f64, stop1: f64, start2: f64, stop2: f64) -> f64 {

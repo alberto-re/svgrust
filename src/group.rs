@@ -1,8 +1,7 @@
 use crate::prelude::Pen;
-use crate::shapes::circle::Circle;
 use crate::shapes::linestring::LineString;
 use crate::style::Style;
-use crate::traits::{Contains, ToShape};
+use crate::traits::ToShape;
 use crate::Shape;
 
 #[derive(Clone)]
@@ -36,6 +35,7 @@ impl Group {
             Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
             Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
             Shape::Text(s) => self.elements.push(Shape::Text(s)),
+            Shape::Triangle(s) => self.elements.push(Shape::Triangle(s)),
         }
     }
 
@@ -49,6 +49,7 @@ impl Group {
                 Shape::LineString(s) => self.elements.push(Shape::LineString(s)),
                 Shape::Polygon(s) => self.elements.push(Shape::Polygon(s)),
                 Shape::Text(s) => self.elements.push(Shape::Text(s)),
+                Shape::Triangle(s) => self.elements.push(Shape::Triangle(s)),
             }
         }
     }
@@ -61,50 +62,6 @@ impl Group {
             }
         });
         lstrs
-    }
-
-    pub fn circles(&self) -> Vec<Circle> {
-        let mut circles = vec![];
-        self.elements.iter().for_each(|e| {
-            if let Shape::Circle(s) = e {
-                circles.push(*s)
-            }
-        });
-        circles
-    }
-
-    pub fn split_shape<T: Contains>(&self, bbox: &T) -> (Group, Group) {
-        let mut inside = Group::default();
-        let mut outside = Group::default();
-        self.elements.iter().for_each(|e| match e {
-            Shape::Circle(_) => {
-                unreachable!();
-            }
-            Shape::Rectangle(s) => {
-                if bbox.contains(s) {
-                    inside.add(s.clone());
-                } else {
-                    outside.add(s.clone());
-                }
-            }
-            Shape::LineString(s) => {
-                if bbox.contains(s) {
-                    inside.add(s.clone());
-                } else {
-                    outside.add(s.clone());
-                }
-            }
-            Shape::Polygon(_) => {
-                unreachable!();
-            }
-            Shape::Hexagon(_) => {
-                unreachable!();
-            }
-            Shape::Text(_) => {
-                unreachable!();
-            }
-        });
-        (inside, outside)
     }
 }
 

@@ -13,6 +13,7 @@ pub use crate::shapes::hexagon::Hexagon;
 pub use crate::shapes::linestring::LineString;
 pub use crate::shapes::polygon::Polygon;
 pub use crate::shapes::rectangle::Rect;
+pub use crate::shapes::triangle::Triangle;
 pub use crate::shapes::Text;
 pub use crate::sketch::Debug;
 pub use crate::sketch::Sketch;

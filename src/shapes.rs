@@ -3,6 +3,7 @@ pub mod hexagon;
 pub mod linestring;
 pub mod polygon;
 pub mod rectangle;
+pub mod triangle;
 
 use crate::shapes::linestring::LineString;
 use crate::vec2::Vec2;
