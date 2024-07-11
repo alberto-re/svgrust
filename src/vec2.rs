@@ -72,6 +72,16 @@ impl Vec2 {
             Angle::from_radians(signed)
         }
     }
+
+    /// Return a new `Vec2` containing the absolute value of each component of `self`.
+    pub fn abs(&self) -> Self {
+        Vec2::new(self.x.abs(), self.y.abs())
+    }
+
+    /// Compute the sum of all components of `self`.
+    pub fn sum(&self) -> f64 {
+        self.x + self.y
+    }
 }
 
 impl Lerp for Vec2 {
@@ -355,6 +365,26 @@ mod tests {
         let v1 = Vec2::new(x1, y1);
         let v2 = Vec2::new(x2, y2);
         assert_eq!(v1.angle_between(v2), Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(0., 0., 0., 0.)]
+    #[case(-1., 1., 1., 1.)]
+    #[case(-1., -1., 1., 1.)]
+    fn abs(#[case] x: f64, #[case] y: f64, #[case] expected_x: f64, #[case] expected_y: f64) {
+        let v = Vec2::new(x, y).abs();
+        assert_eq!(v.x, expected_x);
+        assert_eq!(v.y, expected_y);
+    }
+
+    #[rstest]
+    #[case(0., 0., 0.)]
+    #[case(2., 2., 4.)]
+    #[case(-1., 2., 1.)]
+    #[case(-1., -3., -4.)]
+    fn sum(#[case] x: f64, #[case] y: f64, #[case] expected: f64) {
+        let v = Vec2::new(x, y);
+        assert_eq!(v.sum(), expected);
     }
 
     #[rstest]

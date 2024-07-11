@@ -2,9 +2,9 @@ use anyhow::Result;
 use plt::prelude::*;
 
 const SEED: u64 = 123;
-const POISSON_RADIUS: f64 = 3.;
+const POISSON_RADIUS: f64 = 5.;
 const RADIUS_TO_MINLEN_RATIO: f64 = 0.4;
-const CIRCUMFERENCE_N_SAMPLE: usize = 100;
+const CIRCUMFERENCE_N_SAMPLE: usize = 40;
 
 fn main() -> Result<()> {
     let mut sketch = Sketch::new(&PageLayout::a4(Portrait), Uom::Mm, Debug::On);
@@ -25,50 +25,8 @@ fn main() -> Result<()> {
 
     let triangles = points.triangulate();
 
-    let chosen = 100;
-    let adj = find_adjacent(chosen, &triangles);
-    if let Some(adja) = adj {
-        println!("Found");
-        sketch.group(1).add(triangles[adja].clone());
-    } else {
-        println!("Not found");
-    }
-
-    sketch.group(1).add(triangles[chosen].clone());
-
     sketch.group(0).add_many(triangles);
 
     sketch.render().save_default()?;
     Ok(())
-}
-
-// fn merge_adjacent(left: &Polygon, right: &Polygon) -> Polygon {
-//     let mut points: Vec<Vec2> = vec![];
-//     points.append(&mut left.points.clone());
-//     points.append(&mut right.points.clone());
-//
-//     let center_point = points.centroid();
-//
-//     // points = points.iter().map(|p|).collect();
-//     Polygon::new(vec![])
-// }
-
-fn find_adjacent(index: usize, triangles: &[Polygon]) -> Option<usize> {
-    let left_edges = triangles[index].edges();
-    for (otherindex, other) in triangles.iter().enumerate() {
-        if otherindex == index {
-            continue;
-        }
-        let right_edges = other.edges();
-        for ledge in &left_edges {
-            for redge in &right_edges {
-                if ledge.0.distance(redge.0) + ledge.1.distance(redge.1) < 0.01
-                    || ledge.1.distance(redge.0) + ledge.0.distance(redge.1) < 0.01
-                {
-                    return Some(otherindex);
-                }
-            }
-        }
-    }
-    None
 }
