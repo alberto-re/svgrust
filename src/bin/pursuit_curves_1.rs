@@ -12,7 +12,7 @@ fn pursuit_polygons_times(polygon: &Polygon, t: f64, t_step: f64, times: usize) 
     fn pursuit_once(polygon: &Polygon, t: f64) -> Polygon {
         let mut vecs = vec![];
         for edge in polygon.edges() {
-            let newvec = edge.0.lerp(edge.1, t);
+            let newvec = edge.v1.lerp(edge.v2, t);
             vecs.push(newvec);
         }
         Polygon::new(vecs)

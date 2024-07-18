@@ -1,9 +1,10 @@
 use crate::traits::Lerp;
+use std::cmp::Ordering;
 use std::f64::consts::{PI, TAU};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// An abstract representation of an angle.
-#[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Angle {
     pub radians: f64,
 }
@@ -118,12 +119,36 @@ impl MulAssign<f64> for Angle {
     }
 }
 
+impl Eq for Angle {}
+
+impl PartialOrd for Angle {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Angle {
+    fn cmp(&self, other: &Self) -> Ordering {
+        if self.radians.is_nan() || other.radians.is_nan() {
+            unreachable!()
+        }
+        if self.radians < other.radians {
+            Ordering::Less
+        } else if self.radians > other.radians {
+            Ordering::Greater
+        } else {
+            Ordering::Equal
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::angle::Angle;
     use crate::traits::Lerp;
     use rstest::rstest;
-    use std::f64::consts::PI;
+    use std::cmp::Ordering;
+    use std::f64::consts::{PI, TAU};
 
     #[test]
     fn from_degrees() {
@@ -234,5 +259,31 @@ mod tests {
         let mut theta = Angle::from_degrees(a);
         theta *= rhs;
         assert_eq!(theta, Angle::from_degrees(expected));
+    }
+
+    #[rstest]
+    #[case(1., 1., Some(Ordering::Equal))]
+    #[case(2., 1., Some(Ordering::Greater))]
+    #[case(1., 2., Some(Ordering::Less))]
+    fn partial_cmp(#[case] a: f64, #[case] b: f64, #[case] expected: Option<Ordering>) {
+        assert_eq!(f64::partial_cmp(&a, &b), expected);
+    }
+
+    #[test]
+    fn sort() {
+        let mut angles = vec![
+            Angle::from_radians(TAU),
+            Angle::from_radians(PI * 0.5),
+            Angle::from_radians(PI * 1.5),
+            Angle::from_radians(PI * 1.0),
+        ];
+        angles.sort();
+        let expected = vec![
+            Angle::from_radians(PI * 0.5),
+            Angle::from_radians(PI * 1.0),
+            Angle::from_radians(PI * 1.5),
+            Angle::from_radians(TAU),
+        ];
+        assert_eq!(angles, expected);
     }
 }

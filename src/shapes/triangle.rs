@@ -2,7 +2,7 @@ use crate::shapes::polygon::Polygon;
 use crate::vec2::Vec2;
 
 /// A triangle represented by three vertexes.
-#[derive(Clone, PartialEq, Copy)]
+#[derive(Clone, PartialEq, Copy, Debug)]
 pub struct Triangle {
     pub a: Vec2,
     pub b: Vec2,

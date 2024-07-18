@@ -1,4 +1,5 @@
 pub mod circle;
+pub mod edge;
 pub mod hexagon;
 pub mod linestring;
 pub mod polygon;

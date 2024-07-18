@@ -1,6 +1,7 @@
 use crate::angle::Angle;
 use crate::traits::Lerp;
 use std::f64::consts::TAU;
+use std::iter::Sum;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// A two-dimensional vector.
@@ -230,6 +231,15 @@ impl SubAssign<f64> for Vec2 {
     fn sub_assign(&mut self, rhs: f64) {
         self.x -= rhs;
         self.y -= rhs;
+    }
+}
+
+impl Sum<Vec2> for Vec2 {
+    fn sum<I: Iterator<Item = Vec2>>(iter: I) -> Vec2 {
+        iter.fold(Vec2::ZERO, |a, b| Vec2::new(
+            a.x + b.x,
+            a.y + b.y,
+        ))
     }
 }
 
@@ -519,5 +529,21 @@ mod tests {
         v -= 1.5;
         assert_relative_eq!(v.x, 0.5, epsilon = EPSILON);
         assert_relative_eq!(v.y, 1.5, epsilon = EPSILON);
+    }
+
+    #[rstest]
+    #[case(0., 0., 0., 0., true)]
+    #[case(2., 3., 2., 3., true)]
+    #[case(2., 3., 2.00001, 3., false)]
+    fn eq(
+        #[case] x1: f64,
+        #[case] y1: f64,
+        #[case] x2: f64,
+        #[case] y2: f64,
+        #[case] expected: bool,
+    ) {
+        let v1 = Vec2::new(x1, y1);
+        let v2 = Vec2::new(x2, y2);
+        assert_eq!(v1 == v2, expected);
     }
 }

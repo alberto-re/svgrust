@@ -5,6 +5,7 @@ use std::f64::consts::TAU;
 use crate::angle::Angle;
 use crate::prelude::Pen;
 use crate::shapes::circle::Circle;
+use crate::shapes::edge::Edge;
 use crate::shapes::hexagon::Hexagon;
 use crate::shapes::linestring::LineString;
 use crate::shapes::polygon::Polygon;
@@ -404,7 +405,7 @@ impl ScaleDist for Polygon {
     fn scale_dist(&self, distance: f64) -> Polygon {
         // This is a very raw and fragile adaptation of this code:
         // https://codepen.io/HansMuller/pen/AgLWaz
-        let edges: Vec<(Vec2, Vec2)> = self.edges();
+        let edges = self.edges();
 
         fn inward_normal(p1: Vec2, p2: Vec2) -> Vec2 {
             let dx = p2.x - p1.x;
@@ -413,32 +414,32 @@ impl ScaleDist for Polygon {
             Vec2::new(-dy / edge_length, dx / edge_length)
         }
 
-        let mut offset_edges: Vec<(Vec2, Vec2)> = vec![];
+        let mut offset_edges: Vec<Edge> = vec![];
         for edge in &edges {
-            let normal = inward_normal(edge.0, edge.1);
+            let normal = inward_normal(edge.v1, edge.v2);
             let dx = normal.x * distance;
             let dy = normal.y * distance;
-            let offset_edge = (
-                Vec2::new(edge.0.x + dx, edge.0.y + dy),
-                Vec2::new(edge.1.x + dx, edge.1.y + dy),
-            );
+            let offset_edge = Edge {
+                v1: Vec2::new(edge.v1.x + dx, edge.v1.y + dy),
+                v2: Vec2::new(edge.v2.x + dx, edge.v2.y + dy),
+            };
             offset_edges.push(offset_edge)
         }
 
-        fn edges_intersection(edge1: (Vec2, Vec2), edge2: (Vec2, Vec2)) -> Vec2 {
-            let den = (edge2.1.y - edge2.0.y) * (edge1.1.x - edge1.0.x)
-                - (edge2.1.x - edge2.0.x) * (edge1.1.y - edge1.0.y);
+        fn edges_intersection(edge1: Edge, edge2: Edge) -> Vec2 {
+            let den = (edge2.v2.y - edge2.v1.y) * (edge1.v2.x - edge1.v1.x)
+                - (edge2.v2.x - edge2.v1.x) * (edge1.v2.y - edge1.v1.y);
             if den == 0. {
                 panic!(); // lines are parallel or conincident
             }
 
-            let ua = ((edge2.1.x - edge2.0.x) * (edge1.0.y - edge2.0.y)
-                - (edge2.1.y - edge2.0.y) * (edge1.0.x - edge2.0.x))
+            let ua = ((edge2.v2.x - edge2.v1.x) * (edge1.v1.y - edge2.v1.y)
+                - (edge2.v2.y - edge2.v1.y) * (edge1.v1.x - edge2.v1.x))
                 / den;
 
             Vec2::new(
-                edge1.0.x + ua * (edge1.1.x - edge1.0.x),
-                edge1.0.y + ua * (edge1.1.y - edge1.0.y),
+                edge1.v1.x + ua * (edge1.v2.x - edge1.v1.x),
+                edge1.v1.y + ua * (edge1.v2.y - edge1.v1.y),
             )
         }
 

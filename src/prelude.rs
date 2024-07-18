@@ -9,6 +9,7 @@ pub use crate::map_range;
 pub use crate::pen::Pen;
 pub use crate::seed::Seed;
 pub use crate::shapes::circle::Circle;
+pub use crate::shapes::edge::Edge;
 pub use crate::shapes::hexagon::Hexagon;
 pub use crate::shapes::linestring::LineString;
 pub use crate::shapes::polygon::Polygon;

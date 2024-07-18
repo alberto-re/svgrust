@@ -1,3 +1,4 @@
+use crate::shapes::edge::Edge;
 use crate::shapes::LineString;
 use crate::traits::ToGeoLineString;
 use crate::vec2::Vec2;
@@ -6,7 +7,7 @@ use geo::Coord;
 use geo::MultiPolygon as GeoMultiPolygon;
 
 /// A bounded area represented by a LineString exterior ring
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Polygon {
     pub points: Vec<Vec2>,
 }
@@ -69,13 +70,80 @@ impl Polygon {
         retval
     }
 
-    pub fn edges(&self) -> Vec<(Vec2, Vec2)> {
-        let mut edges: Vec<(Vec2, Vec2)> = vec![];
+    pub fn edges(&self) -> Vec<Edge> {
+        let mut edges = vec![];
         for i in 0..self.points.len() {
             let curpoint = self.points[i];
             let nextpoint = self.points[(i + 1) % self.points.len()];
-            edges.push((curpoint, nextpoint));
+            edges.push(Edge {
+                v1: curpoint,
+                v2: nextpoint,
+            });
         }
         edges
+    }
+
+    pub fn edges_in_common(&self, rhs: &Polygon) -> Vec<Edge> {
+        let left = self.edges();
+        let right = rhs.edges();
+        let mut common = vec![];
+        for l in &left {
+            for r in &right {
+                if l == r {
+                    common.push(*l);
+                }
+            }
+        }
+        common
+    }
+
+    // Merge two adjacent (they shares at least one edge),
+    // non-overlapping polygons.
+    // The method doesn't check the preconditions: is up
+    // to the caller to ensure preconditions are met.
+    pub fn merge_adjacent(&self, adj: &Self) -> Self {
+        let mut union_points = vec![];
+        union_points.append(&mut self.points.clone());
+        union_points.append(&mut adj.points.clone());
+
+        let psum: Vec2 = union_points.iter().copied().sum();
+        let center = psum / union_points.len() as f64;
+
+        union_points.sort_by_key(|p| (*p - center).to_polar().0);
+        union_points.dedup_by_key(|p| (*p - center).to_polar().0);
+
+        Polygon::new(union_points)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::shapes::edge::Edge;
+    use crate::shapes::polygon::Polygon;
+    use crate::vec2::Vec2;
+
+    #[test]
+    fn edges_in_common() {
+        let p1 = Polygon::new(vec![
+            Vec2::new(10., 10.),
+            Vec2::new(20., 10.),
+            Vec2::new(20., 20.),
+            Vec2::new(10., 20.),
+        ]);
+        let p2 = Polygon::new(vec![
+            Vec2::new(20., 10.),
+            Vec2::new(30., 10.),
+            Vec2::new(30., 20.),
+            Vec2::new(20., 20.),
+        ]);
+        let edges = p1.edges_in_common(&p2);
+        assert_eq!(edges.len(), 1);
+        assert_eq!(
+            edges[0],
+            Edge {
+                v1: Vec2::new(20., 10.),
+                v2: Vec2::new(20., 20.)
+            }
+        );
     }
 }
