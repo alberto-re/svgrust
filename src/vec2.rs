@@ -236,10 +236,7 @@ impl SubAssign<f64> for Vec2 {
 
 impl Sum<Vec2> for Vec2 {
     fn sum<I: Iterator<Item = Vec2>>(iter: I) -> Vec2 {
-        iter.fold(Vec2::ZERO, |a, b| Vec2::new(
-            a.x + b.x,
-            a.y + b.y,
-        ))
+        iter.fold(Vec2::ZERO, |a, b| Vec2::new(a.x + b.x, a.y + b.y))
     }
 }
 
