@@ -41,7 +41,7 @@ fn main() -> Result<()> {
         .map(|p| *p + sketch.as_rect().centroid())
         .collect::<Vec<Vec2>>();
 
-    sketch.group(0).add(&LineString::new(points));
+    sketch.group(0).add(LineString::new(points));
 
     sketch.as_rect().grid(50, 30).iter().for_each(|rect| {
         sketch.group(1).add(Circle::new(rect.centroid(), 0.1));

@@ -30,7 +30,13 @@ pub fn render_svg(sketch: &Sketch) -> Document {
         group = group.set("id", format!("layer{}", id + 1));
         group = group.set("stroke", l.style.stroke.clone());
         group = group.set("stroke-width", l.style.stroke_width.clone());
-        for e in l.elements.iter() {
+
+        // Optimization
+        // Very naive, very slow, could not optimize for a lot of cases (makes bold assumptions)
+        let mut elements = l.elements.clone();
+        elements.sort_by_key(|e| (e.path_start().x as u64 / 10, e.path_start().y as u64));
+
+        for e in elements.iter() {
             match e {
                 Shape::Circle(s) => {
                     let center_uom = Uom::convert_vec2(s.center, sketch.uom, Uom::Px);

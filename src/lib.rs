@@ -16,6 +16,7 @@ pub mod vec2;
 pub mod vec3;
 
 use traits::Lerp;
+use vec2::Vec2;
 
 #[derive(Clone)]
 pub enum Shape {
@@ -26,6 +27,20 @@ pub enum Shape {
     Polygon(shapes::polygon::Polygon),
     Text(shapes::Text),
     Triangle(shapes::triangle::Triangle),
+}
+
+impl Shape {
+    pub fn path_start(&self) -> Vec2 {
+        match self {
+            Shape::Circle(s) => s.center,
+            Shape::Rectangle(s) => s.xy,
+            Shape::Hexagon(s) => s.center,
+            Shape::LineString(s) => *s.points.first().unwrap(),
+            Shape::Polygon(s) => *s.points.first().unwrap(),
+            Shape::Text(s) => s.pos,
+            Shape::Triangle(s) => s.a,
+        }
+    }
 }
 
 pub fn map_range(n: f64, start1: f64, stop1: f64, start2: f64, stop2: f64) -> f64 {

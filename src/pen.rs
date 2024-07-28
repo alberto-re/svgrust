@@ -84,14 +84,31 @@ impl<'a> Pen<'a> {
         Self::new("gold", 0.5, 1.4)
     }
 
+    /// https://www.stabilo.com/it/prodotti/per-colorare/pennarelli/stabilo-pen-68/
+    ///
     /// Stabilo Pen 68/46 - Black
     pub fn stabilo_pen_68_46_black() -> Self {
-        Self::new("rgba(0, 0, 0, 0.9)", 0.5, 7.0)
+        Self::new("rgba(0, 0, 0, 0.9)", 0.9, 7.0)
     }
 
     /// Stabilo Pen 68/51 - Turquoise
     pub fn stabilo_pen_68_51_turquoise() -> Self {
-        Self::new("rgba(42, 148, 146, 0.9)", 0.5, 7.0)
+        Self::new("rgba(42, 148, 146, 0.9)", 0.9, 7.0)
+    }
+
+    /// Stabilo Pen 68/86 - Beige
+    pub fn stabilo_pen_68_86_beige() -> Self {
+        Self::new("rgba(195, 189, 182, 0.9)", 0.9, 7.0)
+    }
+
+    /// Stabilo Pen 68/32 - Ultramarine
+    pub fn stabilo_pen_68_32_ultramarine() -> Self {
+        Self::new("rgba(19, 66, 149, 0.9)", 0.9, 7.0)
+    }
+
+    /// Stabilo Pen 68/12 - Eucalyptus
+    pub fn stabilo_pen_68_12_eucalyptus() -> Self {
+        Self::new("rgba(131, 192, 181, 0.9)", 0.9, 7.0)
     }
 
     /// Molotow ONE4ALL 161 - Shock blue middle

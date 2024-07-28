@@ -1,6 +1,7 @@
 use crate::grid::SquareGrid;
 use crate::shapes::linestring::LineString;
 use crate::shapes::polygon::Polygon;
+use crate::traits::{ScaleDist, ScalePerc};
 use crate::vec2::Vec2;
 
 /// A rectangle represented by an upper-left corner plus width and height dimesions
@@ -99,6 +100,32 @@ impl Rect {
             .with_seed(seed)
             .with_dimensions([self.width, self.height], radius);
 
-        samples.iter().map(|s| Vec2::from_slice(&s)).collect()
+        samples
+            .iter()
+            .map(|s| Vec2::from_slice(&s) + self.xy)
+            .collect()
+    }
+}
+
+impl ScalePerc for Rect {
+    fn scale_perc(&self, percentage: f64) -> Rect {
+        Rect::new(
+            Vec2 {
+                x: self.xy.x + self.width * ((1. - percentage) / 2.),
+                y: self.xy.y + self.height * ((1. - percentage) / 2.),
+            },
+            self.width * percentage,
+            self.height * percentage,
+        )
+    }
+}
+
+impl ScaleDist for Rect {
+    fn scale_dist(&self, distance: f64) -> Self {
+        Rect::new(
+            self.xy + distance,
+            self.width - distance * 2.0,
+            self.height - distance * 2.0,
+        )
     }
 }

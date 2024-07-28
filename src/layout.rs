@@ -69,6 +69,16 @@ impl PageLayout {
         )
     }
 
+    // I can't find a standard for this size, but it's one of the
+    // sizes Fabriano produces Black Black.
+    pub fn fabriano_24x32(orientation: Orientation) -> Self {
+        Self::new(
+            Uom::convert_scalar(320.0, Uom::Mm, Uom::Px),
+            Uom::convert_scalar(240.0, Uom::Mm, Uom::Px),
+            orientation,
+        )
+    }
+
     pub fn set_style(&mut self, style: &str) -> &Self {
         self.style = Some(style.to_string());
         self

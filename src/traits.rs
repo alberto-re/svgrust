@@ -465,19 +465,6 @@ impl Clip for Vec<Polygon> {
     }
 }
 
-impl ScalePerc for Rect {
-    fn scale_perc(&self, percentage: f64) -> Rect {
-        Rect::new(
-            Vec2 {
-                x: self.xy.x + self.width * ((1. - percentage) / 2.),
-                y: self.xy.y + self.height * ((1. - percentage) / 2.),
-            },
-            self.width * percentage,
-            self.height * percentage,
-        )
-    }
-}
-
 impl Contains for Rect {
     fn contains<T: Centroid>(&self, shape: &T) -> bool {
         (shape.centroid().x > self.xy.x && shape.centroid().x < self.xy.x + self.width)
